@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="blockchain ethereum erc20,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。 BEC12345678910111213function batchTransfer(address[] _receivers, uint256 _value) public whenNotPaused returns (bool) &amp;#123;  uint cnt =">
+<meta name="keywords" content="blockchain ethereum erc20">
+<meta property="og:type" content="article">
+<meta property="og:title" content="token 合约大数溢出安全问题">
+<meta property="og:url" content="http://yoursite.com/2018/04/26/token-合约大数溢出安全问题/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。 BEC12345678910111213function batchTransfer(address[] _receivers, uint256 _value) public whenNotPaused returns (bool) &amp;#123;  uint cnt =">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T16:03:03.926Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="token 合约大数溢出安全问题">
+<meta name="twitter:description" content="上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。 BEC12345678910111213function batchTransfer(address[] _receivers, uint256 _value) public whenNotPaused returns (bool) &amp;#123;  uint cnt =">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/26/token-合约大数溢出安全问题/">
+
+
+
+
+
+  <title>token 合约大数溢出安全问题 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/26/token-合约大数溢出安全问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">token 合约大数溢出安全问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-26T15:21:03+08:00">
+                2018-04-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。</p>
+<h2 id="BEC"><a href="#BEC" class="headerlink" title="BEC"></a>BEC</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function batchTransfer(address[] _receivers, uint256 _value) public whenNotPaused returns (bool) &#123;</span><br><span class="line">  uint cnt = _receivers.length;</span><br><span class="line">  uint256 amount = uint256(cnt) * _value; // 大数溢出 amount 可能从 11111.....1111 体现成 1111 从而在发送者的余额范围内</span><br><span class="line">  require(cnt &gt; 0 &amp;&amp; cnt &lt;= 20);</span><br><span class="line">  require(_value &gt; 0 &amp;&amp; balances[msg.sender] &gt;= amount);</span><br><span class="line"></span><br><span class="line">  balances[msg.sender] = balances[msg.sender].sub(amount);</span><br><span class="line">  for (uint i = 0; i &lt; cnt; i++) &#123;</span><br><span class="line">      balances[_receivers[i]] = balances[_receivers[i]].add(_value); // 各个地址增加 _value 余额</span><br><span class="line">      Transfer(msg.sender, _receivers[i], _value);</span><br><span class="line">  &#125;</span><br><span class="line">  return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>BEC</code> 的问题出现在 <code>batchTransfer</code> 方法。如注释所述，当 <code>amount</code> 超过最大值，那么该值会被截取范围内的数字，当截取后的数字处在当前用户余额范围内，那么 <code>_value &gt; 0 &amp;&amp; balances[msg.sender] &gt;= amount</code> 成立。后面的代码就可以正常执行，余额减去实际的 <code>amount</code> 截取后的较小数字，然后可以给地址列表内的地址增加 <code>_value</code> 余额。</p>
+<h2 id="SMT"><a href="#SMT" class="headerlink" title="SMT"></a>SMT</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">function transferProxy(address _from, address _to, uint256 _value, uint256 _feeSmt,</span><br><span class="line">    uint8 _v,bytes32 _r, bytes32 _s) public transferAllowed(_from) returns (bool)&#123;</span><br><span class="line"></span><br><span class="line">    // 将 _feeSmt + _value 的和截取后溢出值小于发起者余额 绕过检测</span><br><span class="line">    // _value = 8fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</span><br><span class="line">    // _feeSmt = 7000000000000000000000000000000000000000000000000000000000000001</span><br><span class="line">    if(balances[_from] &lt; _feeSmt + _value) revert();</span><br><span class="line"></span><br><span class="line">    uint256 nonce = nonces[_from]; // 获得发起人 nonce </span><br><span class="line">    bytes32 h = keccak256(_from,_to,_value,_feeSmt,nonce);</span><br><span class="line">    if(_from != ecrecover(h,_v,_r,_s)) revert();</span><br><span class="line"></span><br><span class="line">    // _value &gt; 0 , _feeSmt &gt; 0</span><br><span class="line">    if(balances[_to] + _value &lt; balances[_to]</span><br><span class="line">        || balances[msg.sender] + _feeSmt &lt; balances[msg.sender]) revert();</span><br><span class="line">    balances[_to] += _value;</span><br><span class="line">    Transfer(_from, _to, _value);</span><br><span class="line"></span><br><span class="line">    balances[msg.sender] += _feeSmt;</span><br><span class="line">    Transfer(_from, msg.sender, _feeSmt);</span><br><span class="line"></span><br><span class="line">    balances[_from] -= _value + _feeSmt; // 发起人扣币为溢出之后截取的值</span><br><span class="line">    nonces[_from] = nonce + 1; </span><br><span class="line">    return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>SMT</code> 的问题在 <code>transferProxy</code> 方法。如注释所述（注释中的数值示例是从异常交易中查看得到的，这里是将两个数字之和刚好溢出而得到 0 的情况），当 <code>_feeSmt + _value</code> 的和溢出之后，截取的较小数字处在余额范围内，就可以通过 <code>balances[_from] &lt; _feeSmt + _value</code> 的判断条件。后续代码继续执行，就会给 <code>_to</code> 用户的余额中增加资产。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果无法保证自身在编码时考虑到一切细节，那么应该使用安全的数学类库来进行相关的操作。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/blockchain-ethereum-erc20/" rel="tag"># blockchain ethereum erc20</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/01/智能合约最佳实践翻译六-文档和程序/" rel="next" title="智能合约最佳实践翻译六 - 文档和程序">
+                <i class="fa fa-chevron-left"></i> 智能合约最佳实践翻译六 - 文档和程序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/27/solidity-安全考虑/" rel="prev" title="solidity 安全考虑">
+                solidity 安全考虑 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#BEC"><span class="nav-number">1.</span> <span class="nav-text">BEC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SMT"><span class="nav-number">2.</span> <span class="nav-text">SMT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

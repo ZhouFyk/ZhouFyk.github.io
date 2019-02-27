@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="blockchain ethereum eip,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言1234567EIP: 20Title: ERC-20 Token StandardAuthor: Fabian Vogelsteller &amp;lt;fabian@ethereum.org&amp;gt;, Vitalik Buterin &amp;lt;vitalik.buterin@ethereum.org&amp;gt;Type: StandardCategory: ERCStatus: AcceptedCrea">
+<meta name="keywords" content="blockchain ethereum eip">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ethereum EIP 20">
+<meta property="og:url" content="http://yoursite.com/2018/02/23/Ethereum-EIP-20/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="前言1234567EIP: 20Title: ERC-20 Token StandardAuthor: Fabian Vogelsteller &amp;lt;fabian@ethereum.org&amp;gt;, Vitalik Buterin &amp;lt;vitalik.buterin@ethereum.org&amp;gt;Type: StandardCategory: ERCStatus: AcceptedCrea">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T16:37:42.406Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ethereum EIP 20">
+<meta name="twitter:description" content="前言1234567EIP: 20Title: ERC-20 Token StandardAuthor: Fabian Vogelsteller &amp;lt;fabian@ethereum.org&amp;gt;, Vitalik Buterin &amp;lt;vitalik.buterin@ethereum.org&amp;gt;Type: StandardCategory: ERCStatus: AcceptedCrea">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/23/Ethereum-EIP-20/">
+
+
+
+
+
+  <title>Ethereum EIP 20 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/23/Ethereum-EIP-20/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ethereum EIP 20</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-23T10:22:41+08:00">
+                2018-02-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">EIP: 20</span><br><span class="line">Title: ERC-20 Token Standard</span><br><span class="line">Author: Fabian Vogelsteller &lt;fabian@ethereum.org&gt;, Vitalik Buterin &lt;vitalik.buterin@ethereum.org&gt;</span><br><span class="line">Type: Standard</span><br><span class="line">Category: ERC</span><br><span class="line">Status: Accepted</span><br><span class="line">Created: 2015-11-19</span><br></pre></td></tr></table></figure>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>token 接口标准。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>下面描述了在智能合约中对代币实现的 API 标准。这个标准提供了转移，接受代币的基本方法，所以代币可以在链上被转给第三方。</p>
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>一种使得在 Ethereum 上的代币可以被其他应用复用的标准接口：从钱包到去中心化的交易所。</p>
+<h2 id="详情"><a href="#详情" class="headerlink" title="详情"></a>详情</h2><h3 id="代币"><a href="#代币" class="headerlink" title="代币"></a>代币</h3><h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ul>
+<li>注意：调用者必须处理 <code>returns (bool success)</code> 返回的 <code>false</code> 情况。不能假设永远不会返回 <code>false</code>。</li>
+</ul>
+<h4 id="name"><a href="#name" class="headerlink" title="name"></a>name</h4><p>返回代币名称。如 MyToken。</p>
+<p>可选的 - 该方法可以被提高可用性，不过接口和其他合约不能认为其是一定存在的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function name() constant returns (string name)</span><br></pre></td></tr></table></figure>
+<h4 id="symbol"><a href="#symbol" class="headerlink" title="symbol"></a>symbol</h4><p>返回代币符号。如 HIX。</p>
+<p>可选的 - 该方法可以被提高可用性，不过接口和其他合约不能认为其是一定存在的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function symbol() constant returns (string symbol)</span><br></pre></td></tr></table></figure>
+<h4 id="decimals"><a href="#decimals" class="headerlink" title="decimals"></a>decimals</h4><p>返回十进制的代币使用数量。如 8，代表用户能看到 100000000 分之一的代币。</p>
+<p>可选的 - 该方法可以被提高可用性，不过接口和其他合约不能认为其是一定存在的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function decimals() constant returns (uint8 decimals)</span><br></pre></td></tr></table></figure>
+<h4 id="totalSupply"><a href="#totalSupply" class="headerlink" title="totalSupply"></a>totalSupply</h4><p>返回代币发行的总数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function totalSupply() constant returns (uint256 totalSupply)</span><br></pre></td></tr></table></figure>
+<h4 id="balanceOf"><a href="#balanceOf" class="headerlink" title="balanceOf"></a>balanceOf</h4><p>返回指定地址的剩余账户资产</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function balanceOf(address _owner) constant returns (uint256 balance)</span><br></pre></td></tr></table></figure>
+<h4 id="transfer"><a href="#transfer" class="headerlink" title="transfer"></a>transfer</h4><p>将指定数量的代币转移到指定地址，并且必须触发 <code>Transfer</code> 事件。当发币账户没有足够的资产，应该 throw。</p>
+<ul>
+<li><p>注意：转账额为 0，也必须按照常规转账执行，并且触发 Transfer 事件。</p>
+<p><code>function transfer(address _to, uint256 _value) returns (bool success)</code></p>
+</li>
+</ul>
+<h4 id="transferFrom"><a href="#transferFrom" class="headerlink" title="transferFrom"></a>transferFrom</h4><p>将一定数量资产从 <code>_from</code> 转账到 <code>_to</code>，并且必须触发 <code>Transfer</code> 事件。</p>
+<p>本方法用于提币，允许合约从你的账户转移代币。举例来说，合约可以从你的账户中扣除一定资产作为手续费。除非经过 <code>_from</code> 通过某些机制认证了信息的发送者。</p>
+<ul>
+<li><p>注意：转账额为 0，也必须按照常规转账执行，并且触发 Transfer 事件。</p>
+<p><code>function transferFrom(address _from, address _to, uint256 _value) returns (bool success)</code></p>
+</li>
+</ul>
+<h4 id="approve"><a href="#approve" class="headerlink" title="approve"></a>approve</h4><p>设置提币额度。允许 <code>_spender</code> 从你的账户中多次提币，直到上限 <code>_value</code>。如果这个方法被再次调用，它会使用 <code>_value</code> 覆盖当前的额度。</p>
+<ul>
+<li><p>注意：为了防御如<a href="https://docs.google.com/document/d/1YLPtQxZu1UAvO9cZ1O2RPXBbT0mooh4DYKjA_jp-RLM/edit#heading=h.m9fhqynw2xvt" target="_blank" rel="noopener">这里描述的</a>和<a href="https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729" target="_blank" rel="noopener">这里讨论的</a>，客户端在设置一个用户可以从一个账户提出一定资产之前，需要先将提币额度设置成 0。尽管合约本身不强制要求完成此要求。</p>
+<p><code>function approve(address _spender, uint256 _value) returns (bool success)</code></p>
+</li>
+</ul>
+<h4 id="allowance"><a href="#allowance" class="headerlink" title="allowance"></a>allowance</h4><p>返回消费者 <code>_spender</code> 从 <code>_owner</code> 账户中的剩余提币额度。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function allowance(address _owner, address _spender) constant returns (uint256 remaining)</span><br></pre></td></tr></table></figure>
+<h3 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h3><h4 id="Transfer"><a href="#Transfer" class="headerlink" title="Transfer"></a>Transfer</h4><p>当发生资产转移的时候，必须触发此事件，即使资产转移数为 0。</p>
+<p>当一个创建代币的合约创建新代币时，应该触发 Transfer 事件，并且将 <code>_from</code> 地址设为 <code>0x0</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event Transfer(address indexed _from, address indexed _to, uint256 _value)</span><br></pre></td></tr></table></figure>
+<h4 id="Approval"><a href="#Approval" class="headerlink" title="Approval"></a>Approval</h4><p>成功调用 <code>approve(address _spender, uint256 _value)</code> 时，必须触发。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event Approval(address indexed _owner, address indexed _spender, uint256 _value)</span><br></pre></td></tr></table></figure>
+<h2 id="个人总结"><a href="#个人总结" class="headerlink" title="个人总结"></a>个人总结</h2><p>该接口是对于代币的一个约定，尽量统一不同代币的相关方法，以方便代币的使用。</p>
+<p>对于代币主要有两部分，即查看资产，和转账功能。能查看的资产有代币总数，和用户个人账户中的代币数量。资产转账功能中又分为主动转与第三方转。所以该约定主要针对的就是这些基本功能。</p>
+<p>资产部分：</p>
+<ol>
+<li><p>查看代币总量，<code>totalSupply</code>： </p>
+<p><code>function totalSupply() constant returns (uint256 totalSupply)</code></p>
+</li>
+<li><p>查看个人账户代币数量，<code>balanceOf</code>：</p>
+<p><code>function balanceOf(address _owner) constant returns (uint256 balance)</code></p>
+</li>
+</ol>
+<p>转账部分：</p>
+<ol>
+<li><p>个人主动转账，<code>transfer</code>：</p>
+<p><code>function transfer(address _to, uint256 _value) returns (bool success)</code></p>
+</li>
+<li><p>第三方转账，<code>transferFrom</code>：</p>
+<p><code>function transferFrom(address _from, address _to, uint256 _value) returns (bool success)</code></p>
+</li>
+</ol>
+<p>2.1 设置第三方能够从自己账户提币的额度，<code>approve</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function approve(address _spender, uint256 _value) returns (bool success)</span><br></pre></td></tr></table></figure>
+<p>2.2 查看第三方当前还能够从指定账户提币的额度，allowance：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function allowance(address _owner, address _spender) constant returns (uint256 remaining)</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>除了以上，还有两个是用户需要用到的，即什么时候发生了资产的变更，和什么时候发生了提币额度的变更</li>
+</ol>
+<p>3.1 资产转移必须触发的事件，<code>Transfer</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event Transfer(address indexed _from, address indexed _to, uint256 _value)。</span><br></pre></td></tr></table></figure>
+<p>3.2 提币额度修改必须触发的事件，<code>Approval</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event Approval(address indexed _owner, address indexed _spender, uint256 _value)</span><br></pre></td></tr></table></figure>
+<p>所以代币必须的有以上 6 个函数，2 个事件。而 6 个函数中，因为 <code>totalSupply()</code> 函数是一个针对代币合约中公开状态的读取，而对于合约中的公开状态，合约会自动生成一个针对该状态的公开函数，用来访问获取该状态的值，所以 <code>totalSupply()</code> 函数可以由在合约中创建一个 <code>totalSupply</code> 状态变量替代。</p>
+<p>除此之外，对于转账的函数，与现实生活中一样，需要对转账金额和账户金额进行比较，不可能存在转账金额比账户金额还要多的情况。所以当金额不足时，需要抛出异常。这样一切就会回滚，不会出现错误。这里要注意，不能直接 +/-，因为存在情况被构造数据，在增加或者减少之后溢出产生的数据在比较中通过的情况，所以要利用开源的公用数学类库，它已经封装好了相关的方法。</p>
+<p>对于转账来说，自然是有出的账户地址，也有入的账户地址，创建新代币的合约也是一个转账操作，就是将指定的币量转到一个指定的外部账户，但是来源呢，这里就有一个约定，来源地址为 ‘0x0’。所以当转账的来源地址为这个值的时候，说明这实际上是创建了一个新代币。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/blockchain-ethereum-eip/" rel="tag"># blockchain ethereum eip</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/28/关于容器/" rel="next" title="关于容器">
+                <i class="fa fa-chevron-left"></i> 关于容器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/24/ethereum-设计原理/" rel="prev" title="ethereum 设计原理">
+                ethereum 设计原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">3.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目的"><span class="nav-number">4.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#详情"><span class="nav-number">5.</span> <span class="nav-text">详情</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代币"><span class="nav-number">5.1.</span> <span class="nav-text">代币</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法"><span class="nav-number">5.2.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#name"><span class="nav-number">5.2.1.</span> <span class="nav-text">name</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#symbol"><span class="nav-number">5.2.2.</span> <span class="nav-text">symbol</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#decimals"><span class="nav-number">5.2.3.</span> <span class="nav-text">decimals</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#totalSupply"><span class="nav-number">5.2.4.</span> <span class="nav-text">totalSupply</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#balanceOf"><span class="nav-number">5.2.5.</span> <span class="nav-text">balanceOf</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#transfer"><span class="nav-number">5.2.6.</span> <span class="nav-text">transfer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#transferFrom"><span class="nav-number">5.2.7.</span> <span class="nav-text">transferFrom</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#approve"><span class="nav-number">5.2.8.</span> <span class="nav-text">approve</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#allowance"><span class="nav-number">5.2.9.</span> <span class="nav-text">allowance</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件"><span class="nav-number">5.3.</span> <span class="nav-text">事件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Transfer"><span class="nav-number">5.3.1.</span> <span class="nav-text">Transfer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Approval"><span class="nav-number">5.3.2.</span> <span class="nav-text">Approval</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#个人总结"><span class="nav-number">6.</span> <span class="nav-text">个人总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Contracts title: solidity contracts date: 2018-3-12 15:40:33 tags: blockchain ethereum solidity contract  Solidity 中的合约与面向对象语言中的类相似。它们拥有持久化的状态变量，和可以修改这些变量的函数。在不同的合约（实例）上调用函数将执行 EVM 函数调用，从而切换上下文使得状态变量不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fuyk&#39;s blog">
+<meta property="og:url" content="http://yoursite.com/2019/02/28/solidity-contracts/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="Contracts title: solidity contracts date: 2018-3-12 15:40:33 tags: blockchain ethereum solidity contract  Solidity 中的合约与面向对象语言中的类相似。它们拥有持久化的状态变量，和可以修改这些变量的函数。在不同的合约（实例）上调用函数将执行 EVM 函数调用，从而切换上下文使得状态变量不">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T16:14:39.462Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Fuyk&#39;s blog">
+<meta name="twitter:description" content="Contracts title: solidity contracts date: 2018-3-12 15:40:33 tags: blockchain ethereum solidity contract  Solidity 中的合约与面向对象语言中的类相似。它们拥有持久化的状态变量，和可以修改这些变量的函数。在不同的合约（实例）上调用函数将执行 EVM 函数调用，从而切换上下文使得状态变量不">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/02/28/solidity-contracts/">
+
+
+
+
+
+  <title> | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/28/solidity-contracts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-28T00:14:39+08:00">
+                2019-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Contracts"><a href="#Contracts" class="headerlink" title="Contracts"></a>Contracts</h1><hr>
+<p>title: solidity contracts</p>
+<p>date: 2018-3-12 15:40:33</p>
+<p>tags: blockchain ethereum solidity contract</p>
+<hr>
+<p>Solidity 中的合约与面向对象语言中的类相似。它们拥有持久化的状态变量，和可以修改这些变量的函数。在不同的合约（实例）上调用函数将执行 EVM 函数调用，从而切换上下文使得状态变量不可访问。</p>
+<h2 id="Creating-Contracts"><a href="#Creating-Contracts" class="headerlink" title="Creating Contracts"></a>Creating Contracts</h2><p>合约可以通过以太坊 “从外部” 创建，或者在 Solidity 中被创建。</p>
+<p>IDE，如 <a href="https://remix.ethereum.org/" target="_blank" rel="noopener">Remix</a>，使用 UI 元素来使得创建过程十分友好。</p>
+<p>在以太坊上编程创建合约最好通过 JavaScript API 的 <a href="https://github.com/ethereum/web3.js" target="_blank" rel="noopener">web3.js</a>。目前，它有一个名为 <a href="https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#new-contract" target="_blank" rel="noopener">web3.eth.Contract</a> 的方法来方便创建合约。</p>
+<p>在合约创建时，它的构造函数（和合约具有同名的函数）会被执行一次。构造函数是可选的。只允许存在一个构造函数，即不支持对构造函数的重载。</p>
+<p>在内部，构造函数的参数按照 <a href="https://solidity.readthedocs.io/en/latest/abi-spec.html#abi" target="_blank" rel="noopener">ABI 来编码</a> 然后在合约本身的代码之后传递，如果你使用的是 <code>web3.js</code>，就不用关心这一点。</p>
+<p>如果一个合约想要创建另一合约，创建者需要知道被创建的合约的源代码（和二进制代码）。这也说明循环依赖是不可能的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">contract OwnedToken &#123;</span><br><span class="line">	TokenCreator creator;</span><br><span class="line">	address owner;</span><br><span class="line">	bytes32 name;</span><br><span class="line"></span><br><span class="line">	function OwnedToken(bytes32 _name) public &#123;</span><br><span class="line">		owner = msg.sender;</span><br><span class="line">		creator = TokenCreator(msg.sender);</span><br><span class="line">		name = _name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function changeName(bytes32 newName) public &#123;</span><br><span class="line">		if (msg.sender == address(creator))</span><br><span class="line">			name = newName;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function transfer(address newOwner) public &#123;</span><br><span class="line">		if (msg.sender != owner) return;</span><br><span class="line">		if (creator.isTokenTransferOK(owner, newOwner))</span><br><span class="line">			owner = newOwner;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract TokenCreator &#123;</span><br><span class="line">	function createToken(bytes32 name) public returns(OwnedToken tokenAddress) &#123;</span><br><span class="line">		return new OwnedToken(name);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function changeName(OwnedToken tokenAddress, bytes32 name) public &#123;</span><br><span class="line">		tokenAddress.changeName(name);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function isTokenTransferOK(address currentOwner, address newOwner) public view returns (bool ok) &#123;</span><br><span class="line">		address tokenAddress = msg.sender;</span><br><span class="line">		return (keccak256(newOwner) &amp; 0xff) == (bytes20(tokenAddress) &amp; 0xff);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Visibility-and-Getters"><a href="#Visibility-and-Getters" class="headerlink" title="Visibility and Getters"></a>Visibility and Getters</h2><p>solidity 有两种函数调用（不会创建一个真实虚拟机调用（也被称作消息调用）的内部调用，以及会创建一个真实的虚拟机调用的外部调用），函数和状态变量则有 4 种可见性。</p>
+<p>函数可以被指定为，<code>external / public / internal / private</code>，默认值为 <code>public</code>。对于状态变量来说，<code>external</code> 是不可能的，默认值为 <code>internal</code>。</p>
+<p><code>external</code>：</p>
+<p>外部函数是合约接口的一部分，这表示它们可以被其他合约或者通过交易来调用。一个外部函数 <code>f</code> 不能在内部被调用（即 <code>f()</code> 不会起作用，而 <code>this.f()</code> 会）。外部函数在接收大量的数组数据时更有效率。</p>
+<p><code>public</code>：</p>
+<p>公有函数是合约接口的一部分，既可以被内部调用也可以通过消息被调用。对于状态变量来说，会生成一个自动获取函数。</p>
+<p><code>internal</code>：</p>
+<p>这些函数和状态变量只能被内部访问（即在当前的合约内或者继承了当前合约的合约），使用时不需要 <code>this</code>。</p>
+<p><code>private</code>：</p>
+<p>私有函数和状态变量只能在其被定义的合约内使用，即使是在子合约中也不可以被使用。</p>
+<p>（<code>public / internal / private</code> 相当于面向对象的 <code>public / protected / private</code>，<code>external</code> 的作用是限制函数只能在外部被使用。）</p>
+<p>注意：合约内的任何内容都可以被外界看到。<code>private</code> 只是防止了其他合约访问和修改该私有信息，但是它依旧可以被区块链之外的整个世界看到。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">	function f(uint a) private pure returns (uint b) &#123;</span><br><span class="line">		return a + 1;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function setData(uint a) internal &#123; data = a; &#125;</span><br><span class="line">	uint public data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在下面的例子中，<code>D</code>，可以调用 <code>c.getData()</code> 来获取状态存储中 <code>data</code> 的值，但是不能调用 <code>f</code>。合约 <code>E</code> 继承了 <code>C</code>，所以可以调用 <code>compute</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">	uint private data;</span><br><span class="line"></span><br><span class="line">	function f(uint a) private returns (uint b) &#123; return a + 1; &#125;</span><br><span class="line">	function setData(uint a) public &#123; data = a; &#125;</span><br><span class="line">	function getData() public returns (uint) &#123; return data; &#125;</span><br><span class="line">	function compute(uint a, uint b) internal returns (uint) &#123; return a + b; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract D &#123;</span><br><span class="line">	function readData() public &#123;</span><br><span class="line">		C c = new C();</span><br><span class="line">		uint local = c.f(7);</span><br><span class="line">		c.setData(3);</span><br><span class="line">		local = c.getData();</span><br><span class="line">		local = c.compute(3, 5);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract E is C &#123;</span><br><span class="line">	function g() public &#123;</span><br><span class="line">		C c = new C();</span><br><span class="line">		uint val = compute(3, 5);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="获取器函数"><a href="#获取器函数" class="headerlink" title="获取器函数"></a>获取器函数</h3><p>编译器会为所有的 <code>public</code> 状态变量创建获取器函数。对于下面给出的合约，编译器会生成一个叫 <code>data</code> 的方法，该方法不需要任何参数，会返回一个类型为 <code>uint</code> 的状态变量 <code>data</code> 的值。状态变量的初始化会在定义的时候执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">	uint public data = 42;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Caller &#123;</span><br><span class="line">	C c = new C();</span><br><span class="line">	function f() public &#123;</span><br><span class="line">		uint local = c.data();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>获取器方法拥有外部可见性。如果该标识符在内部被访问（即不是使用 <code>this.</code>），它会被当做一个状态变量。如果它在外部被访问（即使用 <code>this.</code>），它会被当做一个函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">	uint public data;</span><br><span class="line">	function x() public &#123;</span><br><span class="line">		data = 3;</span><br><span class="line">		uint val = this.data();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下个例子更复杂一些：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0</span><br><span class="line"></span><br><span class="line">contract Complex &#123;</span><br><span class="line">	struct Data &#123;</span><br><span class="line">		uint a;</span><br><span class="line">		bytes3 b;</span><br><span class="line">		mapping (uint =&gt; uint) map;</span><br><span class="line">	&#125;</span><br><span class="line">	mapping (uint =&gt; mapping(bool =&gt; Data[])) public data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>它会生成一个下列格式的函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function data(uint arg1, bool arg2, uint arg3) public returns (uint a, bytes3 b) &#123;</span><br><span class="line">	a = data[arg1][arg2][arg3].a;</span><br><span class="line">	b = data[arg1][arg2][arg3].b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意，结构体中的映射被省略了，因为这里没有好办法来为映射提供键。</p>
+<h2 id="Function-Modifiers"><a href="#Function-Modifiers" class="headerlink" title="Function Modifiers"></a>Function Modifiers</h2><p>可以很容易地使用修饰器来修改函数的行为。例如，它可以自动在执行函数之前检查条件。修饰器是合约的可继承属性，而且可以被子合约覆盖。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.11;</span><br><span class="line"></span><br><span class="line">contract owned &#123;</span><br><span class="line">	funcion owned() public &#123; owner = msg.sender; &#125;</span><br><span class="line">	address owner;</span><br><span class="line"></span><br><span class="line">	modifier onlyOwner &#123;</span><br><span class="line">		require(msg.sender == owner);</span><br><span class="line">		_;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract mortal is owned &#123;</span><br><span class="line">	function close() public onlyOwner &#123;</span><br><span class="line">		selfdestruct(owner);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract priced &#123;</span><br><span class="line">	modifier costs(uint price) &#123;</span><br><span class="line">		if (msg.value &gt;= price) &#123;</span><br><span class="line">			_;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Register is priced, owned &#123;</span><br><span class="line">	mapping(address =&gt; bool) registeredAddresses;</span><br><span class="line">	uint price;</span><br><span class="line"></span><br><span class="line">	function Register(uint initialPrice) public &#123; price = initialPrice; &#125;</span><br><span class="line"></span><br><span class="line">	function register() public payable costs(price) &#123;</span><br><span class="line">		registeredAddresses[msg.sender] = true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function changePrice(uint _price) public onlyOwner &#123;</span><br><span class="line">		price = _price;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Mutex &#123;</span><br><span class="line">	bool locked;</span><br><span class="line">	modifier noReentrancy() &#123;</span><br><span class="line">		require(!locked);</span><br><span class="line">		locked = true;</span><br><span class="line">		_;</span><br><span class="line">		locked = false;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function f() public noReentrancy returns (uint) &#123;</span><br><span class="line">		require(msg.sender.call());</span><br><span class="line">		return 7;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过在一个空白分隔的列表中指定多个修饰符并按照所呈现的顺序对多个修饰符进行判断。</p>
+<p>警告：在 Solidity 的早期版本中，拥有修饰器的函数中的 <code>return</code> 语句的行为是不同的。</p>
+<p>修饰器或者函数体中显式的 <code>return</code> 只会离开当前的修饰器或者函数体。返回变量被赋值并且控制流程在前一个修改器中的“<code>_</code>”之后继续。</p>
+<p>允许任意表达式用于修饰符参数，在此上下文中，该函数中的所有可见的符号在修饰器中同样可见。而在修饰器中的引入的符号，在函数中并不可见（因为他们可能会被通过覆盖来更改）。</p>
+<h2 id="Constant-State-Variables"><a href="#Constant-State-Variables" class="headerlink" title="Constant State Variables"></a>Constant State Variables</h2><p>状态变量可以被定义为 <code>constant</code>。在这个例子中，它们必须被一个在编译时是常数的表达式所赋值。所有访问存储，区块链数据（如 <code>now</code>，<code>this.balance</code> 或者 <code>block.number</code>）或者执行数据（<code>msg.gas</code>）或者禁止外部调用合约的表达式。对内存分配有影响的表达式也被允许，但是对其他内存对象产生印象的表达式是不可以的。内置函数 <code>keccak256 / sha256 / ripemd160 / ecrecover / addmod / mulmod</code> 是被允许的（即使它们调用了外部合约）。</p>
+<p>允许对内存分配有影响是因为它应该可以构造一个复杂的对象，如 查找表。目前为止，这个特性并不能完全使用。</p>
+<p>编译器不会为这些变量保留一个存储槽，并且每个出现都被各自的常量表达式（可能由优化器计算为单个值）替换。</p>
+<p>并非所有类型的常量都被实现了。唯一支持的类型是值类型和字符串。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">	uint constant x = 32 ** 22 + 8;</span><br><span class="line">	string constant text = &quot;abc&quot;;</span><br><span class="line">	bytes32 constant myHash = keccak256(&quot;abc&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Functions"><a href="#Functions" class="headerlink" title="Functions"></a>Functions</h2><h3 id="View-Functions-不会修改状态"><a href="#View-Functions-不会修改状态" class="headerlink" title="View Functions : 不会修改状态"></a>View Functions : 不会修改状态</h3><p>修改状态的语句：</p>
+<ol>
+<li>写入状态变量</li>
+<li>发生事件</li>
+<li>创建其他合约</li>
+<li>使用 selfdestruct </li>
+<li>通过调用发送 Ether</li>
+<li>调用任何不是 view 和 pure 的方法</li>
+<li>使用底层调用</li>
+<li>使用大量行内的确定的 opcodes</li>
+<li>constant 是 view 的别名</li>
+<li>Getter 方法是 view 方法</li>
+<li>目前为止，编译器并没有强制要求 view 不能修改状态</li>
+</ol>
+<h3 id="Pure-Function-：-不会读取或修改状态"><a href="#Pure-Function-：-不会读取或修改状态" class="headerlink" title="Pure Function ： 不会读取或修改状态"></a>Pure Function ： 不会读取或修改状态</h3><p>除了上述修改状态的语句，读取状态语句如下：</p>
+<ol>
+<li>读取状态</li>
+<li>访问 <code>this.balance</code> 或 <code>&lt;address&gt;.balance</code></li>
+<li>访问 <code>block</code>, <code>tx</code>, <code>msg</code> 的任何成员（不包括 <code>msg.sig</code> 和 <code>msg.data</code>）</li>
+<li>调用任何非 <code>pure</code> 方法</li>
+<li>使用大量包含了确定的行内 <code>opcodes</code></li>
+<li>目前为止，编译器没有强制要求 pure 方法不能读取状态</li>
+</ol>
+<h3 id="Fallback-Function"><a href="#Fallback-Function" class="headerlink" title="Fallback Function"></a>Fallback Function</h3><p>一个合约可以拥有一个没有名字的方法。该方法不能有参数和返回。如果调用了该合约不存在的方法，或者没有提供数据，就会执行这个方法。</p>
+<p>当合约收到没有数据的转账时，这个方法就会执行。为了接受以太坊，fallback function 必须标记为 <code>payable</code>。如果不存在该方法，合约就无法通过常规的交易收到以太币。</p>
+<p>这样的情境中，调用该方法只会消耗极少量的 gas（精确的说是 2300 gas），所以使 fallback 函数尽可能的便宜是十分重要的。注意通过交易（不是内部调用）调用 fallback 函数会消耗更多 gas，因为每笔交易都会需要额外的 21000 gas 或者更多的消耗，如果还有其他操作比如检查签名。</p>
+<p>以下操作比 fallback 函数消耗的 gas 会更多：</p>
+<ol>
+<li>写入存储</li>
+<li>创建合约</li>
+<li>调用一个消耗大量 gas 的外部方法</li>
+<li>发送以太币</li>
+</ol>
+<p>在部署合约之前，彻底的测试一下，确认 fallback 函数的执行消耗少于 2300 gas。</p>
+<ul>
+<li>即使 fallback 函数不能有参数，但是还是可以通过 msg.data 来获取任何调用该函数时提供的数据。</li>
+<li>如果没有定义 fallback 函数，而是直接接收 Ether（没有使用函数调用，即使用 <code>send</code> 或者 <code>transfer</code>），会抛出一个异常，然后 Ether 会回退（这点和 solidity v0.4.0 之前不同）。所以如果你想要你的合约收到 Ether，就必须实现一个 fallback 函数。</li>
+<li>没有 payable fallback 函数来接收 Ether 的话，合约可以通过 coinbase 来接收挖矿奖励来获得 Ether，或者作为自销毁的目标（destination of a selfdestruct）。<br>合约不会对这样的 Ether 转账做出反应，所以自然也不能拒绝。这是 EVM 的一个设计选择，而 Solidity 并不能在这方面工作。<br>这也表示，<code>this.balance</code> 可以比在合约中实现的手工账户总量要高（即在 fallback 函数中有一个更新的计数器）。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0</span><br><span class="line"></span><br><span class="line">contract Test &#123;</span><br><span class="line">	function() public &#123; x = 1; &#125;</span><br><span class="line">	uint x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Sink &#123;</span><br><span class="line">	function() public payable &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Caller &#123;</span><br><span class="line">	function callTest(Test test) public &#123;</span><br><span class="line">		test.call(0xabcdef01);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Function-Overloading"><a href="#Function-Overloading" class="headerlink" title="Function Overloading"></a>Function Overloading</h3><p>一个合约可以拥有多个同名但不同参数的函数，这也适用于继承的方法。下面的例子展示了在合约 A 内重载了 <code>f</code> 函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16</span><br><span class="line"></span><br><span class="line">contract A &#123;</span><br><span class="line">	function f(uint _in) public pure returns (uint out) &#123;</span><br><span class="line">		out = 1;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function f(uint _in, bytes32 _key) public pure returns (uint out) &#123;</span><br><span class="line">		out = 2;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重载方法也可以存在于外部接口。如果两个外部可见的方法，它们的 solidity 类型不同，但它们的外部类型相同，就会报一个错误。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// this will not compile</span><br><span class="line">pragma solidity ^0.4.16</span><br><span class="line"></span><br><span class="line">contract A &#123;</span><br><span class="line">	function f(B _in) public pure returns (B out) &#123;</span><br><span class="line">		out = _in;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function f(address _in) public pure returns (address out) &#123;</span><br><span class="line">		out = _in;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract B &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>上述两个 <code>f</code> 函数重载最终都会接受ABI的地址类型，尽管它们在 Solidity 中被认为是不同的。</p>
+<h3 id="重载方式-和-参数匹配"><a href="#重载方式-和-参数匹配" class="headerlink" title="重载方式 和 参数匹配"></a>重载方式 和 参数匹配</h3><p>通过将当前作用域中的函数声明与函数调用中提供的参数进行匹配来选择重载函数。 如果所有参数都可以隐式转换为预期的类型，则函数被选为重载候选项。 如果找不到，则失败。</p>
+<ul>
+<li>返回的参数不会影响重载。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">contract A &#123;</span><br><span class="line">	function f(uint8 _in) public pure returns (uint8 out) &#123;</span><br><span class="line">		out = _in;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	funciton f(uint256 _in) public pure returns (uint256 out) &#123;</span><br><span class="line">		out = _in;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用 <code>f(50)</code> 会产生一个类型错误，因为 <code>250</code> 可以被隐式转换成 <code>uint8</code> 和 <code>uint256</code> 类型。另一方面 <code>f(256)</code> 会被当做 <code>f(uint256)</code> 来重载，因为 <code>256</code> 不能被隐式替换为 <code>uint8</code>。</p>
+<h2 id="Events"><a href="#Events" class="headerlink" title="Events"></a>Events</h2><p>事件允许方便地使用 EVM 日志记录工具，后者又可用于“调用”监听这些事件的 dapp 的用户界面中 JavaScript 回调。</p>
+<p>事件可被继承。调用它们的时候，它们会将参数存储在交易日志中，交易日志是区块链中一个特殊的数据结构。这些日志会和合约的地址关联起来，然后被存入区块链中，只要区块能够被访问，日志就会一直存在。日志和事件数据并不能在合约内访问到，即使是创建它们的合约也不行。</p>
+<p>对日志的 SPV 证明的可能的，如果存在一个外部的实体提供了一个有这样的证明的合约，它就可以查看在区块链中的确实存在的日志。不过要注意的是必须提供区块头，因为合约只能看到最后的 256 个区块的哈希。</p>
+<p>最多三个参数可以接受 indexed 属性，该属性可以让这些参数被独立搜索，这样就可以在用户接口中获取指定索引参数的详细值。</p>
+<p>如果在索引参数中使用了数组（包含了 string 和 bytes），那么它的 Keccak-256 哈希会被存为话题。</p>
+<p>事件的签名哈希是诸多话题中的一个，除非你对事件声明了 anonymous。这说明过通过名字滤出 anonymous 事件的详细信息是不可能的。<br>​<br>所有非索引参数会作为日志数据的一部分存储。</p>
+<ul>
+<li>索引参数不能存储它们本身。只能搜索值，而不能获得这些值。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0</span><br><span class="line"></span><br><span class="line">contract ClientReceipt &#123;</span><br><span class="line">	event Deposit(</span><br><span class="line">		address indexed _from,</span><br><span class="line">		bytes32 indexed _id,</span><br><span class="line">		uint _value</span><br><span class="line">		);</span><br><span class="line"></span><br><span class="line">	function deposit(bytes32 _id) public payable &#123;</span><br><span class="line">		emit Deposit(msg.sender, _id, msg.value);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>JavaScript API 中的使用方法如下，通过合约的 abi 和地址获取到合约的实例，然后获取到事件，然后监听该事件，当该事件被触发，进行后续操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">var abi = /* abi as generated by the compiler*/;</span><br><span class="line">var ClientReceipt = web3.eth.contract(abi);</span><br><span class="line">var clientReceipt = ClientReceipt.at(&quot;0x1234...ab67&quot; /* address */);</span><br><span class="line"></span><br><span class="line">var event = clientReceipt.Deposit();</span><br><span class="line"></span><br><span class="line">event.watch(function(error, result) &#123;</span><br><span class="line">	if (!error)</span><br><span class="line">		console.log(result);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">var event = clientReceipt.Deposit(function(error, result) &#123;</span><br><span class="line">	if (!error)</span><br><span class="line">		console.log(result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="Low-Level-Interface-to-Logs"><a href="#Low-Level-Interface-to-Logs" class="headerlink" title="Low-Level Interface to Logs"></a>Low-Level Interface to Logs</h3><p>可以通过方法 log0, log1, log2, log3, log4 来访问日志机制的底层接口。logi 使用第 i + 1 个 bytes32 类型的参数，第一个参数将会作为日志数据的一部分，其他作为话题。上述事件使用方式一样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.10;</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">    function f() public payable &#123;</span><br><span class="line">        bytes32 _id = 0x420042;</span><br><span class="line">        log3(</span><br><span class="line">            bytes32(msg.value),</span><br><span class="line">            bytes32(0x50cb9fe53daa9737b786ab3646f04d0150dc50ef4e75f59509d83667ad5adb20),</span><br><span class="line">            bytes32(msg.sender),</span><br><span class="line">            _id</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中的 16 进制为事件的签名 keccak256(“Deposit(address,hash256,uint256)”)。</p>
+<h3 id="其他理解事件的资源"><a href="#其他理解事件的资源" class="headerlink" title="其他理解事件的资源"></a>其他理解事件的资源</h3><ul>
+<li><a href="https://github.com/ethereum/wiki/wiki/JavaScript-API#contract-events" target="_blank" rel="noopener">Javascript documentation</a></li>
+<li><a href="https://github.com/ethchange/smart-exchange/blob/master/lib/contracts/SmartExchange.sol" target="_blank" rel="noopener">Example usage of events</a></li>
+<li><a href="https://github.com/ethchange/smart-exchange/blob/master/lib/exchange_transactions.js" target="_blank" rel="noopener">How to access them in js</a></li>
+</ul>
+<h2 id="Inheritance"><a href="#Inheritance" class="headerlink" title="Inheritance"></a>Inheritance</h2><p>Solidity 使用复制代码，包括多态来支持多重继承。</p>
+<p>所有的函数调用都是虚拟的，意思是几乎所有的继承的函数都被调用，除了合约名字被显式指定的时候。（All function calls are virtual, which means that the most derived function is called, except when the contract name is explicitly given.）</p>
+<p>当一个合约继承了多个合约，只有一个合约在区块链上被创建，继承的代码会被复制到创建的合约中。</p>
+<p>常规的继承系统和 Python 的十分相似，特别是多重继承。</p>
+<p>细节可见下面的例子。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16</span><br><span class="line"></span><br><span class="line">contract owner &#123;</span><br><span class="line">	function owned() &#123; owner = msg.sender; &#125;</span><br><span class="line">	address owner;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract mortal is owned &#123;</span><br><span class="line">	function kill() &#123;</span><br><span class="line">		if (msg.sender == owner) selfdestruct(owner);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Config &#123;</span><br><span class="line">	function lookup(uint id) public returns (address adr);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract NameReg &#123;</span><br><span class="line">	function register(bytes32 name) public;</span><br><span class="line">	function unregister() public;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract named is owned, mortal &#123;</span><br><span class="line">	function named(bytes32 name) &#123;</span><br><span class="line">		Config config = Config(0xD5f9D8D94886E70b06E474c3fB14Fd43E2f23970);</span><br><span class="line">		NameReg(config.lookup(1)).register(name);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function kill() public &#123;</span><br><span class="line">		if (msg.sender == owner) &#123;</span><br><span class="line">			Config config = Config(0xD5f9D8D94886E70b06E474c3fB14Fd43E2f23970);</span><br><span class="line">			NameReg(config.lookup(1)).unregister();</span><br><span class="line">			mortal.kill();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract PriceFeed is owned, mortal, named(&quot;GoldFeed&quot;) &#123;</span><br><span class="line">	function updateInfo(uint newInfo) public &#123;</span><br><span class="line">		if (msg.sender ==  owner) info = newInfo;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function get() public view returns (uint r) &#123; return info; &#125;</span><br><span class="line"></span><br><span class="line">	uint info;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意，在上面我们调用了 <code>mortal.kill()</code> 来“推进”销毁请求。这个方法是有问题的，见下面的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract owned &#123;</span><br><span class="line">	function owned() public &#123; owned = msg.sender; &#125;</span><br><span class="line">	address owner;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract mortal is owned &#123;</span><br><span class="line">	function kill() public &#123;</span><br><span class="line">		if (msg.sender == owned) selfdestruct(owner);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Base1 is mortal &#123;</span><br><span class="line">	function kill() public &#123; mortal.kill(); &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Base2 is mortal &#123;</span><br><span class="line">	function kill() public &#123; mortal.kill(); &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Final is Base1, Base2 &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>对 <code>Final.kill()</code> 的调用会调用 <code>Base2.kill</code> 作为重写，但是这个方法会忽略 <code>Base1.kill</code>，主要是因为它甚至不知道 <code>Base1</code>。解决方法是使用 <code>super</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract owned &#123;</span><br><span class="line">	function owned() public &#123; owner = msg.sender; &#125;</span><br><span class="line">	address owner;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract mortal is owned &#123;</span><br><span class="line">	function kill() public &#123;</span><br><span class="line">		if (msg.sender == owner) selfdestruct(owner);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Base1 is mortal &#123;</span><br><span class="line">	function kill() public &#123;super.kill();&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Base2 is mortal &#123;</span><br><span class="line">	function kill() public &#123;super.kill();&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Final is Base1, Base2 &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>如果 <code>Base2</code> 调用了一个 <code>super</code> 函数，它不是简单地调用它父合约的该方法。相反，它调用在最终继承图中的下一个父合约的该函数，所以它会调用 <code>Base1.kill()</code>（注意最终的继承序列是 - 从最后派生的合约开始：Final, Base2, Base1, mortal, owned）。使用 <code>super</code> 调用的函数，在它使用的上下文情境中，其实并不知道是哪个，虽然它的类型是已知的。这和普通的虚函数查找是类似的。</p>
+<h3 id="Arguments-for-Base-Constructors"><a href="#Arguments-for-Base-Constructors" class="headerlink" title="Arguments for Base Constructors"></a>Arguments for Base Constructors</h3><p>派生合约需要提供父合约构造器所需要的所有参数。可以通过以下两种方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract Base &#123;</span><br><span class="line">	uint x;</span><br><span class="line">	function Base(uint _x) public &#123; x = _x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Derived is Base(7) &#123;</span><br><span class="line">	function Derived(uint _y) Base(_y * _y) public &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个方式是直接在继承列表中（<code>is Base(7)</code>）。另一种方式是调用一个修饰符作为派生构造函数的头部的一部分 <code>(Base(_y * _y))</code>。如果构造函数参数是一个常量，并且定义了合约的行为或者描述了它，第一个方法会更方便。第二种方法在父合约的构造函数的参数依赖派生合约的时候使用。在上面这个很蠢的例子中，两个地方都使用了，那么修饰器形式的参数有更高的优先级。</p>
+<h3 id="Multiple-Inheritance-and-Linearization"><a href="#Multiple-Inheritance-and-Linearization" class="headerlink" title="Multiple Inheritance and Linearization"></a>Multiple Inheritance and Linearization</h3><p>允许多重继承的语言必须解决一些问题。一个是<a href="https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem" target="_blank" rel="noopener">菱形问题(<code>Diamond Problem</code>)</a>。Solidity 遵循 Python 的路径，并使用 <a href="https://en.wikipedia.org/wiki/C3_linearization" target="_blank" rel="noopener">C3 Linearization</a> 来强制基类中 DAG 的详细顺序。这导致了单调性的理想特性，但不允许某些继承图。特别的，通过 <code>is</code> 命令给出的基类内的顺序是十分重要的。在下列的代码中，Solidity 会给出一个错误 ”Linearization of inheritance graph impossible“</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// this will not compile</span><br><span class="line"></span><br><span class="line">pragma solidity ^0.4.0</span><br><span class="line"></span><br><span class="line">contract X &#123;&#125;</span><br><span class="line">contract A is X &#123;&#125;</span><br><span class="line">contract C is A, X &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>原因是 <code>C</code> 要求 <code>X</code> 重写 <code>A</code>(通过指定 <code>A, X</code> 顺序)，但是 <code>A</code> 本身又会请求重写 <code>X</code>，这就是个不能解决的矛盾了。</p>
+<p>一个简单记住的规则是具体描述基类的顺序从 ”最基础的“ 到 ”最多派生的“（大概就是从后往前，从最后的合约，到最开始的原始被继承的合约）。</p>
+<h3 id="Inheriting-Different-Kinds-of-Members-of-the-Same-Name"><a href="#Inheriting-Different-Kinds-of-Members-of-the-Same-Name" class="headerlink" title="Inheriting Different Kinds of Members of the Same Name"></a>Inheriting Different Kinds of Members of the Same Name</h3><p>当继承导致了一个合约内有同名的函数和修饰器，它会被视作一个错误。同名事件和修饰器，同名函数和事件也都会导致这个错误。例外的是，一个状态变量的获取器可以被一个公开的方法重写。</p>
+<h2 id="Abstract-Contracts"><a href="#Abstract-Contracts" class="headerlink" title="Abstract Contracts"></a>Abstract Contracts</h2><p>合约函数可以缺少具体的实现方式，例子如下（注意函数声明头以 <code>;</code> 结束）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract Feline &#123;</span><br><span class="line">	function utterance() public returns (bytes32);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的合约是不能编译的（即使有别的方法已经有具体的实现方式了），但是它可以作为父合约来使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0</span><br><span class="line"></span><br><span class="line">contract Feline &#123;</span><br><span class="line">	function utterance() public returns (bytes32);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Cat is Feline &#123;</span><br><span class="line">	function utterance() public returns (bytes32) &#123; return &quot;miaow&quot;; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果一个合约继承了一个抽象合约，但是没有完全实现那些未实现的函数，那么它也会成为一个抽象合约。</p>
+<p>注意一个没有实现的方法与 <a href="https://solidity.readthedocs.io/en/develop/types.html#function-types" target="_blank" rel="noopener">方法类型</a> 是不同的，即使它们的语法看起来十分相似。</p>
+<p>未实现的函数示例（一个函数声明）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function foo(address) external returns (address);</span><br></pre></td></tr></table></figure>
+<p>函数类型示例（一个变量的声明，其类型为 <code>function</code>）:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function(address) external returns (address) foo;</span><br></pre></td></tr></table></figure>
+<h2 id="Interfaces"><a href="#Interfaces" class="headerlink" title="Interfaces"></a>Interfaces</h2><p>接口和抽象合约十分相似，但是它不能有任何的方法实现。这里是一些更严格的限制：</p>
+<ol>
+<li>不能继承其他合约或者接口</li>
+<li>不能定义构造函数</li>
+<li>不能定义变量</li>
+<li>不能定义结构体</li>
+<li>不能定义 <code>enums</code></li>
+</ol>
+<p>这些限制中的一部分可能在将来会被取消掉。</p>
+<p>接口基本上的仅限于合约 abi 所表达的内容，而它们之间应该是能够转换而不损失任何信息的。</p>
+<p>接口通过它们自身的关键词表示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.11</span><br><span class="line"></span><br><span class="line">interface Token &#123;</span><br><span class="line">	funciton transfer(address recipient, uint amount) public;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>合约可以和继承其他合约一样继承接口。</p>
+<h2 id="Libraries"><a href="#Libraries" class="headerlink" title="Libraries"></a>Libraries</h2><p>类库和合约十分相似，但是它们的目的是只被部署在指定的地址上一次，而它们的代码会通过以太坊虚拟机的 <code>DELEGATECALL</code> （Homestead 之前是 <code>CALLCODE</code>）来重复使用。这个意思就是如果类库函数被调用，它们的代码就会在调用它的合约上下文中执行，即 <code>this</code> 指向发起调用的合约，并且发起调用的合约的存储能够被访问。作为类库，它们是从源码中剥离出来的片段，如果发起调用的合约显式地提供了状态变量，那么类库只能访问调用合约的这些状态变量（但是它不能命名这些变量）。因为类库被假定为无状态，所以如果类库函数不修改状态的话（即它们是 <code>view / pure</code> 函数），那么它们只能被直接调用（即不通过 <code>DELEGATECALL</code>）。特别的，除非绕过了 Solidity 的类型系统，否则不可能破坏类库。</p>
+<p>类库可以被当做是那些使用类库的合约的父合约。它们在继承层次结构中并不是显式可见的，但对库函数的调用看起来就像调用显式的父合约函数（如果类库名为 <code>L</code>，调用方式为 <code>L.f()</code>）。更多的，类库的 <code>internal</code> 函数是对所有合约可见的，就想类库是一个父合约一样。当然，调用内部函数就需要使用内部调用的方式，就是说所有的内部类型都可以被传递并且内存类型会通过引用传递而不是复制。为了在 EVM 中认识到这一点，内部类库函数的代码和所有被调用的函数会在编译时被拉入发起调用的合约内，并且将使用常规的 <code>JUMP</code> 调用而不是 <code>DELEGATECALL</code>。</p>
+<p>下列例子描述了如何使用类库（但一定要查看<a href="https://solidity.readthedocs.io/en/develop/contracts.html#using-for" target="_blank" rel="noopener"><code>using for</code></a>来实现一组更高级的示例）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">library Set &#123;</span><br><span class="line">	struct Data&#123;</span><br><span class="line">		mapping(uint =&gt; bool) flags;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function insert(Data storage self, uint value) public returns (bool) &#123;</span><br><span class="line">		if (self.flags[value])</span><br><span class="line">			reutrn false;</span><br><span class="line"></span><br><span class="line">		self.flags[value] = true;</span><br><span class="line">		return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function remove(Data storage self, uint value) public returns (bool) &#123;</span><br><span class="line">		if (!self.flags[value])</span><br><span class="line">			return false;</span><br><span class="line">		self.flags[value] = false;</span><br><span class="line">		return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function contains(Data storage self, uint value) public view returns (bool) &#123;</span><br><span class="line">		return self.flags[value];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">	Set.Data knownValues;</span><br><span class="line"></span><br><span class="line">	function register(uint value) public &#123;</span><br><span class="line">		require(Set.insert(knownValues, value));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然，你不用遵循这个方式来使用类库：它们也可以不通过定义结构体数据类型来使用。没有任何存储引用参数，函数也可以正常工作，而且它可以在任何位置拥有多重的存储引用参数。</p>
+<p>对 <code>Set.contains</code>，<code>Set.insert</code> 和 <code>Set.remove</code> 的调用，会被作为调用（<code>DELEGATECALL</code>）外部合约/类库来编译。如果你使用类库，注意执行实际的外部函数调用。尽管 <code>msg.sender</code>，<code>msg.value</code> 和 <code>this</code> 会在这个调用中保留它们的值（但是在 Homestead 之前，由于使用了 <code>CALLCODE</code>，<code>msg.sender</code> 和 <code>msg.value</code> 就改变了）。</p>
+<p>下面的例子显示了如何在库中使用内存类型和内部函数，以实现自定义类型，而无需外部函数调用的开销：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">library BigInt &#123;</span><br><span class="line">	struct bigint &#123;</span><br><span class="line">		uint[] limbs;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function fromUint(uint x) internal pure returns (bigint r) &#123;</span><br><span class="line">		r.limbs = new uint[](1);</span><br><span class="line">		r.limbs[0] = x;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function add(bigint _a, bigint _b) internal pure returns (bigint r) &#123;</span><br><span class="line">		r.limbs = new uint[](max(_a.limbs.length, _b.limbs.length));</span><br><span class="line">		uint carry = 0;</span><br><span class="line">		for (uint i = 0; i &lt; r.limbs.length; ++i) &#123;</span><br><span class="line">			uint a = limb(_a, i);</span><br><span class="line">			uint b = limb(_b, i);</span><br><span class="line">			r.limbs[i] = a + b + carry;</span><br><span class="line">			if (a + b &lt; a || (a + b == uint(-1) &amp;&amp; carry &gt; 0))</span><br><span class="line">				carry = 1;</span><br><span class="line">			else </span><br><span class="line">				carry = 0;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		if (carry &gt; 0) &#123;</span><br><span class="line">			uint[] memory newLimbs = new uint[](r.limbs.length + 1);</span><br><span class="line">			for (i = 0; i &lt; r.limbs.length; ++i)</span><br><span class="line">				newLimbs[i] = r.limbs[i];</span><br><span class="line">			newLimbs[i] = carry;</span><br><span class="line">			r.limbs = newLimbs;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function limb(bigint _a, uint _limb) internal pure returns (uint) &#123;</span><br><span class="line">		return _limb &lt; _a.limbs.length ? _a.limbs[_limb] : 0;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function max(uint a, uint b) private pure returns (uint) &#123;</span><br><span class="line">		return a &gt; b ? a : b;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">	using BigInt for BigInt.bigint;</span><br><span class="line"></span><br><span class="line">	function f() public pure &#123;</span><br><span class="line">		var x = BigInt.fromUint(7);</span><br><span class="line">		var y = BigInt.fromUint(uint(-1));</span><br><span class="line">		var z = x.add(y);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为编译器不可能做到类库被部署到那哪里，所以这些地址需要通过链接（见 <a href="https://solidity.readthedocs.io/en/develop/using-the-compiler.html#commandline-compiler" target="_blank" rel="noopener">Using the Commandline Compiler</a> 查看如何使用命令行编译器来链接）填充到最后的字节码中。如果地址没有作为参数传递给编译器，那编译的十六进制码将包含如 <code>__Set______</code> 格式的占位符（<code>Set</code> 为类库的名字）。地址可以通过用类库合约地址的十六进制编码替换所有这 40 个符号来手动填充。</p>
+<p>与合约比起来，类库的限制：</p>
+<ul>
+<li>没有状态变量</li>
+<li>不能继承或被继承</li>
+<li>不能接受以太币</li>
+</ul>
+<p>（这些可能会在之后被解除）</p>
+<h3 id="Call-Protection-For-Libraries"><a href="#Call-Protection-For-Libraries" class="headerlink" title="Call Protection For Libraries"></a>Call Protection For Libraries</h3><p>正如介绍中提到的，如果一个类库的代码通过 <code>CALL</code> 而不是 <code>DELEGATECALL</code> 或者 <code>CALLCODE</code> 来执行，那么除非调用的函数是 <code>view</code> 或者 <code>pure</code>，它都将会被回滚。</p>
+<p>EVM 并没有提供一种直接的方式来查看合约是否是通过 <code>CALL</code> 被调用，但是合约可以通过 <code>ADDRESS</code> 操作码来找到当前运行的地址是多少。生成的代码将这个地址与构造时使用的地址进行比较，来决定是使用哪种方式调用。</p>
+<p>更具体的说，类库的运行代码总是以一个推送指令开始，该命令在编译时是 20 字节的 0。当部署的代码运行时，这个内存中的常量会被当前的地址替换，并且被修改的代码会被存储在合约中。在运行时，这会导致部署时间地址成为第一个被压入堆栈的常量，并且调度程序代码会将当前地址与此常量进行比较，以查看任何非视图和非纯函数。</p>
+<h2 id="Using-For"><a href="#Using-For" class="headerlink" title="Using For"></a>Using For</h2><p> 指令 <code>using A for B</code> 库添加类库函数（来自类库 <code>A</code>）到任何类型（<code>B</code>）。这些函数会接收它们被调用的对象，并将其作为它们的第一个参数（像 Python 中的 <code>self</code> 变量）。</p>
+<p> <code>using A for *</code> 的作用是将类库 <code>A</code> 中的函数都添加到任何类型。</p>
+<p> 在这两种情况下，都会附加所有函数，即使是第一个参数的类型与对象类型不匹配的函数。 在函数被调用的地方检查类型并执行函数重载解析。</p>
+<p> <code>using A for B</code> 指令只在当前作用域生效，目前是被限制在合约内，但是之后会被解除，放宽到全局，这样通过包含模块，它的数据类型（包括了类库的函数），可以无需添加多余的代码就能直接使用了。</p>
+<p> 重写类库 set 示例： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">library Set &#123;</span><br><span class="line">	struct Data &#123; mapping(uint =&gt; bool) flags;&#125;</span><br><span class="line"></span><br><span class="line">	function insert(Data storage self, uint value) public reutrns (bool) &#123;</span><br><span class="line">		if (self.flags[value])</span><br><span class="line">			return false;</span><br><span class="line">		self.flags[value] = true;</span><br><span class="line">		return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function remove(Data storage self, uint value) public returns (bool) &#123;</span><br><span class="line">		if (!self.flags[value] = false);</span><br><span class="line">			return false;</span><br><span class="line">		self.flags[value] = false;</span><br><span class="line">		return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function contains(Data storage self, uint value) public view returns (bool) &#123;</span><br><span class="line">		return self.flags[value];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">	using Set for Set.Data;</span><br><span class="line">	Set.Data knownValues;</span><br><span class="line"></span><br><span class="line">	function register(uint value) public &#123;</span><br><span class="line">		require(knownValues.insert(value));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也可以通过这种方式来扩展元组类型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">library Search &#123;</span><br><span class="line">	function indexOf(uint[] storage self, uint value) public view returns (uint) &#123;</span><br><span class="line">		for (uint i = 0; i &lt; self.length; i++)</span><br><span class="line">			if (self[i] == value) return i;</span><br><span class="line">		return uint(-1);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">	using Search for uint[];</span><br><span class="line">	uint[] data;</span><br><span class="line"></span><br><span class="line">	funciton append(uint value) public &#123;</span><br><span class="line">		data.push(value);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function replace(uint _old, uint _new) public &#123;</span><br><span class="line">		uint index = data.indexOf(_old);</span><br><span class="line">		if (index == uint(-1))</span><br><span class="line">			data.push(_new);</span><br><span class="line">		else </span><br><span class="line">			data[index] = _new;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意所有的类库调用都是 EVM 的方法调用。意思是如果你传了一个内存或者值类型，就会发生一次复制操作，即使是 <code>self</code> 变量。不使用复制的场景只有在使用存储引用变量时。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/27/solidity-安全考虑/" rel="next" title="solidity 安全考虑">
+                <i class="fa fa-chevron-left"></i> solidity 安全考虑
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/28/以太坊公私钥和地址/" rel="prev" title="以太坊公私钥和地址">
+                以太坊公私钥和地址 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Contracts"><span class="nav-number">1.</span> <span class="nav-text">Contracts</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Creating-Contracts"><span class="nav-number">1.1.</span> <span class="nav-text">Creating Contracts</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visibility-and-Getters"><span class="nav-number">1.2.</span> <span class="nav-text">Visibility and Getters</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取器函数"><span class="nav-number">1.2.1.</span> <span class="nav-text">获取器函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Function-Modifiers"><span class="nav-number">1.3.</span> <span class="nav-text">Function Modifiers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Constant-State-Variables"><span class="nav-number">1.4.</span> <span class="nav-text">Constant State Variables</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Functions"><span class="nav-number">1.5.</span> <span class="nav-text">Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#View-Functions-不会修改状态"><span class="nav-number">1.5.1.</span> <span class="nav-text">View Functions : 不会修改状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pure-Function-：-不会读取或修改状态"><span class="nav-number">1.5.2.</span> <span class="nav-text">Pure Function ： 不会读取或修改状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fallback-Function"><span class="nav-number">1.5.3.</span> <span class="nav-text">Fallback Function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Function-Overloading"><span class="nav-number">1.5.4.</span> <span class="nav-text">Function Overloading</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重载方式-和-参数匹配"><span class="nav-number">1.5.5.</span> <span class="nav-text">重载方式 和 参数匹配</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Events"><span class="nav-number">1.6.</span> <span class="nav-text">Events</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Low-Level-Interface-to-Logs"><span class="nav-number">1.6.1.</span> <span class="nav-text">Low-Level Interface to Logs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他理解事件的资源"><span class="nav-number">1.6.2.</span> <span class="nav-text">其他理解事件的资源</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Inheritance"><span class="nav-number">1.7.</span> <span class="nav-text">Inheritance</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Arguments-for-Base-Constructors"><span class="nav-number">1.7.1.</span> <span class="nav-text">Arguments for Base Constructors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multiple-Inheritance-and-Linearization"><span class="nav-number">1.7.2.</span> <span class="nav-text">Multiple Inheritance and Linearization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Inheriting-Different-Kinds-of-Members-of-the-Same-Name"><span class="nav-number">1.7.3.</span> <span class="nav-text">Inheriting Different Kinds of Members of the Same Name</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract-Contracts"><span class="nav-number">1.8.</span> <span class="nav-text">Abstract Contracts</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Interfaces"><span class="nav-number">1.9.</span> <span class="nav-text">Interfaces</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Libraries"><span class="nav-number">1.10.</span> <span class="nav-text">Libraries</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Call-Protection-For-Libraries"><span class="nav-number">1.10.1.</span> <span class="nav-text">Call Protection For Libraries</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-For"><span class="nav-number">1.11.</span> <span class="nav-text">Using For</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

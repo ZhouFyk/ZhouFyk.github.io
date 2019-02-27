@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="blockchain ethereum solidity,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="软件工程技术如我们在常规理念中讨论的一样，其不足以保护你来抵御已知的攻击。由于区块链上的失败成本可能非常高，因此您还必须调整自己编写软件的方式，以解决该风险。 我们主张的方式是 “做好失败的准备”。不可能提前知道你的代码是否安全。但是，你可以以使其能够优雅地失败并且损失最小的方式来构建你的合约。本部分提出了多种技术来帮助你为失败做好准备。 注意：当你新增一个组件到你的系统中时，总是伴随着一定的风险">
+<meta name="keywords" content="blockchain ethereum solidity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="智能合约最佳实践翻译四 - 软件工程技术">
+<meta property="og:url" content="http://yoursite.com/2018/03/26/智能合约最佳实践翻译四-软件工程技术/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="软件工程技术如我们在常规理念中讨论的一样，其不足以保护你来抵御已知的攻击。由于区块链上的失败成本可能非常高，因此您还必须调整自己编写软件的方式，以解决该风险。 我们主张的方式是 “做好失败的准备”。不可能提前知道你的代码是否安全。但是，你可以以使其能够优雅地失败并且损失最小的方式来构建你的合约。本部分提出了多种技术来帮助你为失败做好准备。 注意：当你新增一个组件到你的系统中时，总是伴随着一定的风险">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T16:25:07.745Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="智能合约最佳实践翻译四 - 软件工程技术">
+<meta name="twitter:description" content="软件工程技术如我们在常规理念中讨论的一样，其不足以保护你来抵御已知的攻击。由于区块链上的失败成本可能非常高，因此您还必须调整自己编写软件的方式，以解决该风险。 我们主张的方式是 “做好失败的准备”。不可能提前知道你的代码是否安全。但是，你可以以使其能够优雅地失败并且损失最小的方式来构建你的合约。本部分提出了多种技术来帮助你为失败做好准备。 注意：当你新增一个组件到你的系统中时，总是伴随着一定的风险">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/26/智能合约最佳实践翻译四-软件工程技术/">
+
+
+
+
+
+  <title>智能合约最佳实践翻译四 - 软件工程技术 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/26/智能合约最佳实践翻译四-软件工程技术/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">智能合约最佳实践翻译四 - 软件工程技术</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-26T11:37:45+08:00">
+                2018-03-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="软件工程技术"><a href="#软件工程技术" class="headerlink" title="软件工程技术"></a>软件工程技术</h2><p>如我们在<a href="https://consensys.github.io/smart-contract-best-practices/software_engineering/#general-philosophy" target="_blank" rel="noopener">常规理念</a>中讨论的一样，其不足以保护你来抵御已知的攻击。由于区块链上的失败成本可能非常高，因此您还必须调整自己编写软件的方式，以解决该风险。</p>
+<p>我们主张的方式是 “做好失败的准备”。不可能提前知道你的代码是否安全。但是，你可以以使其能够优雅地失败并且损失最小的方式来构建你的合约。本部分提出了多种技术来帮助你为失败做好准备。</p>
+<p>注意：当你新增一个组件到你的系统中时，总是伴随着一定的风险。一个不好的防故障设计本身可能会成为一个漏洞 - 当它与大量优秀的防故障设计交互时。请仔细考虑你在合约中使用的每种技术，并仔细考虑它们是如何协同合作以创建一个健壮的系统。</p>
+<h3 id="改进被破坏的合约"><a href="#改进被破坏的合约" class="headerlink" title="改进被破坏的合约"></a>改进被破坏的合约</h3><p>当错误发生或者需要做升级的时候，代码会需要被更改。当发现一个 bug 却无法处理的时候，十分糟糕。</p>
+<p>为智能合约设计一个有效的改进系统是一个十分活跃的研究领域，而我们不会覆盖本文档中的所有难题。但是，存在两种最常用的基本方法。其中更简单的一种是使用一个注册合约来持有最新版本合约的地址。对于合约用户来说，更连贯的方法是拥有一份可以将调用和数据转发到合约的最新版本的合约。</p>
+<p>不管是什么技术，模块化和组件间良好的分离是十分重要的，这样代码的修改就不会破坏功能，独立的数据，或者需要大量成本来移植。尤其是将复杂的逻辑从你的数据存储分离通常是有益的，这样你就不需要为了修改功能而重新创建所有的数据。</p>
+<p>提供一种安全的方式可以让多方去决定升级代码也十分重要。由你的合约决定，代码修改被通过的前提是只需要一方可信的，一个团队，或者是所有股东的投票才可以。如果这个过程需要一些时间，你需要考虑是否有其他方法可以在发生攻击时迅速做出反应，如<a href="https://github.com/ConsenSys/smart-contract-best-practices/#circuit-breakers-pause-contract-functionality" target="_blank" rel="noopener">紧急停止或者是熔断机制</a>。</p>
+<p><strong>示例 1:使用一个注册合约来存储另一个合约的最新版本</strong></p>
+<p>在这个例子中，调用不会被发送，所以用户应该在每一次与合约交互之前都获取一下当前的地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">contract SomeRegister &#123;</span><br><span class="line">	address backendContract;</span><br><span class="line">	address[] previousBackends;</span><br><span class="line">	address owner;</span><br><span class="line"></span><br><span class="line">	function SomeRegister() &#123;</span><br><span class="line">		owner = msg.sender;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	modifier onlyOwner() &#123;</span><br><span class="line">		require(msg.sender == owner)</span><br><span class="line">		_;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function changeBackend(address newBackend) public onlyOwner() returns (bool) &#123;</span><br><span class="line">		if (newBackend != backendContract) &#123;</span><br><span class="line">			previousBackend.push(backendContract);</span><br><span class="line">			backendContract = newBackend;</span><br><span class="line">			return true;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法有两个缺点：</p>
+<ol>
+<li>用户必须总是检查当前的地址，如果不这么做就有使用旧版本合约的风险。</li>
+<li>你需要在替换合约的时候小心的思考如果处理合约内的数据。</li>
+</ol>
+<p>另一种方法是让合约将调用和数据转发给合约的最新版本：</p>
+<p><strong>示例 2：<a href="http://ethereum.stackexchange.com/questions/2404/upgradeable-contracts" target="_blank" rel="noopener">使用 <code>DELEGATECALL</code></a> 来转发数据和调用</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">contract Relay　&#123;</span><br><span class="line">	address public currentVersion;</span><br><span class="line">	address public owner;</span><br><span class="line"></span><br><span class="line">	modifier onlyOwner() &#123;</span><br><span class="line">		require(msg.sender == owner);</span><br><span class="line">		_;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function Relay(address initAddr) &#123;</span><br><span class="line">		currentVersion = initAddr;</span><br><span class="line">		owner = msg.sender; // this owner may be another contract with multisig, not a single contract owner</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function changeContract(address newVersion) public onlyOwner() &#123;</span><br><span class="line">		currentVersion = newVersion;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function() &#123;</span><br><span class="line">		require(currentVersion.delegatecall(msg.data));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方式避免了之前的问题，但他本身又存在问题。在这个合约中存储数据的时候你必须极度小心。如果你的新合约和第一个的存储结构不同，你的数据可能会被破坏。另外，这种模式的简单版本不会从函数返回值，只会转发他们，这限制了它的适用性。（<a href="https://github.com/ownage-ltd/ether-router" target="_blank" rel="noopener">更复杂的实现方式</a>则是试图通过内联汇编代码和返回大小的注册表来解决这个问题。）</p>
+<p>不管你的方法是什么，重要的是要有某种方法来升级你的合约，否则当不可避免的错误被发现时，它们将变得无法使用。</p>
+<h3 id="断路器（暂停合约功能）"><a href="#断路器（暂停合约功能）" class="headerlink" title="断路器（暂停合约功能）"></a>断路器（暂停合约功能）</h3><p>当触发了确定的条件，断路器会停止当前的执行，而对于新发现的错误，它也十分有用。举例来说，如果发现了错误，合约中除了提币操作，其他大多数操作可能都会暂停。你既可以给某些可信的一方触发断路器的能力，也可以设定在某些条件满足时自动触发某些断路器的程序规则。</p>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">bool private stopped = false;</span><br><span class="line">address private owner;</span><br><span class="line"></span><br><span class="line">modifier isAdmin() &#123;</span><br><span class="line">	require(msg.sender == owner);</span><br><span class="line">	_;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function toggleContractActive() isAdmin public &#123;</span><br><span class="line">	// You can add an additional modifier that restricts stopping a contract to be based on another action, such as a vote of users</span><br><span class="line">	stopped = !stopped;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">modifier stopInEmergency &#123;if (!stopped) _;&#125;</span><br><span class="line">modifier onlyInEmergency &#123;if（stopped）_;&#125;</span><br><span class="line"></span><br><span class="line">function deposit() stopInEmergency public &#123;</span><br><span class="line">	// some code</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function withdraw() onlyInEmergency public &#123;</span><br><span class="line">	// some code</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="速度碰撞（延迟合约动作）"><a href="#速度碰撞（延迟合约动作）" class="headerlink" title="速度碰撞（延迟合约动作）"></a>速度碰撞（延迟合约动作）</h3><p>速度碰撞使得动作变慢，所以如果发生了恶意的动作，就有时间来恢复了。举例来说，<a href="https://github.com/slockit/DAO/" target="_blank" rel="noopener">The DAO</a>在一个拆分 DAO 的成功请求和完成该请求之间需要 27 天的时间。这保证了资金被保存在合约内，增加了恢复的可能性。在 DAO 这个例子中，在速度碰撞期间内无法采取有效的行动，但是与其他技术相结合，这就相当有效了。</p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">struct RequestedWithdrawal &#123;</span><br><span class="line">	uint amount;</span><br><span class="line">	uint time;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">mapping(address =&gt; uint) private balances;</span><br><span class="line">mapping(address =&gt; RequestedWithdrawal) private requestedWithdrawals</span><br><span class="line">uint constant withdrawalWaitPeriod = 28 days; // 4 weeks</span><br><span class="line"></span><br><span class="line">function requestWithdrawal() public &#123;</span><br><span class="line">	 if (balances[msg.sender] &gt; 0) &#123;</span><br><span class="line">	 	uint amountToWithdraw = balances[msg.sender];</span><br><span class="line">	 	balances[msg.sender] = 0;</span><br><span class="line"></span><br><span class="line">	 	requestedWithdrawals[msg.sender] = RequestedWithdrawal(&#123;</span><br><span class="line">	 		amount: amountToWithdraw,</span><br><span class="line">	 		time: now</span><br><span class="line">	 		&#125;);</span><br><span class="line">	 &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function withdraw() public &#123;</span><br><span class="line">	if(requestedWithdrawals[msg.sender].amount &gt; 0 &amp;&amp; now &gt; requestedWithdrawals[msg.sender].time + withdrawalWaitPeriod) &#123;</span><br><span class="line">		uint amountToWithdraw = requestedWithdrawals[msg.sender].amount;</span><br><span class="line">		requestedWithdrawals[msg.sender].amount = 0;</span><br><span class="line"></span><br><span class="line">		require(msg.sender.send(amountToWithdraw));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="比例限制"><a href="#比例限制" class="headerlink" title="比例限制"></a>比例限制</h3><p>比例限制停止或要求实质性变更的通过。举例来说，一个存款人在一定时期内只允许提取一定数量或一定百分比的存款（如 一天最多 100 ether）- 另外在该时期内的提币将会失败或者需要一些特殊的审批通过。或者比例限制可以通过在该时期内合约只能提取一定的 token 的形式在合约层面实现。</p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">contract CircuitBreaker &#123;</span><br><span class="line">	struct Transfer &#123;</span><br><span class="line">		uint amount;</span><br><span class="line">		address to;</span><br><span class="line">		uint releaseBlock;</span><br><span class="line">		bool released;</span><br><span class="line">		bool stopped;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	Transfer[] public transfers;</span><br><span class="line"></span><br><span class="line">	address public curator;</span><br><span class="line">	address public authorizedSender;</span><br><span class="line">	uint public period;</span><br><span class="line">	uint public limit;</span><br><span class="line"></span><br><span class="line">	uint public currentPeriodEnd;</span><br><span class="line">	uint public currentPeriodAmount;</span><br><span class="line"></span><br><span class="line">	event PendingTransfer(uint id, uint amount, address to, uint releaseBlock);</span><br><span class="line"></span><br><span class="line">	function CircuitBreaker(address _curator, address _authorizedSender, uint _period, uint _limit) &#123;</span><br><span class="line">		curator = _curator;</span><br><span class="line">		period = _period;</span><br><span class="line">		limit = _limit;</span><br><span class="line">		authorizedSender = _authorizedSender;</span><br><span class="line">		currentPeriodEnd = block.number + period;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function transfer(uint amount, address to) &#123;</span><br><span class="line">		if (msg.sender == authorizedSender) &#123;</span><br><span class="line">			updatePeriod();</span><br><span class="line"></span><br><span class="line">			if (currentPeriodAmount + amount &gt; limit) &#123;</span><br><span class="line">				uint releaseBlock = block.number + period;</span><br><span class="line">				PendingTransfer(transfer.length, amount, to, releaseBlock);</span><br><span class="line">				transfer.push(Transfer(amount, to, releaseBlock, false, false));</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				currentPeriodAmount += amount;</span><br><span class="line">				transfers.push(Transfer(amount, to, block.number, true, false));</span><br><span class="line">				if (!to.sender(amount)) throw;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function updatePeriod() &#123;</span><br><span class="line">		if (currentPeriodEnd &lt; block.number) &#123;</span><br><span class="line">			currentPeriodEnd = block.number + period;</span><br><span class="line">			currentPeriodAmount = 0;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function releasePendingTransfer(uint id) &#123;</span><br><span class="line">		Transfer transfer = transfers[id];</span><br><span class="line">		if (transfer.releaseBlock &lt;= block.number &amp;&amp; !transfer.released &amp;&amp; !transfer.stopped) &#123;</span><br><span class="line">			transfer.released = true;</span><br><span class="line">			if (!transfer.to.send(transfer.amount)) throw;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function stopTransfer(uint id) &#123;</span><br><span class="line">		if (msg.sender == curator) &#123;</span><br><span class="line">			transfer[id].stopped = true;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="合约部署"><a href="#合约部署" class="headerlink" title="合约部署"></a>合约部署</h3><p>在资金处于危险之前，合约应该有大量的长期的测试阶段。</p>
+<p>最小程度，你应该：</p>
+<ul>
+<li>有一个完整的测试套件，覆盖了 100%（或者接近） 的测试。</li>
+<li>部署在你自己的测试网络上。</li>
+<li>经过大量的测试之后才能发布在公共测试网络上，并且要发布 bug 悬赏。</li>
+<li>详尽的测试应该包括大量不同的玩家同时与合约交互。</li>
+<li>将 beta 版本部署在主网上，降低风险。</li>
+</ul>
+<h5 id="自动防护"><a href="#自动防护" class="headerlink" title="自动防护"></a>自动防护</h5><p>在测试期，你可以设置在一定时期之后自动反对来防止任何的操作。举例来说，一个 alpha 版本的合约在工作几周之后会自动关闭所有的操作，除了最终的提币。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">modifier isActive() &#123;</span><br><span class="line">	requrie(block.number &lt;= SOME_BLOCK_NUMBER);</span><br><span class="line">	_;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function deposit() public isActive &#123;</span><br><span class="line">	// some code</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function withdraw() public &#123;</span><br><span class="line">	// some code</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="限制每个用户-合约的-ETH-数量"><a href="#限制每个用户-合约的-ETH-数量" class="headerlink" title="限制每个用户/合约的 ETH 数量"></a>限制每个用户/合约的 ETH 数量</h5><p>在早期阶段，你可以限制任何用户（或者整个合约）的 ETH 数量来降低风险。</p>
+<h3 id="bug-悬赏计划"><a href="#bug-悬赏计划" class="headerlink" title="bug 悬赏计划"></a>bug 悬赏计划</h3><p>一些悬赏计划的技巧：</p>
+<ul>
+<li>决定奖励哪些货币（BTC 或者 ETH）</li>
+<li>决定悬赏的总预算</li>
+<li>从预算中确定三层奖励：</li>
+<li>你愿意付出的最小奖励</li>
+<li>最高的奖励是可以常常被获得的</li>
+<li>如果存在非常严重的漏洞，将额外给予的奖励范围</li>
+<li>确定赏金评委是谁（3人可能是典型的理想人选）</li>
+<li>首席开发者可能应该是赏金评委之一</li>
+<li>当收到错误报告时，首席开发人员应该根据评委的建议评估错误的严重程度</li>
+<li>在这个阶段的工作应该是在一个私有仓库，并归档在 Github 上提出的问题</li>
+<li>如果这是一个应该修复的 bug，那么在私有仓库中，开发人员应该编写一个测试用例，这个用例应该会失败，从而确认 bug</li>
+<li>开发人员应该执行修复程序并确保测试通过; 根据需要编写额外的测试</li>
+<li>给赏金猎人展示修复工作; 将修复合并入公共仓库是一种方法</li>
+<li>确定赏金猎人是否有任何其他有关修复的反馈</li>
+<li>赏金评委根据他们对 bug 的 <em>可能性</em> 和 <em>影响</em> 的评估来确定奖励的大小</li>
+<li>在整个过程中保持奖励参与者的信息，然后努力避免延误向他们发送奖励</li>
+</ul>
+<p>有关三种奖励的例子，请参阅<a href="https://bounty.ethereum.org/" target="_blank" rel="noopener">以太坊的赏金计划</a>：</p>
+<blockquote>
+<p>支付的奖励价值取决于影响的严重程度。 对轻微“无害”错误的奖励最少 0.05 BTC。例如，导致共识问题的错误将奖励高达 5 BTC。 如果存在非常严重的漏洞，可能获得更高的奖励（高达 25 BTC）。</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/blockchain-ethereum-solidity/" rel="tag"># blockchain ethereum solidity</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/17/本地运行-geth-记录/" rel="next" title="本地运行 geth 记录">
+                <i class="fa fa-chevron-left"></i> 本地运行 geth 记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/26/智能合约最佳实践翻译五-Token-实现最佳实践/" rel="prev" title="智能合约最佳实践翻译五 - Token 实现最佳实践">
+                智能合约最佳实践翻译五 - Token 实现最佳实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#软件工程技术"><span class="nav-number">1.</span> <span class="nav-text">软件工程技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#改进被破坏的合约"><span class="nav-number">1.1.</span> <span class="nav-text">改进被破坏的合约</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#断路器（暂停合约功能）"><span class="nav-number">1.2.</span> <span class="nav-text">断路器（暂停合约功能）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#速度碰撞（延迟合约动作）"><span class="nav-number">1.3.</span> <span class="nav-text">速度碰撞（延迟合约动作）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#比例限制"><span class="nav-number">1.4.</span> <span class="nav-text">比例限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#合约部署"><span class="nav-number">1.5.</span> <span class="nav-text">合约部署</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#自动防护"><span class="nav-number">1.5.0.1.</span> <span class="nav-text">自动防护</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#限制每个用户-合约的-ETH-数量"><span class="nav-number">1.5.0.2.</span> <span class="nav-text">限制每个用户/合约的 ETH 数量</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bug-悬赏计划"><span class="nav-number">1.6.</span> <span class="nav-text">bug 悬赏计划</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

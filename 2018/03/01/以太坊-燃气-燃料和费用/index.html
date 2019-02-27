@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="blockchain ethereum gas gasprice,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="来自 BTC Relay 的首席开发人员 Joseph Chow ：Ethereum,Gas,Fuel &amp;amp; Fees 以太坊是分布式和诚实的应用程序的平台，可在没有任何管理员或单点故障的全球点对点网络上运行。这些应用程序没有停机时间，任何人都可以创建它们：这是无许可的创新。这些应用是诚实的，不可改变的，并且在编码时总是互操作。从这个角度来说，智能合约的术语是合理的，因为它们是始终遵循其创建">
+<meta name="keywords" content="blockchain ethereum gas gasprice">
+<meta property="og:type" content="article">
+<meta property="og:title" content="以太坊，燃气，燃料 和 费用">
+<meta property="og:url" content="http://yoursite.com/2018/03/01/以太坊-燃气-燃料和费用/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="来自 BTC Relay 的首席开发人员 Joseph Chow ：Ethereum,Gas,Fuel &amp;amp; Fees 以太坊是分布式和诚实的应用程序的平台，可在没有任何管理员或单点故障的全球点对点网络上运行。这些应用程序没有停机时间，任何人都可以创建它们：这是无许可的创新。这些应用是诚实的，不可改变的，并且在编码时总是互操作。从这个角度来说，智能合约的术语是合理的，因为它们是始终遵循其创建">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T16:40:55.473Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="以太坊，燃气，燃料 和 费用">
+<meta name="twitter:description" content="来自 BTC Relay 的首席开发人员 Joseph Chow ：Ethereum,Gas,Fuel &amp;amp; Fees 以太坊是分布式和诚实的应用程序的平台，可在没有任何管理员或单点故障的全球点对点网络上运行。这些应用程序没有停机时间，任何人都可以创建它们：这是无许可的创新。这些应用是诚实的，不可改变的，并且在编码时总是互操作。从这个角度来说，智能合约的术语是合理的，因为它们是始终遵循其创建">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/01/以太坊-燃气-燃料和费用/">
+
+
+
+
+
+  <title>以太坊，燃气，燃料 和 费用 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/01/以太坊-燃气-燃料和费用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">以太坊，燃气，燃料 和 费用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-01T16:11:53+08:00">
+                2018-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://media.consensys.net/ethereum-gas-fuel-and-fees-3333e17fe1dc" target="_blank" rel="noopener">来自 BTC Relay 的首席开发人员 Joseph Chow ：Ethereum,Gas,Fuel &amp; Fees</a></p>
+<p>以太坊是分布式和诚实的应用程序的平台，可在没有任何管理员或单点故障的全球点对点网络上运行。这些应用程序没有停机时间，任何人都可以创建它们：这是无许可的创新。这些应用是诚实的，不可改变的，并且在编码时总是互操作。从这个角度来说，智能合约的术语是合理的，因为它们是始终遵循其创建时所设定的条款的最终合约。</p>
+<p>使这成为可能的核心实际上是 Ethereum。在技术上称为以太坊虚拟机（EVM），它包括用于计算和数据存储的操作。交易代表 Ethereum 内的单个会话。它是交互的单位，类似于句子如何作为语法意义的单位，尽管单个句子可以包含很多单词。</p>
+<h2 id="燃气（gas）是什么？"><a href="#燃气（gas）是什么？" class="headerlink" title="燃气（gas）是什么？"></a>燃气（gas）是什么？</h2><p>燃气是 Ethereum 使用的计量单位。做一个类比，电量按千瓦小时计量。在以太坊中使用更多的算力和存储代表着会使用更多的燃气。计量的一个基本原因是它可以激励人们（矿工）操作 Ethereum。这些矿工为处理交易收取费用，费用则取决于计量方案：燃气。</p>
+<p>EVM 中的每个操作都会消耗燃气。例如，一个乘法（<code>MUL</code>）消耗 5 燃气而一个加法（<code>ADD</code>）消耗 3 燃气。<a href="https://docs.google.com/spreadsheets/d/1m89CVujrQe5LAFJ8-YAUCcNK950dUzMQPMJBxRtGCqs/edit" target="_blank" rel="noopener">以太坊操作的燃气消耗表格</a></p>
+<p><strong>将燃气看做是燃料的代名词</strong></p>
+<p>计量与费用不同，而燃气和以太币也不同。为了帮助说清楚这个，将燃气看做是燃料的代名词。一笔交易必须提供足够的燃料，或者 <code>startGas</code>，来支持 EVM 的计算和存储的使用。所有的剩余燃气会回退给交易的发起人：初始化该笔交易的用户。一笔燃料耗尽的交易会回滚，但是依旧包含在区块中，并且相关的费用已经支付给了矿工。</p>
+<p>了解了燃料角度的概述，让我们来看看费用相关的概述。在 EVM 中，每个操作都会消耗已经预定义数量的燃气（比如，一个乘法操作总是消耗 5 燃气），用户在每笔交易中都可以指定燃气价格。当前的燃气价格是 0.02μ 以太币，或者 0.00000002 ETH。交易发起人支付给矿工的费用是交易的 <code>(开始燃气 - 剩余燃气) * 燃气价格</code>。</p>
+<p>这里是一个关于交易燃料和交易费用的影响的总结：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>燃料</th>
+<th>费用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>通常</td>
+<td>EVM 中的每个操作都会消耗一定数量预先已经设定好的燃料；用户不能更改它。每笔交易都有一个用户指定的初始燃气。</td>
+<td>每笔交易都有用户指定的燃料价格（当前默认为每单位燃气 0.02μ ETH）</td>
+</tr>
+<tr>
+<td>交易开始时</td>
+<td>交易发起人应该提供足够的燃料：初始燃气。剩余燃气 = 初始燃气。</td>
+<td>交易发起人必须支付所有燃料。放置 <code>初始燃气 * 燃气价格 = 以太币</code> 在托管中。</td>
+</tr>
+<tr>
+<td>每个操作</td>
+<td>剩余燃气会由于操作消耗而减少</td>
+<td>直到交易完结，不论成功不成功。</td>
+</tr>
+<tr>
+<td>不成功的交易</td>
+<td>剩余燃气为零，还有未完成的操作。这导致一个燃气耗尽的异常，而所有的操作都会被撤销</td>
+<td>所有托管的费用都会被支付给矿工</td>
+</tr>
+<tr>
+<td>成功的交易</td>
+<td>所有剩余的燃气会回退给交易发起人</td>
+<td>（初始燃气 - 剩余燃气） <em> 燃气价格 = 费用 支付给矿工；剩余燃气 </em> 燃气价格 = 回退给交易发起人的费用。</td>
+</tr>
+</tbody>
+</table>
+<p>在交易开始时，被要求用来作为初始燃气的以太币会被搁置，然后剩余燃气会被设置为初始燃气。随着交易中的每个操作，燃气会被消耗，剩余燃气逐渐变少。如果发生燃气耗尽的异常，所有的操作都会回滚，而之前搁置的所有的以太币都会被支付给矿工。如果交易成功执行完毕，所有的剩余部分的燃气会回退给交易发起人，而其他燃气则支付给矿工。</p>
+<h2 id="简单的例子"><a href="#简单的例子" class="headerlink" title="简单的例子"></a>简单的例子</h2><p>在下面的情景模拟中，假设存储消耗 45 燃气，一个加法操作消耗 10 燃气。这个场景涉及到在 EVM 中存储数字 31，将两个数相加，然后存储它们的和。让我们假设交易发起人指定了 150 的初始燃气，和 0.02μ 以太币的燃气价格。下面是 EVM 处理该笔交易的描述：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>操作消耗的燃气</th>
+<th>剩余燃气</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>交易开始</td>
+<td></td>
+<td>150</td>
+</tr>
+<tr>
+<td>存储 31</td>
+<td>45</td>
+<td>105</td>
+</tr>
+<tr>
+<td>两个数相加</td>
+<td>10</td>
+<td>95</td>
+</tr>
+<tr>
+<td>存储和</td>
+<td>45</td>
+<td>50</td>
+</tr>
+<tr>
+<td>交易结束</td>
+<td>数字 31 和 加法的和 已经被存储写入区块链</td>
+</tr>
+</tbody>
+</table>
+<p>交易发起人支付给矿工的费用是：</p>
+<p><strong>（150–50) × 0.02µETH = 2µETH = 0.000002 ETH</strong></p>
+<h2 id="燃料与费用"><a href="#燃料与费用" class="headerlink" title="燃料与费用"></a>燃料与费用</h2><p>交易发起人提供足够的燃料与提供足够的费用是有区别的。以下是对交易的可能影响：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>燃料</th>
+<th>费用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>太低</td>
+<td>不会广播给矿工（错误：<code>intrinsic gas too low</code>）</td>
+<td>矿工不会执行计算</td>
+</tr>
+<tr>
+<td>低</td>
+<td>少量计算或者燃料耗尽</td>
+<td>之后会打包进区块</td>
+</tr>
+<tr>
+<td>中等</td>
+<td>通常是理想的</td>
+<td>通常是理想的</td>
+</tr>
+<tr>
+<td>高</td>
+<td>可能导致打包被延迟</td>
+<td>尽快被打包入区块</td>
+</tr>
+<tr>
+<td>太高</td>
+<td>不会广播给矿工（错误：<code>exceeds block gas limit</code>）</td>
+<td>如果交易发起人没有足够的以太币，则不会广播给矿工</td>
+</tr>
+</tbody>
+</table>
+<p>尽管提供了费用，但是一笔燃料很低的交易甚至可能不会到达矿工处。如果一笔交易提供了足够的燃料，但是费用很低，即使该交易到达矿工处，一旦矿工看到这个费用就不会对其进行计算处理。费用决定了交易将被打包进入区块的顺序。而提供高燃料会导致交易打包时间更长的原因在本文中 <em>高初始燃气可能会导致延迟</em> 部分。</p>
+<h2 id="初始燃气"><a href="#初始燃气" class="headerlink" title="初始燃气"></a>初始燃气</h2><p>让我们讨论一下交易开始时的燃料需求。抽象地说，在被允许使用 Ethereum 的计算和存储之前，Ethereum 需要知道交易发起人是否有能力支付费用。具体地说，在处理交易之前，矿工需要知道自己是否可以获得报酬。一笔交易需要指定它愿意花费的最大燃料值。对于本文的目的来说，这个需求被称作初始燃气。初始燃气是交易的重要部分。不幸的是，不同的文档使用了不同的词来描述这个关键部分：</p>
+<ul>
+<li><a href="https://github.com/ethereum/wiki/wiki/White-Paper" target="_blank" rel="noopener">以太坊白皮书</a>中使用了 初始燃气</li>
+<li><a href="https://github.com/ethereum/yellowpaper" target="_blank" rel="noopener">以太坊黄皮书</a>中使用了燃料限制</li>
+<li><a href="https://github.com/ethereum/go-ethereum/releases" target="_blank" rel="noopener">Geth</a> 和 <a href="https://github.com/ethereum/web3.js/releases" target="_blank" rel="noopener">web3.js</a> 等软件中，简单地使用了 ”燃气“。</li>
+</ul>
+<p>因为在通常情况下，不真正运行计算（关联 <a href="https://en.wikipedia.org/wiki/Halting_problem" target="_blank" rel="noopener">停机问题</a>），矿工是不知道到底需要多少计算量的，所以初始燃气使事情变得更加简单（而不用 ”燃气作为支付的消耗方式“ 这种说法）。作为一个以太坊应用的用户，必须提供初始燃气似乎很复杂，但开发人员可以使用一些工具来估计初始燃气并隐藏用户的详细信息。</p>
+<h2 id="燃料耗尽异常"><a href="#燃料耗尽异常" class="headerlink" title="燃料耗尽异常"></a>燃料耗尽异常</h2><p>一笔交易提供了它愿意消耗的最大燃料值。该燃气会被 EVM 中的每个操作消耗。如果燃料消耗完毕，而交易还未完成，那么一个燃料耗尽的异常就会发生。交易发起人为已经执行的操作支付，而交易也被打包进区块，但是所有的状态改变（比如合约的创建，值的存储，和<a href="https://media.consensys.net/technical-introduction-to-events-and-logs-in-ethereum-a074d65dd61e" target="_blank" rel="noopener">日志</a>的写入）都会回滚。</p>
+<p>让我们还是使用第一个例子作为场景，但是这次交易发起人指定初始燃气为 90（而不是 150）。这里是执行的示意图：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>操作的燃料消耗</th>
+<th>剩余燃料</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>交易开始</td>
+<td></td>
+<td>90</td>
+</tr>
+<tr>
+<td>存储 31</td>
+<td>45</td>
+<td>45</td>
+</tr>
+<tr>
+<td>求和</td>
+<td>10</td>
+<td>35</td>
+</tr>
+<tr>
+<td>保存和</td>
+<td>45</td>
+<td>燃料耗尽</td>
+</tr>
+<tr>
+<td>交易结束</td>
+<td>因为燃料耗尽，存储的 31 会回滚</td>
+</tr>
+</tbody>
+</table>
+<p>在交易开始时，交易发起人需要拿出所有燃料的资金： 初始燃气 * 燃气价格 = 存放在柜台的以太币。柜台中的以太币数量为：</p>
+<p><strong>90 × 0.02µETH = 1.8µETH</strong></p>
+<p>当每个操作执行时，燃气会消耗，而在存储和时产生了燃料耗尽异常。这会导致所有的操作撤销，代表数字 31 会被回滚到它之前存储的值，但是交易依旧被打包进入区块链，而且矿工获得所有的酬金：1.8μ ETH。</p>
+<h2 id="燃气回退"><a href="#燃气回退" class="headerlink" title="燃气回退"></a>燃气回退</h2><p>EVM 中有两个负值燃气的操作：</p>
+<ul>
+<li>清空合约是 -24000</li>
+<li>清空存储是 -15000</li>
+</ul>
+<p>当 EVM 执行了这样的一个操作，它将被记录在单独的退款计数器中。燃气退款仅在交易结束时提供。 此外，返还的最高值为一半已经消耗的燃气。</p>
+<p>一个关键点在于，一笔交易的燃料永远不会增加。当 EVM 执行操作时，燃料总是减少（当一些合约或者存储被清空，退款计数器会增加）。如果燃料到零或者负数，那么立马会产生一个燃料耗尽异常：退款计数器中有多少燃气并不重要。一笔交易为了能够使用燃气退款，它必须避免燃料耗尽异常。假设一笔交易有足够的燃气，然后它就能使用退款计数器中的燃气。</p>
+<p>退款的燃气值最多为消耗的燃气值的一半。例如，如果一笔交易使用了 60000 燃气，然后清空了 2 个合约而获得 48000 的一笔退款（每笔 24000），交易发起人还是需要支付给矿工 30000 燃气。这激励了矿工使用负值燃气操作处理交易，因为这给了他们收入，并确保了矿工不可能为他人的计算付款。</p>
+<h2 id="区块燃气限制（Block-gas-limit-BGL）"><a href="#区块燃气限制（Block-gas-limit-BGL）" class="headerlink" title="区块燃气限制（Block gas limit:BGL）"></a>区块燃气限制（Block gas limit:BGL）</h2><p>回顾一下，初始燃气由用户指定，是一笔交易将要消耗的燃料最大值。那么一个区块中能够容纳多少交易呢？答案是直到所有交易的初始燃气总和达到区块燃气限制（BGL）位置。当前(2016.6.23)的 BGL 是 4,712,388 （1.5π 的数字形式），表示能够在一个区块（平均出块时间 15 秒）中容纳 224 笔初始燃气为 21000 的交易。为了防止像比特币一样对区块是否变大产生分歧，以太坊协议允许矿工对自己的区块往任意方向进行 1/1024(0.0976%) 幅度的 BGL 调整。与协议不同的是默认的采矿策略，其最小 BGL 为 4,712,388。</p>
+<h2 id="高初始燃气可能存在的延迟"><a href="#高初始燃气可能存在的延迟" class="headerlink" title="高初始燃气可能存在的延迟"></a>高初始燃气可能存在的延迟</h2><p>既然燃料耗尽异常对交易发起人来说几乎是在浪费金钱，那么将初始燃气设置得更高更低总是更好的。所以，交易发起人不总是将初始燃气指定为 4,000,000 呢？</p>
+<p>答案在于交易的初始燃气和它实际消耗的燃气之间的差异。矿工只会获得一笔交易实际消耗的燃气；所有未使用的燃气会被回退给交易发起人。</p>
+<p>如果同时存在一笔初始燃气为 4M 的交易和 100 笔初始燃气为 40,000 的交易，矿工可能会选择后者，因为这 100 笔交易的收入有更高的预测性。如果一笔初始燃气为 4M 的交易实际只消耗了 1M 燃气，那么矿工将损失 3M 的潜在燃气收入。所以，矿工更愿意优先考虑一些”小“交易，而不是拥有高初始燃气（除非<a href="https://github.com/ethereum/pyethereum/blob/3841e9a406f4ca9452afa45035fb07b5ce6314d9/ethereum/transactions.py#L177" target="_blank" rel="noopener">潜在的实际消耗燃气</a>也十分高）的一笔交易。这会导致高初始燃气的交易在被打包之前存在延迟，并且解释了过高的初始燃气会是有害的。</p>
+<h2 id="绕过交易所"><a href="#绕过交易所" class="headerlink" title="绕过交易所"></a>绕过交易所</h2><p>以太坊有两种类型的账户：</p>
+<ul>
+<li>用户账户（由私钥控制）</li>
+<li>合约（由代码控制）</li>
+</ul>
+<p>发送以太币到一个用户账户需要 21000 的燃气费用，而发送以太币到合约则需要更高的费用，这个费用取决于合约代码和交易中发送的数据。一些交易所会对他们所有的交易都只提供 21000 燃气，这会表示在用户想要从交易所发送以太币到他们 Mist（以太坊钱包） 中的合约钱包时，交易会耗尽燃料，以太币永远也不会发送到用户的合约钱包。</p>
+<h2 id="计量和费用"><a href="#计量和费用" class="headerlink" title="计量和费用"></a>计量和费用</h2><p>关于计量和费用之间的区别还有一点需要注意。在比特币中，计量是根据交易中字节数来的。在以太坊中，计算也需要计量，因为少量的代码也可能被编码成永远执行。计量计算量也是使用燃气的一个原因。但是拥有燃气不代表需要费用。</p>
+<p>比如，在一个私链上，每个账户每天可以拥有 X 燃气，或者是每笔交易 Y 燃气，或者其他方案。另一方面，有费用不代表需要燃气：费用可以基于不同的计量，如字节。对于公有链上的安全性来说，燃气和费用两者都需要，而替代方案可能更适合私有链（比如，对于任何人都可以创建账户的公有链来说，每个账户每天有 X 燃气，可以被”女巫攻击“（Sybil-attacked））。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>燃气是使用 Ethereum 的计量方式和燃料，与使用 Ethereum 所支付的以太币费用是不同的。提供足够的燃料和足够的费用，两者直接是有区别的。运行时燃料耗尽会花费钱，而提供更多的燃气会使得更加安全，反正所有的未使用的燃气都会被回退。燃气是以太坊的核心部分，它的大多数话题已经被讨论过。这里有更多关于它的信息，包括<a href="https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethestimategas" target="_blank" rel="noopener">估计燃气</a>，内在燃气（intrinsic gas），<a href="https://github.com/ethereum/go-ethereum/wiki/Gas-Price-Oracle" target="_blank" rel="noopener">燃气价格预告（gas price oracle）</a>，<a href="https://ethereum.stackexchange.com/questions/1106/is-there-a-limit-for-transaction-size" target="_blank" rel="noopener">交易大小的影响</a>，可以在本文的基础上进一步地探索和理解。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/blockchain-ethereum-gas-gasprice/" rel="tag"># blockchain ethereum gas gasprice</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/24/ethereum-设计原理/" rel="next" title="ethereum 设计原理">
+                <i class="fa fa-chevron-left"></i> ethereum 设计原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/05/智能合约最佳实践翻译二-安全推荐/" rel="prev" title="智能合约最佳实践翻译二 - 安全推荐">
+                智能合约最佳实践翻译二 - 安全推荐 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#燃气（gas）是什么？"><span class="nav-number">1.</span> <span class="nav-text">燃气（gas）是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的例子"><span class="nav-number">2.</span> <span class="nav-text">简单的例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#燃料与费用"><span class="nav-number">3.</span> <span class="nav-text">燃料与费用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始燃气"><span class="nav-number">4.</span> <span class="nav-text">初始燃气</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#燃料耗尽异常"><span class="nav-number">5.</span> <span class="nav-text">燃料耗尽异常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#燃气回退"><span class="nav-number">6.</span> <span class="nav-text">燃气回退</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#区块燃气限制（Block-gas-limit-BGL）"><span class="nav-number">7.</span> <span class="nav-text">区块燃气限制（Block gas limit:BGL）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高初始燃气可能存在的延迟"><span class="nav-number">8.</span> <span class="nav-text">高初始燃气可能存在的延迟</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绕过交易所"><span class="nav-number">9.</span> <span class="nav-text">绕过交易所</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计量和费用"><span class="nav-number">10.</span> <span class="nav-text">计量和费用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">11.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

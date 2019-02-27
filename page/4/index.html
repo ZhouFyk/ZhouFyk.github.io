@@ -229,7 +229,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/25/PHP-manual-mysqli-Multiple-Statements-翻译/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/02/ci-core-config/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -248,7 +248,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/03/25/PHP-manual-mysqli-Multiple-Statements-翻译/" itemprop="url">PHP manual-mysqli-Multiple Statements-翻译</a></h1>
+                <a class="post-title-link" href="/2017/07/02/ci-core-config/" itemprop="url">ci-core-config</a></h1>
         
 
         <div class="post-meta">
@@ -260,8 +260,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-25T17:35:26+08:00">
-                2017-03-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-02T18:44:15+08:00">
+                2017-07-02
               </time>
             
 
@@ -299,12 +299,14 @@
 
       
         
-          <p><code>MySQL</code>允许在一个语句字符串中使用多个语句。 一次发送多个语句可以减少客户端 - 服务器的往返行程，但需要特殊处理。</p>
-<p>必须使用<code>mysqli_multi_query()</code>执行多个语句或多个查询。 语句字符串的各个语句用分号分隔。 然后，执行语句返回的所有结果集都必须被取出。</p>
-<p><code>MySQL</code>服务器允许多重语句中有的语句返回结果集而有的语句不返回结果集。</p>
+          <p><a href="https://github.com/bcit-ci/CodeIgniter/blob/develop/system/core/Config.php" target="_blank" rel="noopener">Config 类</a>：</p>
+<blockquote>
+<p>This class contains functions that enable config files to be managed.</p>
+</blockquote>
+<p>从 config 类的总注释上，可以大致意会到这个类的相关信息，比如属性是配置信息相关的存储变量，方法则用来操作配置信息。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/03/25/PHP-manual-mysqli-Multiple-Statements-翻译/#more" rel="contents">
+            <a class="btn" href="/2017/07/02/ci-core-config/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -355,7 +357,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/25/PHP-manual-mysqli-Stored-Procedures-翻译/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/01/CI-Core-Common-记录/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -374,7 +376,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/03/25/PHP-manual-mysqli-Stored-Procedures-翻译/" itemprop="url">PHP manual-mysqli-Stored Procedures-翻译</a></h1>
+                <a class="post-title-link" href="/2017/07/01/CI-Core-Common-记录/" itemprop="url">CI - Core - Common 记录</a></h1>
         
 
         <div class="post-meta">
@@ -386,8 +388,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-25T17:14:27+08:00">
-                2017-03-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-01T18:34:02+08:00">
+                2017-07-01
               </time>
             
 
@@ -425,12 +427,14 @@
 
       
         
-          <p><code>MySQL</code>支持存储程序过程。存储过程是存储在数据库目录中的子例程。 应用程序可以调用并执行存储过程。<code>CALL SQL</code>语句用于执行存储过程。</p>
-<p><em>参数</em><br>存储过程可以有<code>IN</code>，<code>INPUT</code>和<code>OUT</code>参数，具体取决于<code>MySQL</code>版本。 对于不同类型的参数<code>mysqli</code>界面都没有区别。</p>
-<p><em><code>IN</code> 参数</em><br>CALL语句提供输入的参数。 请确保传入的值正确转义。</p>
+          <p><a href="https://github.com/bcit-ci/CodeIgniter/blob/develop/system/core/Common.php#L603" target="_blank" rel="noopener">github - CodeIgniter/system/core/Common.php</a></p>
+<h2 id="PHP-版本确定"><a href="#PHP-版本确定" class="headerlink" title="PHP 版本确定"></a>PHP 版本确定</h2><p><code>is_php($version)</code>：<br>检测当前 PHP 的版本是否高于指定版本。</p>
+<ul>
+<li><code>version_compare(PHP_VERSION, $version, &#39;&gt;=&#39;);</code></li>
+</ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/03/25/PHP-manual-mysqli-Stored-Procedures-翻译/#more" rel="contents">
+            <a class="btn" href="/2017/07/01/CI-Core-Common-记录/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -481,7 +485,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/24/PHP-manual-mysqli-Prepared-Statements-翻译/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/21/微信-token-验证失败记录/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -500,7 +504,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/03/24/PHP-manual-mysqli-Prepared-Statements-翻译/" itemprop="url">PHP manual-mysqli-Prepared Statements-翻译</a></h1>
+                <a class="post-title-link" href="/2017/06/21/微信-token-验证失败记录/" itemprop="url">微信 token 验证失败记录</a></h1>
         
 
         <div class="post-meta">
@@ -512,8 +516,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-24T16:33:30+08:00">
-                2017-03-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-21T14:16:43+08:00">
+                2017-06-21
               </time>
             
 
@@ -551,11 +555,17 @@
 
       
         
-          <p>MySQL数据库支持预处理语句。使用准备语句或参数化语句可以高效率重复执行相同的语句。</p>
-<p><em>基本工作流程</em><br>预处理语句的执行分为两个阶段：准备和执行。在准备阶段，语句模版会发送给数据库服务器。 服务器执行语法检查并初始化服务器内部资源供以后使用。</p>
+          <p>之前尝试过了解微信开发，不过因为帐号权限的问题，没有进一步的了解。所以只有一个简单的自动回复：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">s:xxx</span><br><span class="line">r:xxx 是</span><br><span class="line">s:hello</span><br><span class="line">r:不管你说什么 xxx都是</span><br></pre></td></tr></table></figure>
+<p>xxx 是我室友的名字。<br>最近想在微信上弄一个东西，随手发了信息，却发现自动回复：</p>
+<blockquote>
+<p>该公众号暂时无法提供服务，请稍后再试。</p>
+</blockquote>
+<p>我都没有动过，所以也不知道是怎么回事。进后台看了一下配置，发现虽然我对微信相关的部分没有动过，但是我后来弄了域名，所以之前微信使用的 IP 就不对了，于是更改了一下。然后报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; token 验证失败。</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/03/24/PHP-manual-mysqli-Prepared-Statements-翻译/#more" rel="contents">
+            <a class="btn" href="/2017/06/21/微信-token-验证失败记录/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -606,7 +616,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/23/PHP-manual-mysqli-connections-翻译/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/21/novel-reader-记录/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -625,7 +635,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/03/23/PHP-manual-mysqli-connections-翻译/" itemprop="url">PHP manual-mysqli-connections-翻译</a></h1>
+                <a class="post-title-link" href="/2017/06/21/novel-reader-记录/" itemprop="url">novel-reader 记录</a></h1>
         
 
         <div class="post-meta">
@@ -637,8 +647,132 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-23T14:40:07+08:00">
-                2017-03-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-21T00:15:04+08:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>重写小说阅读工具，简单地学习 laravel。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/21/novel-reader-记录/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/14/php-variable/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/14/php-variable/" itemprop="url">PHP 的变量思考记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-14T20:18:33+08:00">
+                2017-06-14
               </time>
             
 
@@ -677,13 +811,16 @@
       
         
           <ul>
-<li><a href="http://php.net/manual/zh/mysqli.quickstart.connections.php" target="_blank" rel="noopener">PHP manual-mysqli-connections</a></li>
+<li>从某种意义上来说，这篇记录毫无意义。</li>
 </ul>
-<p><code>MySQL</code>服务器支持使用不同的传输层进行连接。 连接可以使用<code>TCP / IP</code>，<code>Unix</code>域套接字或<code>Windows</code>命名管道。</p>
-<p>主机名<code>localhost</code>具有特殊的含义。它与<code>Unix</code>域套接字绑定，所以不能使用主机名<code>localhost</code>打开<code>TCP / IP</code>连接，要想打开<code>TCP/IP</code>的链接，只能使用<code>127.0.0.1</code>.</p>
+<p><a href="http://www.laruence.com/2008/08/22/412.html" target="_blank" rel="noopener"> 深入理解PHP原理之变量(Variables inside PHP)</a>，鸟哥的这篇文章已经介绍了关于 PHP 的弱类型是如何实现的，其中讲到 PHP 根据变量的类型去存储和获取变量值。然而里面没提到在最初是如何确定变量的类型的。</p>
+<p>比如在 PHP 中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a=&apos;string&apos;;</span><br></pre></td></tr></table></figure>
+<p>那么在保存该变量时，是怎么确定它的类型呢，不像其他语言可以在定义变量时就指定了类型：<code>int a=1</code>。虽然不知道其他语言是如何保存变量，但是就 PHP 的模式联想起来，在变量定义时就声明了类型，那么保存该变量的时候就可以很自然的使用该类型来保存。</p>
+<p><a href="http://www.php-internals.com/book/?p=chapt03/03-01-00-variables-structure" target="_blank" rel="noopener">TIPI 第一节 变量的结构和类型</a> 中也没有提及。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/03/23/PHP-manual-mysqli-connections-翻译/#more" rel="contents">
+            <a class="btn" href="/2017/06/14/php-variable/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -734,7 +871,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/22/我说的不一定对-梁欢-阅读记录-5/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/12/PHP-编译模版记录/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -753,7 +890,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/03/22/我说的不一定对-梁欢-阅读记录-5/" itemprop="url">我说的不一定对-梁欢-阅读记录-5</a></h1>
+                <a class="post-title-link" href="/2017/06/12/PHP-编译模版记录/" itemprop="url">PHP 编译模版记录</a></h1>
         
 
         <div class="post-meta">
@@ -765,629 +902,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-22T14:03:17+08:00">
-                2017-03-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1"><a href="#1" class="headerlink" title="1"></a>1</h2><p>对任何事不要有不切实际的想法。不切实际的想法只会拖累自己，阻止自己的进步。比如网络教程21天精通xxx。略尴尬，以前看过这些书。因为想法不切实际，就会导致预期和实际不同，可能相差很大，不及时承认现实，就会被放弃。然而问题在于，一开始我并不知道到底是不是我的想法错了，你非说我错了，我也很无奈啊，我问你为什么，你只说这是我的经验。你看，都不知道我们的经验是否可以借鉴，你就凭你的经验说我错了，是吧，还是希望不要这么直接肯定吧，给我多点时间思考一下吧，然后再让我承认你说的是对的。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/22/我说的不一定对-梁欢-阅读记录-5/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/21/我说的不一定对-梁欢-阅读记录-4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/03/21/我说的不一定对-梁欢-阅读记录-4/" itemprop="url">我说的不一定对-梁欢-阅读记录-4</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-21T22:10:45+08:00">
-                2017-03-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1"><a href="#1" class="headerlink" title="1"></a>1</h2><p>梁欢将一些中外节目进行了对比。我没看过那些他说的外国的节目，然而，关于国内的节目的描述，嗯，他说的是对的。</p>
-<h2 id="2"><a href="#2" class="headerlink" title="2"></a>2</h2><p>梁欢写了关于艺人的十个点。艺人有缺点，很正常，艺人也是普通人，只是各方面都被放在放大镜下看，让缺点显得似乎变成了罪大恶极。不过从另一个方面来说，作为艺人这个工种的特殊性，某些情况就是需要特别注意的。就像可能有些人不经常洗澡，那么对于实验室人员来说，我想这就不应该了。可能有些人唱歌跑掉，但是对于歌手来说，这就不应该了。某些工种自身必须的素质就要求你必须在某方面达到要求，如果这达不到，别扯什么大家都是普通人，都会犯错了。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/21/我说的不一定对-梁欢-阅读记录-4/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/20/我说的不一定对-梁欢-阅读记录-3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/03/20/我说的不一定对-梁欢-阅读记录-3/" itemprop="url">我说的不一定对-梁欢-阅读记录-3</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-20T15:48:36+08:00">
-                2017-03-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1"><a href="#1" class="headerlink" title="1"></a>1</h2><p>人们会对身边很多习以为常的事情表现出轻慢的态度。比如对亲人没有耐心，而对陌生人彬彬有礼。对没有深入了解过的东西表示不屑。正如段子PHP是世界上最好的语言，黑的多了，竟真的有人这么以为。似乎很少对常见的东西深入了解，见的多了，好奇心也没了。好奇心没了还是比较好的情况，更严重的是对常见的东西看轻，表达一种不屑的态度。这实在是糟糕。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/20/我说的不一定对-梁欢-阅读记录-3/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/20/我说的不一定对-梁欢-阅读记录-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/03/20/我说的不一定对-梁欢-阅读记录-2/" itemprop="url">我说的不一定对-梁欢-阅读记录-2</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-20T15:48:30+08:00">
-                2017-03-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="关于婚姻制度"><a href="#关于婚姻制度" class="headerlink" title="关于婚姻制度"></a>关于婚姻制度</h2><p>梁欢在这部分内容简单描述了婚姻制度的形成，表达了对当前婚姻制度的反对。这是我在除了性别文化选修课之外的地方看到关于和常规婚姻不同的说法。性别文化课上，讲的是希望政府能修改婚姻法，支持同性恋情侣结婚，保障同性婚姻的权利。梁欢这里讲的是除了异性同性之外的内容。就当前的婚姻制度来看，是落后于社会发展的。在过去，人类结婚是为了更好的生存。但是在当前社会，存在独自一人也能够生活的很好的情况。婚姻不是根本上，即更好的生存的必备的条件了。除了根本之外，婚姻制度的作用大概是保障配偶之间的一些权利。就好像如果两个人能够解决双方之间出现的于法律上的问题，那么婚姻制度的存在还有意义吗。结婚之后，两个人组成的家庭，一定要在当前定义下的婚姻制度下才被承认吗。两个失去配偶的邻居老人相互依靠生存，能否算一个家庭？一群志同道合相处融洽的朋友能否算一个家庭？</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/20/我说的不一定对-梁欢-阅读记录-2/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/20/我说的不一定对-梁欢-阅读记录-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/03/20/我说的不一定对-梁欢-阅读记录-1/" itemprop="url">我说的不一定对-梁欢-阅读记录-1</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-20T15:48:22+08:00">
-                2017-03-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1-肉体是精神世界的封顶"><a href="#1-肉体是精神世界的封顶" class="headerlink" title="1. 肉体是精神世界的封顶"></a>1. 肉体是精神世界的封顶</h2><p>在存在保底的物质基础之上，我认为精神世界的富足瑰丽比肉体更重要。即我以一些食品保障自我的基本摄入，然后剩下的时间全都投入了丰富自我内心世界的行动中。似乎是没错的，我想大部分人都会承认精神世界远比肉体要辽远，可探索的太多太多了。阅读，旅行，每次达成探索成就的感觉，我无法以准确的文字来描述。在梁欢差点死了之前，他也是这么想的。但是死上那么一回，他发现了更严重的一个事情。如果在探索精神世界的道路上，肉体先嗝屁了，那还探索什么呢。这是个无解的问题。我们只能在探索精神世界的过程中，同时锻炼身体，提高肉体的上限，来延长探索精神世界的时间，这是在肉体终将毁灭的前提下的唯一选择。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/20/我说的不一定对-梁欢-阅读记录-1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/16/简单算法记录-3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/03/16/简单算法记录-3/" itemprop="url">简单算法记录-3</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-16T19:38:43+08:00">
-                2017-03-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-12T16:25:36+08:00">
+                2017-06-12
               </time>
             
 
@@ -1426,11 +942,522 @@
       
         
           <ul>
-<li>内容来自<a href="https://www.nowcoder.com/ta/coding-interviews" target="_blank" rel="noopener">牛客网《剑指OFFER》刷题</a>。有些算法是自己想的，大部分不会的是改自网友代码。</li>
+<li>资料：PHP 核心技术与最佳实践（kindle 电子书）</li>
+</ul>
+<p>书中第六章：PHP 模版引擎的原理和实践 部分，重新敲一遍代码，代码运行，出现问题。</p>
+<p>问题：部分语法未替换成 php 语法。比如变量输出和循环输出。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/12/PHP-编译模版记录/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/04/PHP-的持久化连接学习记录-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/04/PHP-的持久化连接学习记录-1/" itemprop="url">PHP 的持久化连接学习记录-1</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-04T22:12:45+08:00">
+                2017-06-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <ul>
+<li>昨天在 v2ex 上碰到这个问题：<a href="https://www.v2ex.com/t/365621" target="_blank" rel="noopener">PHP 短连 mysql</a>，回答了一下。但是基本是靠手册上现成的内容引用。过后，自己再读手册，觉得不是十分理解。那个帖子也没人继续回复了。因为之前没有像现在这样比较深入的去研究这个问题。所以个人主观以为是<strong>将持久化连接放入一个连接池，碰到可以复用的情况就复用</strong>。所以在稍微研究了一下之后有了一些困惑。</li>
 </ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/03/16/简单算法记录-3/#more" rel="contents">
+            <a class="btn" href="/2017/06/04/PHP-的持久化连接学习记录-1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/03/PHP-SESSION记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/03/PHP-SESSION记录/" itemprop="url">PHP-SESSION记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-03T17:03:00+08:00">
+                2017-06-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>参考资料：</p>
+<ul>
+<li><a href="https://laravel-china.org/topics/1093/some-problems-about-session-in-php" target="_blank" rel="noopener">关于 PHP 中 Session 的几个问题</a></li>
+<li><a href="http://www.laruence.com/2012/01/10/2469.html" target="_blank" rel="noopener">如何设置一个严格30分钟过期的Session</a></li>
+<li><a href="http://www.laruence.com/2011/03/29/1949.html" target="_blank" rel="noopener">深入理解PHP原理之Session Gc的一个小概率Notice</a></li>
+<li><a href="https://www.amazon.cn/PHP%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-%E5%88%97%E6%97%AD%E6%9D%BE/dp/B00A30JYIG/ref=sr_1_1?ie=UTF8&amp;qid=1496128711&amp;sr=8-1&amp;keywords=php%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF" target="_blank" rel="noopener">PHP核心技术与最佳实践</a></li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/03/PHP-SESSION记录/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/23/CI网站上线记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/23/CI网站上线记录/" itemprop="url">CI网站上线记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-23T19:36:57+08:00">
+                2017-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="1-nginx配置文件检测方式"><a href="#1-nginx配置文件检测方式" class="headerlink" title="1. nginx配置文件检测方式"></a>1. <code>nginx</code>配置文件检测方式</h3><p><code>nginx</code>启动等操作失败，是因为配置文件的代码有问题。可通过<code>usr/sbin/nginx -t -c /etc/nginx/nginx.conf</code>来检测配置文件是否正确。配置文件中的<code>if</code>语句，<code>if</code>后面要有一个空格。否则检测会出现<code>unknow directive</code>。<code>if</code>条件中的逻辑运算符号前后需要空格，否则出现<code>invalid condition</code>错误。</p>
+<h3 id="2-502-和-php-fpm"><a href="#2-502-和-php-fpm" class="headerlink" title="2. 502 和 php-fpm"></a>2. <code>502</code> 和 <code>php-fpm</code></h3><p>一直出现<code>502</code>错误。是因为 <code>php-fpm</code> 没开。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/05/23/CI网站上线记录/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/23/简单课程网站记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/23/简单课程网站记录/" itemprop="url">简单课程网站记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-23T19:20:22+08:00">
+                2017-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <ul>
+<li>使用<code>CI</code>框架，实现功能：<code>CMS</code>的基本功能</li>
+</ul>
+<h2 id="一"><a href="#一" class="headerlink" title="一"></a>一</h2><p>开始，我用了一个控制器<code>pages</code>来控制页面跳转，其他操作都用<code>model</code>实现。随着页面增多，控制器里的方法越来越多，并且不再只是页面跳转，更多的是一些操作方法，比如登录验证方法<code>checklogin</code>，除非出错才会跳转回登录页面，如果一切成功，就会跳转到成功页面。</p>
+<p>于是想隔离开页面跳转和操作两种，将某种流程单独作为一个控制器，比如<code>login</code>控制器用来进行登录验证，退出等一些关于登录相关的控制。<code>register</code>控制器用来进行注册相关控制。<code>pages</code>控制器只用作第一个页面的跳转，里面的方法只有一些简单的逻辑判断，主要代码为加载视图。比如点击登录注册按钮，通过<code>pages</code>控制器进入登录注册页面。然后对登录注册页面进行操作提交之后，通过<code>login</code>，<code>register</code>等控制器中转处理。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/05/23/简单课程网站记录/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1472,7 +1499,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1518,7 +1545,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1531,7 +1558,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>

@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Fuyk&#39;s blog">
 <meta property="og:description" content="合约链接 结构组成使用了 dapphub 的库。 1234567891011121314A:DSAuthority-----	  DSAuthEvents				  |	      |A:ERC20	 DSMath	   ---&amp;gt; DSAuth 		DSNote   |	   |   			  |			  |    -------				   -----------        |">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-27T10:38:25.731Z">
+<meta property="og:updated_time" content="2019-02-27T15:48:31.399Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EOS 合约">
 <meta name="twitter:description" content="合约链接 结构组成使用了 dapphub 的库。 1234567891011121314A:DSAuthority-----	  DSAuthEvents				  |	      |A:ERC20	 DSMath	   ---&amp;gt; DSAuth 		DSNote   |	   |   			  |			  |    -------				   -----------        |">
@@ -303,31 +303,25 @@
         <p><a href="https://etherscan.io/address/0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0#code" target="_blank" rel="noopener">合约链接</a></p>
 <h2 id="结构组成"><a href="#结构组成" class="headerlink" title="结构组成"></a>结构组成</h2><p>使用了 <a href="https://github.com/dapphub" target="_blank" rel="noopener">dapphub 的库</a>。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">A:DSAuthority-----	  DSAuthEvents</span><br><span class="line">				  |	      |</span><br><span class="line">A:ERC20	 DSMath	   ---&gt; DSAuth 		DSNote</span><br><span class="line">   |	   |   			  |			  |</span><br><span class="line">    -------				   -----------</span><br><span class="line">        |					  |</span><br><span class="line">	DSTokenBase				DSStop</span><br><span class="line">		|					  |</span><br><span class="line">		 ---------------------</span><br><span class="line">		 		   |</span><br><span class="line">				DSToken</span><br><span class="line"></span><br><span class="line">A:abstract contract</span><br><span class="line">下面的合约继承上面的合约。DSAuthority 在 DSAuth 中被使用。</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <h2 id="合约简介"><a href="#合约简介" class="headerlink" title="合约简介"></a>合约简介</h2><h3 id="1-DSNote"><a href="#1-DSNote" class="headerlink" title="1. DSNote"></a>1. <a href="https://dapp.tools/dappsys/ds-note.html" target="_blank" rel="noopener">DSNote</a></h3><p>记录合约。定义了事件 <code>LogNote</code>，声明为 <code>anonymous</code>。定义了修饰器 <code>note</code>，内部会触发事件 <code>LogNote</code>。</p>
 <h3 id="2-DSAuth"><a href="#2-DSAuth" class="headerlink" title="2. DSAuth"></a>2. <a href="https://dapp.tools/dappsys/ds-auth.html" target="_blank" rel="noopener">DSAuth</a></h3><ol>
-<li>DSAuthority</li>
+<li><p>DSAuthority<br>抽象函数，只有一个 <code>canCall</code> 函数。</p>
+</li>
+<li><p>DSAuthEvents<br>认证事件合约。只有两个事件 <code>LogSerAuthority / LogSetOwner</code>。当设置 <code>Authority / Owner</code> 时触发。</p>
+</li>
+<li><p>DSAuth<br>继承了 <code>DSAuthEvents</code>。设置 <code>Authority / Owner</code>，以及对来源的检测。</p>
+</li>
 </ol>
-<p>抽象函数，只有一个 <code>canCall</code> 函数。</p>
-<ol start="2">
-<li>DSAuthEvents</li>
-</ol>
-<p>认证事件合约。只有两个事件 <code>LogSerAuthority / LogSetOwner</code>。当设置 <code>Authority / Owner</code> 时触发。</p>
-<ol start="3">
-<li>DSAuth</li>
-</ol>
-<p>继承了 <code>DSAuthEvents</code>。设置 <code>Authority / Owner</code>，以及对来源的检测。</p>
-<p>### </p>
 <h3 id="3-DSStop"><a href="#3-DSStop" class="headerlink" title="3. DSStop"></a>3. <a href="https://dapp.tools/dappsys/ds-stop.html" target="_blank" rel="noopener">DSStop</a></h3><p>继承 <code>DSAuth</code>，<code>DSNote</code>。设置 <code>stopped</code>，停止标识符。</p>
 <h3 id="4-DSMath"><a href="#4-DSMath" class="headerlink" title="4. DSMath"></a>4. <a href="https://dapp.tools/dappsys/ds-math.html" target="_blank" rel="noopener">DSMath</a></h3><p>安全的常规数学运算。包含了 <code>uint256 / uint128 / int256 / WAD / RAY</code> 等相关的运算。</p>
 <h3 id="5-ERC20"><a href="#5-ERC20" class="headerlink" title="5. ERC20"></a>5. <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md" target="_blank" rel="noopener">ERC20</a></h3><p>以太坊上发行代币的接口。实现此接口，可以方便对代币进行操作。</p>
 <h3 id="6-DSToken"><a href="#6-DSToken" class="headerlink" title="6. DSToken"></a>6. <a href="https://dapp.tools/dappsys/ds-token.html" target="_blank" rel="noopener">DSToken</a></h3><ol>
-<li>DSTokenBase</li>
+<li><p>DSTokenBase<br>继承 <code>ERC20 / DSMath</code> 合约。实现了抽象函数中的方法，完成了代币的基础功能。</p>
+</li>
+<li><p>DSToken<br>具体代币的合约，实际的交互合约。</p>
+</li>
 </ol>
-<p>继承 <code>ERC20 / DSMath</code> 合约。实现了抽象函数中的方法，完成了代币的基础功能。</p>
-<ol start="2">
-<li>DSToken</li>
-</ol>
-<p>具体代币的合约，实际的交互合约。</p>
 <ul>
 <li>以上与所链接的文档有些许差别。</li>
 </ul>

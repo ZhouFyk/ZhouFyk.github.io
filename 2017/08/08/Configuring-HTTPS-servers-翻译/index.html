@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="nginx,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="配置 https 服务器Configuring HTTPS servers 原文链接 配置 https 服务器时，需要在 server 中 listen 的端口中使用 ssl 参数，并且需要指定 server_certificate 和 private_key 文件： 123456789server &amp;#123;	listen              443 ssl;	server_name">
+<meta name="keywords" content="nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Configuring HTTPS servers 翻译">
+<meta property="og:url" content="http://yoursite.com/2017/08/08/Configuring-HTTPS-servers-翻译/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="配置 https 服务器Configuring HTTPS servers 原文链接 配置 https 服务器时，需要在 server 中 listen 的端口中使用 ssl 参数，并且需要指定 server_certificate 和 private_key 文件： 123456789server &amp;#123;	listen              443 ssl;	server_name">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:25:39.045Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Configuring HTTPS servers 翻译">
+<meta name="twitter:description" content="配置 https 服务器Configuring HTTPS servers 原文链接 配置 https 服务器时，需要在 server 中 listen 的端口中使用 ssl 参数，并且需要指定 server_certificate 和 private_key 文件： 123456789server &amp;#123;	listen              443 ssl;	server_name">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/08/Configuring-HTTPS-servers-翻译/">
+
+
+
+
+
+  <title>Configuring HTTPS servers 翻译 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/08/Configuring-HTTPS-servers-翻译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Configuring HTTPS servers 翻译</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-08T18:28:35+08:00">
+                2017-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="配置-https-服务器"><a href="#配置-https-服务器" class="headerlink" title="配置 https 服务器"></a>配置 https 服务器</h1><p><a href="https://nginx.org/en/docs/http/configuring_https_servers.html" target="_blank" rel="noopener">Configuring HTTPS servers 原文链接</a></p>
+<p>配置 https 服务器时，需要在 <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#server" target="_blank" rel="noopener"><code>server</code></a> 中 <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#listen" target="_blank" rel="noopener"><code>listen</code></a> 的端口中使用 <code>ssl</code> 参数，并且需要指定 <a href="https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_certificate" target="_blank" rel="noopener"><code>server_certificate</code></a> 和 <a href="https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_certificate_key" target="_blank" rel="noopener"><code>private_key</code></a> 文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen              443 ssl;</span><br><span class="line">	server_name         www.example.com;</span><br><span class="line">	ssl_certificate     www.example.com.crt;</span><br><span class="line">	ssl_certificate_key www.example.com.key;</span><br><span class="line">	ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">	ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>服务器证书是一个公共实体。它将被发送给所有连接了服务器的客户端。私钥是安全实体，应该被保存在一个可以被 nginx 主进程读取，并且严格限制了权限的文件中。私钥可能被交替的保存在与整数相同的文件中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssl_certificate     www.example.com.cert;</span><br><span class="line">ssl_certificate_key www.example.com.cert;</span><br></pre></td></tr></table></figure>
+<p>该文件也被严格限制了权限。即使私钥和证书被保存在同一个文件中，发送给客户端的也只有证书。</p>
+<p>指令 <a href="https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_protocols" target="_blank" rel="noopener"><code>ssl_protocols</code></a> 和 <a href="https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_ciphers" target="_blank" rel="noopener"><code>ssl_ciphers</code></a> 可用于限制连接，只允许使用了高版本 SSL / TLS 加密的链接。默认 nginx 使用 <code>ssl_protocols TLSv1 TLSv1.1 TLSv1.2</code> 和 <code>ssl_ciphers HIGH:!aNULL:!MD5</code>，所以通常不必特别配置。要注意的是这些指令的默认值被修改过数次。</p>
+<h2 id="https-服务器优化"><a href="#https-服务器优化" class="headerlink" title="https 服务器优化"></a>https 服务器优化</h2><p>SSL 操作会消耗额外的 CPU 资源。在多进程系统中，会运行多个进程 <a href="https://nginx.org/en/docs/ngx_core_module.html#worker_processes" target="_blank" rel="noopener"><code>worker processes</code></a>，该数量不会少于可以用的 CPU 核数。最消耗 CPU 资源的操作是 SSL 的握手操作。有两种方式可以最大程度减少每个客户端的握手操作次数：第一种是开启 <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#keepalive_timeout" target="_blank" rel="noopener"><code>keepalive</code></a> 连接，它可以在一个连接中发起多个请求；第二种是重用 SSL 会话参数，以避免并行和后续连接的 SSL 握手。会话信息会被存储在一个进程间共享的 SSL 会话缓存中，该缓存由 <a href="https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_session_cache" target="_blank" rel="noopener"><code>ssl_session_cache</code></a> 指令配置。1M 的缓存包含约 4000 个会话。缓存默认的过期时间是 5 分钟。该值可由 <a href="https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_session_timeout" target="_blank" rel="noopener"><code>ssl_session_timeout</code></a> 指令修改。以下是一个 10M 共享会话缓存的多核系统的简单优化配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">worker_processes auto;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br></pre></td></tr></table></figure>
+<pre><code>   ssl_session_cache   shared:SSL:10m;
+ssl_session_timeout 10m;
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">   	listen              443 ssl;</span><br><span class="line">   	server_name         www.example.com;</span><br><span class="line">   	keepalive_timeout   70;</span><br><span class="line"></span><br><span class="line">   	ssl_certificate     www.example.com.crt;</span><br><span class="line">   	ssl_certificate_key www.example.com.key;</span><br><span class="line">   	ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">   	ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line">   	...</span><br></pre></td></tr></table></figure>
+<h2 id="SSL-证书链"><a href="#SSL-证书链" class="headerlink" title="SSL 证书链"></a>SSL 证书链</h2><p>有些浏览器可能会对知名证书颁发机构签发的证书报警，而有些浏览器则不会。这是因为每个浏览器都有一个知名可信证书颁发机构的证书库，而当前用来签署服务器证书的证书在该证书库中不存在。在这种情况下，机构提供了一系列链接的证书，这些证书应连接到签名的服务器证书。在合并文件时，服务器整数必须出现在链接证书之前：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat www.example.com.crt bundle.crt &gt; www.example.com.chained.crt</span><br></pre></td></tr></table></figure>
+<p>结果文件应该在 <a href="https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_certificate" target="_blank" rel="noopener"><code>ssl_certificate</code></a> 指令中被使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen              443 ssl;</span><br><span class="line">	server_name         www.example.com;</span><br><span class="line">	ssl_certificate     www.example.com.chained.crt;</span><br><span class="line">	ssl_certificate_key www.example.com.key;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果服务器证书和链接整数的顺序错误，nginx 会启动失败并报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SSL_CTX_use_PrivateKey_file(&quot; ... /www.example.com.key&quot;) failed</span><br><span class="line">	(SSL: error:0B080074:x509 certificate routines:X509_check_private_key:key values mismatch)</span><br></pre></td></tr></table></figure>
+<p>因为 nginx 会对链接证书使用私钥而不是服务器整数。</p>
+<p>浏览器常常会将接收到的可靠机构办法的中间证书存储，所以如果经常使用浏览器，可能会已经存在必需的中间证书，并且不会对没有链接证书的证书报警。为了确保服务器发送了完整的证书链，可以在命令行使用 <code>openssl</code>，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ openssl s_client -connect www.godaddy.com:443</span><br><span class="line">...</span><br><span class="line">Certificate chain</span><br></pre></td></tr></table></figure>
+<pre><code> 0 s:/C=US/ST=Arizona/L=Scottsdale/1.3.6.1.4.1.311.60.2.1.3=US
+    /1.3.6.1.4.1.311.60.2.1.2=AZ/O=GoDaddy.com, Inc
+    /OU=MIS Department/CN=www.GoDaddy.com
+    /serialNumber=0796928-7/2.5.4.15=V1.0, Clause 5.(b)
+  i:/C=US/ST=Arizona/L=Scottsdale/O=GoDaddy.com, Inc.
+     /OU=http://certificates.godaddy.com/repository
+     /CN=Go Daddy Secure Certification Authority
+     /serialNumber=07969287
+ 1 s:/C=US/ST=Arizona/L=Scottsdale/O=GoDaddy.com, Inc.
+    /OU=http://certificates.godaddy.com/repository
+    /CN=Go Daddy Secure Certification Authority
+     /serialNumber=07969287
+  i:/C=US/O=The Go Daddy Group, Inc.
+     /OU=Go Daddy Class 2 Certification Authority
+ 2 s:/C=US/O=The Go Daddy Group, Inc.
+    /OU=Go Daddy Class 2 Certification Authority
+     i:/L=ValiCert Validation Network/O=ValiCert, Inc.
+     /OU=ValiCert Class 2 Policy Validation Authority
+    /CN=http://www.valicert.com//emailAddress=info@valicert.com
+...
+</code></pre><p>在这个例子中，简单来说即 <code>#0</code> 由 <code>#1</code> 签发，而 <code>#1</code> 又由 <code>#2</code> 签发，<code>#2</code> 由知名发行者 <code>ValiCert, Inc.</code> 签发，而 <code>ValiCert, Inc.</code> 的证书已经被保存在浏览器内置的证书库了。</p>
+<p>如果一个证书链没有被添加，那么只有服务器证书 <code>#0</code> 被展示。</p>
+<h2 id="单独的-http-https-服务器"><a href="#单独的-http-https-服务器" class="headerlink" title="单独的 http/https 服务器"></a>单独的 http/https 服务器</h2><p>可以配置一个服务器来同时处理 <code>http/https</code> 请求：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen              80;</span><br><span class="line">	listen              443 ssl;</span><br><span class="line">	server_name         www.example.com;</span><br><span class="line">	ssl_certificate     www.example.com.crt;</span><br><span class="line">	ssl_certificate_key www.example.com.key;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：在 <code>0.7.14</code> 之前，无法为各个监听套接字选择性启用 SSL，如上所示。 只能使用 <a href="https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl" target="_blank" rel="noopener"><code>ssl</code></a> 指令为整个服务器启用 SSL，从而无法设置单个 <code>HTTP / HTTPS</code> 服务器。 在 <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#listen" target="_blank" rel="noopener"><code>listen</code></a> 指令中添加 <code>ssl</code> 参数可以解决这个问题。 因此，不建议在现代版本中使用 <a href="https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl" target="_blank" rel="noopener"><code>ssl</code></a> 指令。</p>
+<h2 id="基于域名的-https-服务器"><a href="#基于域名的-https-服务器" class="headerlink" title="基于域名的 https 服务器"></a>基于域名的 https 服务器</h2><p>当配置多个 https 服务器监听同一个 ip 时，存在一个常见的问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br></pre></td></tr></table></figure>
+<pre><code>       listen          443 ssl;
+    server_name     www.example.com;
+    ssl_certificate www.example.com.crt;
+    ...
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen          443 ssl;</span><br><span class="line">	server_name     www.example.org;</span><br><span class="line">	ssl_certificate www.example.org.crt;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用此配置，浏览器会接收到默认服务器的证书，如 <code>www.example.com</code> 而不是请求的域名。这是由 ssl 协议导致的。ssl 链接比浏览器发送 http 请求更早，所以 nginx 不知道请求的服务器是哪个。因此，只会提供默认服务器的证书。</p>
+<p>最原始最可靠的解决方式是为每一个 https 服务器指定一个独立的 ip 地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen          192.168.1.1:443 ssl;</span><br><span class="line">	server_name     www.example.com;</span><br><span class="line">	ssl_certificate www.example.com.crt;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">	listen          192.168.1.2:443 ssl;</span><br><span class="line">	server_name     www.example.org;</span><br><span class="line">	ssl_certificate www.example.org.crt;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="多个名字的-ssl-证书"><a href="#多个名字的-ssl-证书" class="headerlink" title="多个名字的 ssl 证书"></a>多个名字的 ssl 证书</h2><p>还有其他方法可以让数个 https 服务器共用一个 ip 地址。但是，这些方法都有其缺点。一个方式是在使用证书时，在 <code>SubjectAltName</code> 的证书字段写数个域名，如 <code>www.example.com</code> 和 <code>www.example.org</code>。但是这个字段的长度是限定的。</p>
+<p>另一个方法是在证书中使用通配符域名，如 <code>*.example.org</code>。一个通配符域名能够匹配指定域名的所有的子域名，但是只有一个层级。这个证书只匹配 <code>www.example.org</code>，但是不能匹配 <code>example.com</code> 和 <code>www.sub.example.org</code>。</p>
+<p>这两个方法可以结合一下。证书的 <code>SubjectAltName</code> 字段可以包括精确的域名和通配符域名，如 <code>example.org</code> 和 <code>*.example.org</code>。</p>
+<p>更好的是将多个域名和私钥的证书文件放在配置文件的 <code>http</code> 层级，这样就可以让后面的 <code>server</code> 块来继承这个证书文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ssl_certificate     common.crt;</span><br><span class="line">ssl_certificate_key common.key;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">	listen          443 ssl;</span><br><span class="line">	server_name     www.example.com;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">	listen          443 ssl;</span><br><span class="line">	server_name     www.example.org;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="域名标识"><a href="#域名标识" class="headerlink" title="域名标识"></a>域名标识</h2><p>一个在单个 ip 地址上运行多个 https 服务器的更常用的解决方法是 <a href="https://en.wikipedia.org/wiki/Server_Name_Indication" target="_blank" rel="noopener"><code>TLS Server Name Indication extension</code></a> (SNI,RFC 6066)，该扩展允许浏览器在进行 SSL 握手时，传送一个带域名的请求，因此，服务器知道该连接使用哪个证书。然而，支持 SNI 的浏览器十分有限。目前支持的浏览器版本为：</p>
+<ul>
+<li>Opera 8.0</li>
+<li>MSIE 7.0 (仅 Windows Vista 或更高版本)</li>
+<li>Firefox 2.0 和其他使用了 Mozilla 平台 rv:1.8.1 的浏览器</li>
+<li>Safari 3.2.1 (Windows 版本需要 Vista 或更高版本)</li>
+<li>Chrome (Windows 版本需要 Vista 或更高版本)</li>
+</ul>
+<p>注意：SNI 只允许传输域名，然而，如果请求包含 IP 地址，一些浏览器可能错误地将服务器的 IP 地址作为它的名称传递。所以不要依赖这个方式。</p>
+<p>为了在 nginx 中使用 SNI，必需有 nginx 建立的二进制 OpenSSL 库以及运行时动态连接库。OpenSSL 从版本 0.9.8f 起支持 SNI，不过需要在建立它时使用 <code>--enable-tlsext</code> 配置选项。从版本 0.9.8j 起，该选项默认开启。如果 nginx 建立了对 SNI 的支持，那么当使用 nginx 的 <code>-V</code> 命令时会有如下信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ nginx -V</span><br><span class="line">...</span><br><span class="line">TLS SNI support enabled</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>如果开启了 SNI 支持的 nginx 动态连接到了没有 SNI 支持的 OpenSSL 库，nginx 会显示警告：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx was built with SNI support, however, now it is linked</span><br><span class="line">dynamically to an OpenSSL library which has no tlsext support,</span><br><span class="line">therefore SNI is not available</span><br></pre></td></tr></table></figure>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><ul>
+<li>从版本 0.8.21 和 0.7.62 起，可以通过 <code>-V</code> 查看 SNI 的支持状态。</li>
+<li><code>listen</code> 指令已从 0.7.14 支持 SSL 参数。之前 0.8.21 只能一起指定 <code>default</code> 参数。</li>
+<li>SNI 从 0.5.23 起支持。</li>
+<li>共享 SSL 会话缓存从 0.5.6 起支持。</li>
+<li>版本 1.9.1 起：默认 ssl 协议为 TLSv1,TLSv1.1,TLSv1.2(如果 OpenSSL 库支持)。</li>
+<li>版本 0.7.65，0.8.19 起：默认 ssl 协议为 SSLv3, TLSv1, TLSv1.1, and TLSv1.2 (如果 OpenSSL 库支持)。</li>
+<li>版本 0.7.65，0.8.19 或之前：默认 ssl 协议为 SSLv2, SSLv3, and TLSv1.</li>
+<li>版本 1.0.5 起：默认 ssl 加密为 <code>HIGH:!aNULL:!MD5</code></li>
+<li>版本 0.7.65，0.8.20 起：默认 ssl 加密为 <code>HIGH:!ADH:!MD5</code></li>
+<li>版本 0.8.19：默认 ssl 加密为 <code>ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM</code></li>
+<li>版本 0.7.64，0.8.18 或之前：默认 ssl 加密为 <code>ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP</code></li>
+</ul>
+<hr>
+<p>作者：Igor Sysoev<br>编辑：Brian Mercer</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/08/Using-nginx-as-HTTP-load-balancer-翻译/" rel="next" title="Using nginx as HTTP load balancer 翻译">
+                <i class="fa fa-chevron-left"></i> Using nginx as HTTP load balancer 翻译
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/28/关于容器/" rel="prev" title="关于容器">
+                关于容器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#配置-https-服务器"><span class="nav-number">1.</span> <span class="nav-text">配置 https 服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#https-服务器优化"><span class="nav-number">1.1.</span> <span class="nav-text">https 服务器优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSL-证书链"><span class="nav-number">1.2.</span> <span class="nav-text">SSL 证书链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单独的-http-https-服务器"><span class="nav-number">1.3.</span> <span class="nav-text">单独的 http/https 服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于域名的-https-服务器"><span class="nav-number">1.4.</span> <span class="nav-text">基于域名的 https 服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多个名字的-ssl-证书"><span class="nav-number">1.5.</span> <span class="nav-text">多个名字的 ssl 证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#域名标识"><span class="nav-number">1.6.</span> <span class="nav-text">域名标识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#兼容性"><span class="nav-number">1.7.</span> <span class="nav-text">兼容性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

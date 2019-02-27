@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php framework ci,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="ci - core - controller CI_Controller 类的注释为：  应用控制器类 作为框架中所有类库对象都会被赋值保存在此类对象中的超类">
+<meta name="keywords" content="php framework ci">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ci - core - controller">
+<meta property="og:url" content="http://yoursite.com/2017/07/09/ci-core-controller/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="ci - core - controller CI_Controller 类的注释为：  应用控制器类 作为框架中所有类库对象都会被赋值保存在此类对象中的超类">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:20:23.455Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ci - core - controller">
+<meta name="twitter:description" content="ci - core - controller CI_Controller 类的注释为：  应用控制器类 作为框架中所有类库对象都会被赋值保存在此类对象中的超类">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/09/ci-core-controller/">
+
+
+
+
+
+  <title>ci - core - controller | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/09/ci-core-controller/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ci - core - controller</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-09T16:23:56+08:00">
+                2017-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://github.com/bcit-ci/CodeIgniter/blob/develop/system/core/Controller.php" target="_blank" rel="noopener">ci - core - controller</a></p>
+<p><code>CI_Controller</code> 类的注释为：</p>
+<blockquote>
+<p>应用控制器类</p>
+<p>作为框架中所有类库对象都会被赋值保存在此类对象中的超类</p>
+</blockquote>
+<a id="more"></a>
+<p>该类内容极少，只有一个静态私有属性用来保存该类的单例对象。当然作为单例模式的话，也有一个公开的获取该类对象的静态方法 <code>&amp;get_instance()</code>。最后，只有一个构造函数。</p>
+<p>构造函数中，首先实例化本类，然后保存到静态私有属性中。接下来派上用场的是两个全局函数：<code>is_loaded()</code>、<code>load_class()</code>。囧。<code>is_loaded()</code> 这个函数在这里也用到了，那我在写 <code>common</code> 的时候就写错了，当时以为这个函数只在 <code>load_class()</code> 内部调用。所以这里通过 <code>foreach</code> 依次从 <code>is_loaded()</code> 中在整个应用流程控制器实例化之前就获得已经实例化的各种类的名称，然后使用 <code>&amp; load_class($class)</code>，将这些类通过引用赋值到控制器对象的变量中，这样在之后使用的时候，就可以直接使用 <code>$this-&gt;class_name</code> 这样来调用类对象。</p>
+<p>基础核心类对象引用完毕之后，控制器类对象还不能使用。因为除了这些核心类对象之外，不可能完全不使用其他类，如果要使用其他类，那么自然需要一种方式去加载这个类。以前使用魔术方法 <a href="https://secure.php.net/manual/zh/function.autoload.php" target="_blank" rel="noopener"><code>__autoload()</code></a>，后来 php 有了 <a href="https://secure.php.net/manual/zh/function.spl-autoload-register.php" target="_blank" rel="noopener"><code>spl_autoload_register()</code></a>。手册中为 <a href="https://secure.php.net/manual/zh/language.oop5.autoload.php" target="_blank" rel="noopener">类的自动加载</a>。不过现在许多框架间有个 PSR 标准，其中 <a href="https://laravel-china.org/topics/2081/psr-specification-psr-4-automatic-loading-specification" target="_blank" rel="noopener">PSR-4</a> 为自动加载规范,使用了命名空间等特性。</p>
+<p>不过在 CI 框架中，使用的是一个 <code>loader</code> 类来加载类。所以在控制器构造函数中，核心类之后，就将 <code>loader</code> 类的对象也保存在控制器类对象的属性 <code>load</code> 中，然后对该对象初始化，做好对象内部的准备工作。这样在控制器对象中可以通过 <code>$this-&gt;load-&gt;class_name</code> 来加载类了。</p>
+<p>最后记录下日志 - 控制器类已经实例化。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>可以很明显的看到控制器超类使用的单例的思想，因为每次请求响应的整个流程只需要一个控制器对象。不过不知道是不是因为要继承的原因，所以和以往的单例模式的实际写法不相同。我对一个类的单例的写法，通常是一个私有的静态属性 <code>$instance</code> 来保存本类对象，然后构造函数以及魔术方法 <code>__clone()</code> 是私有的。然后这个类通过一个静态公有方法 <code>&amp;getinstance()</code> 来获取该类对象。</p>
+<p>简单示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">class test</span><br><span class="line">&#123;</span><br><span class="line">	private static $instance;</span><br><span class="line"></span><br><span class="line">	private function __construct()&#123;&#125;</span><br><span class="line"></span><br><span class="line">	private function __clone()&#123;&#125;</span><br><span class="line"></span><br><span class="line">	public static function getInstance()</span><br><span class="line">	&#123;</span><br><span class="line">		if(!self::$instance) &#123;</span><br><span class="line">			self::$instance = new test();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		return self::$instance;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以 CI 中的控制器类从代码来讲似乎并不严格算是单例，因为构造函数是公开的，可以随意 new 对象。但是从使用方法来说，应该是单例的的使用方法：只实例化一个对象，并只使用这一个对象。在 CI 框架中，整个的应用流程中，控制器的实例化只有在 <code>Codeigniter.php</code> 中末尾的一次。</p>
+<p>而且常规的单例模式，似乎静态私有属性即可，获取对象的方法并不需要是按引用返回。此处 CI 框架控制器这里使用的是按引用返回。并不清楚这样做的目的。以及虽然设置了 <code>getInstance()</code>，但是在 <code>Codeigniter.php</code> 中还是通过 new 来实例化控制器的啊。</p>
+<p>也许在查看了其他的代码之后可以对这个问题有解答。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-framework-ci/" rel="tag"># php framework ci</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/07/ci-core-codeigniter-php/" rel="next" title="ci - core - codeigniter.php">
+                <i class="fa fa-chevron-left"></i> ci - core - codeigniter.php
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/09/ci-core-exceptions/" rel="prev" title="ci-core-exceptions">
+                ci-core-exceptions <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

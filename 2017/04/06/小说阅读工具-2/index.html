@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="除了完成小说获取展示的基本功能。继续加了一些小功能：  搜索页面 - 列表页面 - 章节页面之间的跳转； 文字大小的调整 D页面背景色的指定更改  界面通过bootstrap实现，动效通过jquery实现。由外部的CDN引入。">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小说阅读工具 2">
+<meta property="og:url" content="http://yoursite.com/2017/04/06/小说阅读工具-2/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="除了完成小说获取展示的基本功能。继续加了一些小功能：  搜索页面 - 列表页面 - 章节页面之间的跳转； 文字大小的调整 D页面背景色的指定更改  界面通过bootstrap实现，动效通过jquery实现。由外部的CDN引入。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:10:03.958Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小说阅读工具 2">
+<meta name="twitter:description" content="除了完成小说获取展示的基本功能。继续加了一些小功能：  搜索页面 - 列表页面 - 章节页面之间的跳转； 文字大小的调整 D页面背景色的指定更改  界面通过bootstrap实现，动效通过jquery实现。由外部的CDN引入。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/06/小说阅读工具-2/">
+
+
+
+
+
+  <title>小说阅读工具 2 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/06/小说阅读工具-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">小说阅读工具 2</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-06T00:52:41+08:00">
+                2017-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>除了完成小说获取展示的基本功能。继续加了一些小功能：</p>
+<ol>
+<li>搜索页面 - 列表页面 - 章节页面之间的跳转；</li>
+<li>文字大小的调整</li>
+<li>D页面背景色的指定更改</li>
+</ol>
+<p>界面通过<code>bootstrap</code>实现，动效通过<code>jquery</code>实现。由外部的CDN引入。<br><a id="more"></a><br>参考网址：</p>
+<ol>
+<li><a href="http://v3.bootcss.com/components/" target="_blank" rel="noopener">bootstrap</a></li>
+<li><a href="http://www.jquery123.com/" target="_blank" rel="noopener">jquery</a></li>
+</ol>
+<p>问题在于我使用<code>chrome</code>的开发者工具可以看到加载页面的速度有2-5秒，加载的文件大小有2-3M。两个数据我都很差，起码速度是能直接感受到，而文件大小实在太费流量了。『不知道对不对，对于速度，我觉得虽然是CDN，但是万一线路就是不好呢。。』引入服务器本地的相关文件。『当时操作时没有实时记录，所以具体数据不太清楚了。』总之，情况都不好。现在想到的方法有缓存以及数据压缩传输。当时想到获取小说时，源网站使用了压缩，所以google了一下gzip压缩。在nginx上配置好了之后，通过谷歌开发者可以看到两个数据都有了明显的降低。加载速度为1-2.5秒。加载文件的大小为100KB左右。</p>
+<p>附上Nginx关于gzip模块的配置文档，翻译自<a href="http://nginx.org/en/docs/http/ngx_http_gzip_module.html" target="_blank" rel="noopener">http://nginx.org/en/docs/http/ngx_http_gzip_module.html</a></p>
+<h2 id="Module-ngx-http-gzip-module"><a href="#Module-ngx-http-gzip-module" class="headerlink" title="Module ngx_ http _ gzip_module"></a><a href="http://nginx.org/en/docs/http/ngx_http_gzip_module.html" target="_blank" rel="noopener">Module ngx_ http _ gzip_module</a></h2><p>ngx_http _gzip _module模块是一个使用“gzip”方法压缩响应的过滤器。 这通常会将传输数据的大小减少一半或更多。</p>
+<h3 id="1-配置示例"><a href="#1-配置示例" class="headerlink" title="1. 配置示例"></a>1. 配置示例</h3><blockquote>
+<p>gzip              on;</p>
+<p>gzip_ min_ length 1000;</p>
+<p>gzip_ proxied     expired no-cache no-store private auth;</p>
+<p>gzip_types        text/plain application/xml;</p>
+</blockquote>
+<p>$gzip_ratio变量可用于记录所获得的压缩比。</p>
+<h3 id="2-指令"><a href="#2-指令" class="headerlink" title="2. 指令"></a>2. 指令</h3><blockquote>
+<p>语法：  <strong>gzip</strong> on | off;</p>
+<p>默认：  gzip off;</p>
+<p>上下文：http, server, location, if in location</p>
+</blockquote>
+<p>↑-启用或禁用对响应数据的压缩。</p>
+<blockquote>
+<p>语法： <strong>gzip_buffers</strong> <em>number size</em>;</p>
+<p>默认： gzip_buffers 32 4k | 16 8k;</p>
+<p>上下文：http, server, location</p>
+</blockquote>
+<p>↑-设置压缩响应数据的数量和大小。默认情况下，缓冲区大小等同与一个内存页。而大小为4k还是8k则取决于平台。</p>
+<ul>
+<li>0.7.28版本之前，默认设置为4个4k或者8k缓冲区。</li>
+</ul>
+<blockquote>
+<p>语法： <strong>gzip_ comp_ level</strong> <em>level</em>;</p>
+<p>默认： gzip_comp _level 1;</p>
+<p>上下文： http, server, location</p>
+</blockquote>
+<p>↑-设置gzip压缩响应的等级。等级范围为1-9。</p>
+<blockquote>
+<p>语法： <strong>gzip_disable</strong> <em>regex</em> …;</p>
+<p>默认：——</p>
+<p>上下文：http, server, location</p>
+<ul>
+<li>该指令在0.6.23版本中出现。</li>
+</ul>
+</blockquote>
+<p>↑-禁止对被正则表达式匹配到的“User-Agent”头字段的请求的响应进行压缩。（即可设置白名单，对此名单内的响应不压缩。）</p>
+<p>特殊掩码“msie6”（0.7.12）对应于正则表达式“MSIE [4-6] \。”，但工作速度更快。 从版本0.8.11开始，“MSIE 6.0; … SV1”从此掩码中去除。（这句翻译的很奇怪。不好理解。）</p>
+<blockquote>
+<p>语法： <strong>gzip_ min_ length</strong> <em>length</em>;</p>
+<p>默认： gzip_ min_ length 20;</p>
+<p>上下文：http, server, location</p>
+</blockquote>
+<p>↑-设置压缩数据的最小数。（即小于这个数，则不进行压缩了。）该长度仅根据“Content-Length”响应头字段确定。</p>
+<blockquote>
+<p>语法： **gzip_ http_ version 1.0 | 1.1;</p>
+<p>默认： gzip_ http_ version 1.1;</p>
+<p>上下文：http, server, location</p>
+</blockquote>
+<p>↑-设置压缩响应所需的请求的最小HTTP版本。</p>
+<blockquote>
+<p>语法： <strong>gzip_ proxied</strong> off | expired | no-cache | no-store | private | no_ last_ modified | no_etag | auth | any…;</p>
+<p>默认： gzip_proxied off;</p>
+<p>上下文：http, server, location</p>
+</blockquote>
+<p>↑-根据请求和响应启用或禁用代理请求的响应的gzip压缩。 具体是代理请求由“Via”请求头字段的存在来确定。指令接受多重参数：</p>
+<ul>
+<li>off : 禁止所有的代理请求的压缩，忽略其他参数</li>
+<li>expired : 如果响应头包括具有控制缓存时间的“Expires”字段与其值，则启用压缩。</li>
+<li>no-cache : 如果响应头包含“Cache-Control:no-cache”,开启压缩。</li>
+<li>no-store : 如果响应头包含“Cache-Control:no-store”,开启压缩。</li>
+<li>private : 如果响应头包含“Cache-Control:private”,开启压缩。</li>
+<li>no_ last_ modified : 如果响应头没有包含“Last-Modified”,开启压缩。</li>
+<li>no_etag : 如果响应头没有包含“ETag”,开启压缩。</li>
+<li>auth : 如果响应头包含“Authorization”,开启压缩。</li>
+<li>any : 为所有的代理请求都开启压缩。</li>
+</ul>
+<blockquote>
+<p>语法： <strong>gzip_types</strong> <em>mime-type</em>…;</p>
+<p>默认： gzip_type text/html;</p>
+<p>上下文：http, server, location</p>
+</blockquote>
+<p>↑-除了“text/html”，也可以对其他指定的MIME类型的响应进行压缩。特殊字符“*”可匹配所有的Mime类型（0.8.29）。“text/html”类型的响应则总会被压缩。</p>
+<blockquote>
+<p>语法： <strong>gzip_vary</strong> on | off;<br>默认： gzip_vary off;<br>上下文：http, server, location</p>
+</blockquote>
+<p>↑-当指令gzip,gzip_static,或者gunzip开启，允许或者禁止插入“Vary:Accept-Encoding”响应头域。</p>
+<h3 id="3-嵌入变量"><a href="#3-嵌入变量" class="headerlink" title="3.嵌入变量"></a>3.嵌入变量</h3><ul>
+<li>$gzip_ratio：实现的压缩比，即原始和压缩响应大小之间的比率。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/25/PHP-manual-mysqli-Metadata-翻译/" rel="next" title="PHP manual-mysqli-Metadata-翻译">
+                <i class="fa fa-chevron-left"></i> PHP manual-mysqli-Metadata-翻译
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/06/小说阅读工具/" rel="prev" title="小说阅读工具">
+                小说阅读工具 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Module-ngx-http-gzip-module"><span class="nav-number">1.</span> <span class="nav-text">Module ngx_ http _ gzip_module</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-配置示例"><span class="nav-number">1.1.</span> <span class="nav-text">1. 配置示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-指令"><span class="nav-number">1.2.</span> <span class="nav-text">2. 指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-嵌入变量"><span class="nav-number">1.3.</span> <span class="nav-text">3.嵌入变量</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

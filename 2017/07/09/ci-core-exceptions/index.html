@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php framework ci,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="ci-core-exceptions 异常类的属性有两个。一个是 $ob_level，是输出缓冲机制的嵌套等级。在 php 中，有一套 输出缓冲控制机制 用来控制输出。另一个属性为允许的错误等级列表，以数组形式存储在　$levels　中。">
+<meta name="keywords" content="php framework ci">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ci-core-exceptions">
+<meta property="og:url" content="http://yoursite.com/2017/07/09/ci-core-exceptions/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="ci-core-exceptions 异常类的属性有两个。一个是 $ob_level，是输出缓冲机制的嵌套等级。在 php 中，有一套 输出缓冲控制机制 用来控制输出。另一个属性为允许的错误等级列表，以数组形式存储在　$levels　中。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:23:15.114Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ci-core-exceptions">
+<meta name="twitter:description" content="ci-core-exceptions 异常类的属性有两个。一个是 $ob_level，是输出缓冲机制的嵌套等级。在 php 中，有一套 输出缓冲控制机制 用来控制输出。另一个属性为允许的错误等级列表，以数组形式存储在　$levels　中。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/09/ci-core-exceptions/">
+
+
+
+
+
+  <title>ci-core-exceptions | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/09/ci-core-exceptions/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ci-core-exceptions</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-09T20:58:48+08:00">
+                2017-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://github.com/bcit-ci/CodeIgniter/blob/develop/system/core/Exceptions.php" target="_blank" rel="noopener">ci-core-exceptions</a></p>
+<p>异常类的属性有两个。一个是 <code>$ob_level</code>，是输出缓冲机制的嵌套等级。在 php 中，有一套 <a href="https://secure.php.net/manual/zh/book.outcontrol.php" target="_blank" rel="noopener">输出缓冲控制机制</a> 用来控制输出。另一个属性为允许的错误等级列表，以数组形式存储在　<code>$levels</code>　中。</p>
+<a id="more"></a>
+<h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><p>构造方法唯一的作用是获取当前缓冲等级，保存在属性　<code>$ob_level</code>　中。</p>
+<h2 id="异常记录"><a href="#异常记录" class="headerlink" title="异常记录"></a>异常记录</h2><p><code>log_exception($severity, $message, $filepath, $line)</code>：</p>
+<p>记录错误信息。</p>
+<h2 id="404-错误处理"><a href="#404-错误处理" class="headerlink" title="404 错误处理"></a>404 错误处理</h2><p><code>show_404($page = &#39;&#39;, $log_error = TRUE)</code>：</p>
+<p>依据命令行，web 服务器等 PHP 运行模式的不同，分别设定错误信息。根据参数 <code>$log_error</code> 来决定是否记录错误信息。然后输出错误信息。终止程序。</p>
+<p>这里输出错误信息，是通过调用下面这个方法 <code>show_error()</code> 来实现的，因为 404 也属于常规错误。不过应该比常规更常规，所以单独处理一下再和其他错误一样由该函数处理。</p>
+<h2 id="常规错误展示"><a href="#常规错误展示" class="headerlink" title="常规错误展示"></a>常规错误展示</h2><p><code>show_error($heading, $message, $template = &#39;error_general&#39;, $status_code = 500)</code>：</p>
+<p>设置常规错误模版路径 <code>$template_path</code>。然后根据 PHP 实际的运行模式来定制错误信息格式，以及指定模版文件。如果 <code>ob_get_level() &gt; $this-&gt;ob_level + 1</code> 则冲刷出（送出）输出缓冲区内容并关闭缓冲。判断的条件直观的解释就是 「输出缓冲机制的嵌套级别，比保存在属性中的嵌套级别高2」，级别是由 <a href="https://secure.php.net/manual/zh/function.ob-start.php" target="_blank" rel="noopener">ob_start()</a> 开启的，所以应该等价于 「在相关的处理之前，又使用了两次 <code>ob_start()</code> 函数」。这里 「相关的处理」 是指需要通过对 <code>ob_get_level() &gt; $this-&gt;ob_level + 1</code> 进行判断之后的操作。本类中后面几个函数就是这样，之后会提到。</p>
+<p>如果等级不高于2，则使用 <code>ob_start()</code> 再开一层缓冲，然后引入模版文件，通过 <code>ob_get_contents()</code> 获取缓冲区的内容保存到 <code>$buffer</code> 中，然后清空顶层缓冲区。返回 <code>$buffer</code>。</p>
+<p>以上解释为字面的解释，到底是什么目的，缓冲区输出的应该是什么内容，返回的是什么内容，一时并不知道。依旧寄希望于其余部分的代码，希望可以有答案。</p>
+<h2 id="展示异常"><a href="#展示异常" class="headerlink" title="展示异常"></a>展示异常</h2><p><code>show_exception($exception)</code>：</p>
+<p>设置异常的模版文件路径。设置异常信息。根据模式来定制模版文件。接下来的代码和之前的那个函数的最后部分从缓冲区嵌套等级的判断条件开始几乎相同，唯一不同的是上一个方法最后是返回缓冲区的内容，而此方法则是直接输出了内容。</p>
+<h2 id="PHP-原生错误处理方式"><a href="#PHP-原生错误处理方式" class="headerlink" title="PHP 原生错误处理方式"></a>PHP 原生错误处理方式</h2><p><code>show_php_error($severity, $message, $filepath, $line)</code>：</p>
+<p>设置错误视图的路径。获取错误等级。根据运行模式定制模版文件。不过此处与之前两个方法不同的是，这里要进行一些处理，当在非命令行模式下时，对文件路径进行处理，不使用全部的路径，而只使用最后的两个路径段落。</p>
+<p>接着同样与之前两个方法一样，判断缓冲区嵌套等级来决定是否输出顶层缓冲区内容，并关闭顶层缓冲区。以及开启 <code>ob_start()</code>，引入模版文件，获取顶层缓冲区内容，关闭顶层缓冲区，输出内容。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在本类中，对于缓冲区部分的代码实现的背后逻辑还没有理解透彻。顶层缓冲区里保存的是什么内容，为什么对它这么处理等，还不明确。</p>
+<p>仔细想想，既然是缓冲区，缓冲的就是原本要输出的内容，本类中的几处输出基本都是从顶层缓冲区获取的内容，然后输出的。如果嵌套等级大于 1，这些操作就会将顶层的内容放到了倒数第二层，其实因为此刻顶层已经被清除，所以内容依旧在顶层，不过是新的顶层。总的来说，这些操作使得输出内容在缓冲区的等级下降，也就是后面的内容会不断的与之前的内容合并。直到最后一级，这个时候输出内容就直接在浏览器的界面中出现了。</p>
+<p>到这里，这些问题想的就差不多了。这里的缓冲区解决的应该是整个流程中错误的追踪，就跟我们平时在框架中调试时一样，一下子出现好长一个错误列表，每个细节的错误信息都被显示出来了。</p>
+<p>不过，现在弄明白了缓冲区一层一层往下合并，那么新创建的内容一层一层往上保存在缓冲区是如何实现的呢。在本类中，虽然有提到错误信息，但是这些信息仅仅被保存在 <code>$message</code> 变量中，并没有被输出啊。就像方法 <code>show_php_error($severity, $message, $filepath, $line)</code> 的参数中明明有 <code>$message</code>，但是方法内部却完全没有用到这个值。唯一有些区别的是 <code>include()</code>，不过这不是把脚本内容包含进来吗，比如包含的脚本里面有 <code>$a</code>，包含进来之后，就能在当前的脚本中使用该变量了。或者这其中有什么我遗漏了的信息，在手册查了查 <code>include()</code>，发现果然，这个函数除了包含脚本之外，还有执行的作用。所以如果包含的错误模版文件内有 html 的代码，就会被直接输出，那么此时这些内容就被保存到了缓冲区中。</p>
+<p>还是不过，不过包含的模版文件应当是死的啊，怎么追踪实时的错误信息呢，除非往里面写入。但是从本类的方法中，只有方法 <code>log_exception()</code> 等需要记录操作的逻辑，记录了一下信息，别的如 <code>show_error()</code>、<code>show_exception()</code> 都仅仅是根据运行模式重新组织了错误信息的格式而已，并没有进行写入这些操作。更别说方法 <code>show_php_error()</code> 了，如前面提到，这个方法中有错误信息的参数，但方法内部根本就没有使用过。</p>
+<p>想到这里，我忽然想到，写入的操作在这些方法中仅有 <code>include</code>，那么被包含的文件中如果有对错误信息处理输出的代码，错误信息自然就被保存到缓冲区了。果然，根据方法内的模版路径找过去，被包含的文件确实对错误信息进行了操作输出。所以我一直默认就以为错误模版文件是单纯的 html 文件了，这种没有经过验证的思想要不得。不过，这东西甚至不用自己去找目标文件看里面的内容。直接靠直观的认识就应该能够想到要能够输出实时错误，那模版文件必定是可以执行操作的，是动态的。</p>
+<p>所以最终还是对 PHP 不够熟悉，比如不知道 <code>include</code> 还能够执行文件。以及思维不够敏锐，思维有局限。前者需要多看手册，后者需要多思考。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-framework-ci/" rel="tag"># php framework ci</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/09/ci-core-controller/" rel="next" title="ci - core - controller">
+                <i class="fa fa-chevron-left"></i> ci - core - controller
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/10/ci-core-hooks/" rel="prev" title="ci - core - hooks">
+                ci - core - hooks <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#构造方法"><span class="nav-number">1.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常记录"><span class="nav-number">2.</span> <span class="nav-text">异常记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#404-错误处理"><span class="nav-number">3.</span> <span class="nav-text">404 错误处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常规错误展示"><span class="nav-number">4.</span> <span class="nav-text">常规错误展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#展示异常"><span class="nav-number">5.</span> <span class="nav-text">展示异常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP-原生错误处理方式"><span class="nav-number">6.</span> <span class="nav-text">PHP 原生错误处理方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="preg,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="note:学习书籍：正则表达式必知必会  1. 匹配单个字符1.1 纯文本匹配。想要匹配ben。表达式就是该字符串本身。根据编程语言本身特性，可能存在i标志表示不区分大小写匹配。    ben 匹配 ben    ben/i 匹配 ben BEN等字符串">
+<meta name="keywords" content="preg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则表达式学习记录">
+<meta property="og:url" content="http://yoursite.com/2017/04/08/正则表达式学习记录/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="note:学习书籍：正则表达式必知必会  1. 匹配单个字符1.1 纯文本匹配。想要匹配ben。表达式就是该字符串本身。根据编程语言本身特性，可能存在i标志表示不区分大小写匹配。    ben 匹配 ben    ben/i 匹配 ben BEN等字符串">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T14:25:12.138Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="正则表达式学习记录">
+<meta name="twitter:description" content="note:学习书籍：正则表达式必知必会  1. 匹配单个字符1.1 纯文本匹配。想要匹配ben。表达式就是该字符串本身。根据编程语言本身特性，可能存在i标志表示不区分大小写匹配。    ben 匹配 ben    ben/i 匹配 ben BEN等字符串">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/08/正则表达式学习记录/">
+
+
+
+
+
+  <title>正则表达式学习记录 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/08/正则表达式学习记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">正则表达式学习记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-08T17:02:59+08:00">
+                2017-04-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>note:学习书籍：正则表达式必知必会</li>
+</ul>
+<h2 id="1-匹配单个字符"><a href="#1-匹配单个字符" class="headerlink" title="1. 匹配单个字符"></a>1. 匹配单个字符</h2><h3 id="1-1-纯文本匹配。"><a href="#1-1-纯文本匹配。" class="headerlink" title="1.1 纯文本匹配。"></a>1.1 纯文本匹配。</h3><p>想要匹配<code>ben</code>。表达式就是该字符串本身。根据编程语言本身特性，可能存在<code>i</code>标志表示不区分大小写匹配。<br>    ben 匹配 ben<br>    ben/i 匹配 ben BEN等字符串</p>
+<a id="more"></a>
+<h3 id="1-2-匹配任意字符"><a href="#1-2-匹配任意字符" class="headerlink" title="1.2 匹配任意字符"></a>1.2 匹配任意字符</h3><p><code>.</code>字符匹配任何一个单个字符、字母、数字或者它本身。（不能匹配<code>\n</code>。）</p>
+<h3 id="1-3-匹配特殊字符"><a href="#1-3-匹配特殊字符" class="headerlink" title="1.3 匹配特殊字符"></a>1.3 匹配特殊字符</h3><p>元字符<code>\</code> 可以对字符进行转义。表示“这个字符有特殊汉仪，而不是字符本身含义”。如<code>\.</code> 匹配<code>.</code>,而不是<code>.</code>本身代表的任意字符。</p>
+<h2 id="2-匹配一组字符"><a href="#2-匹配一组字符" class="headerlink" title="2. 匹配一组字符"></a>2. 匹配一组字符</h2><h3 id="2-1-匹配多个字符中的一个"><a href="#2-1-匹配多个字符中的一个" class="headerlink" title="2.1 匹配多个字符中的一个"></a>2.1 匹配多个字符中的一个</h3><p>元字符<code>[</code>和<code>]</code>之间的所有字符都是该集合的组成部分，字符集合的匹配结果是能够与该集合里的任意一个成员相匹配的文本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[Rr]eg[Ee]x 匹配 RegEx Regex regEx regex</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-利用字符集合区间"><a href="#2-2-利用字符集合区间" class="headerlink" title="2.2 利用字符集合区间"></a>2.2 利用字符集合区间</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[he]a[0123456789] 匹配 第一个字符为h或e 然后是a 然后是任意一个数字。</span><br></pre></td></tr></table></figure>
+<p>字符区间可由连字符<code>-</code>定义.上面的正则表达式可表示为<code>[he]a[0-9]</code>。</p>
+<ul>
+<li>区间的尾字符要小于首字符，如果相反，模式将无效。</li>
+<li>而元字符<code>-</code>只在<code>[]</code>中起作用，在其他位置都匹配它本身。</li>
+</ul>
+<h3 id="2-3-取非匹配"><a href="#2-3-取非匹配" class="headerlink" title="2.3 取非匹配"></a>2.3 取非匹配</h3><p>使用元字符<code>^</code>表明对一个字符集合进行取非匹配，即不要这些字符。<br><code>[^0-9]</code>,匹配除了数字外的所有字符。</p>
+<h2 id="3-使用元字符"><a href="#3-使用元字符" class="headerlink" title="3. 使用元字符"></a>3. 使用元字符</h2><h3 id="3-1-对特殊字符进行转义"><a href="#3-1-对特殊字符进行转义" class="headerlink" title="3.1 对特殊字符进行转义"></a>3.1 对特殊字符进行转义</h3><p>因为元字符在正则表达式里有着特殊的含义，所以这些字符就无法用来表示本身。由上文提及的<code>\</code>反斜线来转义元字符，让其匹配本身。</p>
+<ul>
+<li>配对的元字符如<code>[</code>和<code>]</code>不用做元字符时必须转义，否则正则表达式分析器可能抛出一个错误。</li>
+</ul>
+<h3 id="3-2-匹配空白字符"><a href="#3-2-匹配空白字符" class="headerlink" title="3.2 匹配空白字符"></a>3.2 匹配空白字符</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">元字符					说明</span><br><span class="line">[\b]		回退（并删除）一个字符（Backspace键）</span><br><span class="line">\f			换页符</span><br><span class="line">\n			换行符</span><br><span class="line">\r			回车符</span><br><span class="line">\t			制表符（Tab键）</span><br><span class="line">\v			垂直制表符</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><code>\r\n</code>是windows所使用的文本行结束标签。Unix和Linux系统只使用一个换行符来结束一个文本行；换句话说，在Linux/Unix系统上匹配空白行只使用<code>\n\n</code>即可，不需要加上<code>\r</code>。同时适用于Windows和Unix/Linux系统的正则表达式应该包含一个可选的<code>\r</code>和一个必须被匹配的<code>\n</code>。</li>
+</ul>
+</blockquote>
+<h3 id="3-3-匹配特定的字符类别"><a href="#3-3-匹配特定的字符类别" class="headerlink" title="3.3 匹配特定的字符类别"></a>3.3 匹配特定的字符类别</h3><h4 id="3-3-1-匹配数字（与非数字）"><a href="#3-3-1-匹配数字（与非数字）" class="headerlink" title="3.3.1 匹配数字（与非数字）"></a>3.3.1 匹配数字（与非数字）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">元字符			说明</span><br><span class="line">\d			任何一个数字字符（等价于[0-9]）</span><br><span class="line">\D			任何一个非数字字符（等价于[^0-9]）</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-2-匹配字母和数字（与非字母和数字）"><a href="#3-3-2-匹配字母和数字（与非字母和数字）" class="headerlink" title="3.3.2 匹配字母和数字（与非字母和数字）"></a>3.3.2 匹配字母和数字（与非字母和数字）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">元字符			说明</span><br><span class="line">\w			任何一个字符数字字符（大小写均可）或下划线（等价于[0-9a-zA-Z_]）</span><br><span class="line">\W			任何一个非数字字母或非下划线（等价于[^0-9a-zA-Z_]）</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-3-匹配空白字符（与非空白字符）"><a href="#3-3-3-匹配空白字符（与非空白字符）" class="headerlink" title="3.3.3 匹配空白字符（与非空白字符）"></a>3.3.3 匹配空白字符（与非空白字符）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">元字符			说明</span><br><span class="line">\s			任何一个空白字符（等价于[\f\t\n\r\v]）</span><br><span class="line">\S			任何一个非空白字符(等价于[^\f\t\n\r\v])</span><br></pre></td></tr></table></figure>
+<ul>
+<li>用来匹配退格字符的<code>[\b]</code>元字符是一个特例：它不在类元字符<code>\s</code>的覆盖范围内，也没有被排除在类元字符<code>\S</code>范围外.</li>
+</ul>
+<h4 id="3-3-4-匹配16进制或8进制数值"><a href="#3-3-4-匹配16进制或8进制数值" class="headerlink" title="3.3.4 匹配16进制或8进制数值"></a>3.3.4 匹配16进制或8进制数值</h4><p>1.使用16进制</p>
+<p>以前缀<code>\x</code>给出。如<code>\x0A</code>对应于ASCII字符10（换行符），等价于<code>\n</code>。</p>
+<p>2.使用八进制</p>
+<p>以前缀<code>\0</code>给出。如<code>\011</code>对应于ASCII字符9（制表符），等价于<code>\t</code>。</p>
+<h2 id="4-重复匹配"><a href="#4-重复匹配" class="headerlink" title="4. 重复匹配"></a>4. 重复匹配</h2><h3 id="4-1-有多少个匹配"><a href="#4-1-有多少个匹配" class="headerlink" title="4.1 有多少个匹配"></a>4.1 有多少个匹配</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">元字符				说明</span><br><span class="line">  +          匹配一个或多个字符，至少一个</span><br><span class="line">  *          匹配任意次数的字符或字符集，包括0次</span><br><span class="line">  ？         匹配一个字符的0次或一次，即存在与不存在</span><br></pre></td></tr></table></figure>
+<h3 id="4-2-匹配的重复次数"><a href="#4-2-匹配的重复次数" class="headerlink" title="4.2 匹配的重复次数"></a>4.2 匹配的重复次数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">表达式				说明</span><br><span class="line">｛n｝ 		匹配n次字符或字符集   =n</span><br><span class="line">｛m,n｝		匹配至少m次，至多n次，（m&lt;n） m-n</span><br><span class="line"> &#123;n, &#125;		匹配至少n次  &gt;n</span><br></pre></td></tr></table></figure>
+<h3 id="4-3-防止过度匹配"><a href="#4-3-防止过度匹配" class="headerlink" title="4.3 防止过度匹配"></a>4.3 防止过度匹配</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">贪婪型元字符						懒惰型元字符</span><br><span class="line">	*                                *？</span><br><span class="line">	+                                +?</span><br><span class="line">	&#123;n,&#125;                            &#123;n,&#125;?</span><br></pre></td></tr></table></figure>
+<ul>
+<li>即在元字符后面加上<code>?</code>。过度匹配出现在<code>html</code>标签中，比如只要匹配当前的<code>div</code>，但是可能结果是匹配了所有的<code>div</code>。</li>
+</ul>
+<h2 id="5-位置匹配"><a href="#5-位置匹配" class="headerlink" title="5. 位置匹配"></a>5. 位置匹配</h2><h3 id="5-1-边界"><a href="#5-1-边界" class="headerlink" title="5.1 边界"></a>5.1 边界</h3><p>防止匹配<code>cat</code>却连<code>acatl</code>中的字符串也被匹配到的情况。</p>
+<h3 id="5-2-单词边界"><a href="#5-2-单词边界" class="headerlink" title="5.2 单词边界"></a>5.2 单词边界</h3><p><code>\b</code>用来匹配一个单词的开始或结尾。</p>
+<ul>
+<li><code>\b</code>匹配的是这样一个位置。这个位置位于一个能够用来构成单词的字符（字母、数字和下划线，也就是与<code>\w</code>相匹配的字符）和一个不能用来构成单词的字符（也就是与<code>\W</code>相匹配的字符）之间。</li>
+</ul>
+<p><code>\B</code> 表示不匹配一个单词边界。</p>
+<h3 id="5-3-字符串边界"><a href="#5-3-字符串边界" class="headerlink" title="5.3 字符串边界"></a>5.3 字符串边界</h3><p><code>^</code>字符定义字符串开头，<code>$</code>字符定义字符串结尾。</p>
+<ul>
+<li><code>^</code>只有当它出现在一个字符合集中(被放在<code>[</code>和<code>]</code>之间)并紧跟在<code>[</code>的后面时，它的作用是<strong>求非</strong>。如果在一个字符合集之外，并且位于表达式的开始，则它匹配字符串的开头。</li>
+</ul>
+<h2 id="6-使用子表达式"><a href="#6-使用子表达式" class="headerlink" title="6. 使用子表达式"></a>6. 使用子表达式</h2><h3 id="6-1-什么是子表达式"><a href="#6-1-什么是子表达式" class="headerlink" title="6.1 什么是子表达式"></a>6.1 什么是子表达式</h3><p>为了解决<code>&amp;nbsp;{2,}</code>匹配到<code>&amp;nbsp;;;;</code>而匹配不到<code>&amp;nbsp;&amp;nbsp;</code>的情况。</p>
+<h3 id="6-2-子表达式"><a href="#6-2-子表达式" class="headerlink" title="6.2 子表达式"></a>6.2 子表达式</h3><p>使用<code>(</code>和<code>)</code>将子表达式括起来，来将子表达式作为一个独立元素来使用。</p>
+<ul>
+<li><code>(</code>和<code>)</code>是元字符，如要匹配其本身，需要<code>\</code>转义。</li>
+</ul>
+<p><code>|</code>操作符，是或条件。<code>1|2</code>即匹配数字1或者数字2。</p>
+<h3 id="6-3-子表达式的嵌套"><a href="#6-3-子表达式的嵌套" class="headerlink" title="6.3 子表达式的嵌套"></a>6.3 子表达式的嵌套</h3><p>子表达式可以嵌套。但是需要十分注意细节。</p>
+<ul>
+<li>把必须匹配的情况考虑周全并写出一个匹配结果符合预期的正则表达式很容易，但把不需要匹配的情况也考虑周全并确保他们都将被排除在匹配结果之外往往困难的多。</li>
+</ul>
+<p>一个合法的<code>ip</code>正则表达式示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(((\d&#123;1,2&#125;)|(1\d&#123;2&#125;|(2[0-4]\d)|(25[0-5]))\.)&#123;3&#125;((\d&#123;1,2&#125;)|(1\d&#123;2&#125;)|(2[0-4]\d)|(25[0-5]))</span><br></pre></td></tr></table></figure>
+<h2 id="7-回溯引用：前后一致匹配"><a href="#7-回溯引用：前后一致匹配" class="headerlink" title="7. 回溯引用：前后一致匹配"></a>7. 回溯引用：前后一致匹配</h2><h3 id="7-1-回溯引用有什么用"><a href="#7-1-回溯引用有什么用" class="headerlink" title="7.1 回溯引用有什么用"></a>7.1 回溯引用有什么用</h3><p><code>&lt;[hH\][1-6]&gt;.*?&lt;/[hH][1-6]&gt;</code>在源代码无错的情况下会匹配到各级标题。但是如果源代码是<code>&lt;h2&gt;aaaa&lt;/3&gt;</code>，那么匹配就出现错误了。回溯引用就是为了解决这个问题。</p>
+<h3 id="7-2-回溯引用匹配"><a href="#7-2-回溯引用匹配" class="headerlink" title="7.2 回溯引用匹配"></a>7.2 回溯引用匹配</h3><ul>
+<li>回溯引用指的是模式的后半部分引用在前半部分中定义的子表达式。</li>
+</ul>
+<p>修改上面表达式为<code>&lt;[hH]([1-6])&gt;.*?&lt;/[hH]\1&gt;</code>。其中<code>\1</code>是对第一个子表达式的引用，所以这里，如果该子表达式匹配到2，那么后面也为2，就一一对应起来了。此处只有一个子表达式，如果有多个子表达式，那么后面的引用就是相应的序号。</p>
+<ul>
+<li>回溯引用只能用来引用模式里的子表达式，即使用<code>(</code>和<code>)</code>元字符括起来的正则表达式片段。</li>
+</ul>
+<h3 id="7-3-回溯引用在替换操作中的应用"><a href="#7-3-回溯引用在替换操作中的应用" class="headerlink" title="7.3 回溯引用在替换操作中的应用"></a>7.3 回溯引用在替换操作中的应用</h3><p>将邮件地址改为可点击的链接：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(\w+[\w\.]*@[\w\.]+\.\w+) =&gt; &lt;a href=&quot;mailto:$1&quot;&gt;$1&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+<p>大小写转换</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">元字符					说明</span><br><span class="line"> \E              结束\L或\U转换</span><br><span class="line"> \l              把下一个字符转换为小写</span><br><span class="line"> \L 			 把\L到\E之间的字符全部转换为小写</span><br><span class="line"> \u				 把下一个字符转换为大写</span><br><span class="line"> \U				 把\U到\E之间的字符全部转换为大写</span><br></pre></td></tr></table></figure>
+<h2 id="8-前后查找"><a href="#8-前后查找" class="headerlink" title="8 前后查找"></a>8 前后查找</h2><h3 id="8-1-前后查找"><a href="#8-1-前后查找" class="headerlink" title="8.1 前后查找"></a>8.1 前后查找</h3><p>为了解决“先想办法把自己不真正需要的东西检索出来，再手动删除它们”的问题。需要一个模式，包含的匹配本身并不返回，而是用于确定正确的匹配位置，它并不是匹配结果的一部分。</p>
+<h3 id="8-2-向前查找"><a href="#8-2-向前查找" class="headerlink" title="8.2 向前查找"></a>8.2 向前查找</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http://www.domain.com 从中获取协议</span><br><span class="line">使用正则表达式 &apos;.+:&apos;, 将匹配到&apos;http:&apos;，&apos;:&apos;是我们不需要的。</span><br><span class="line">将表达式修改为 &apos;.+(?=:)&apos;，将匹配到&apos;http&apos;。</span><br><span class="line"></span><br><span class="line">所以在子表达式内开头添加&apos;?=&apos;将排除匹配到的该子表达式，</span><br><span class="line">返回子表达式之前的内容，这就是向前查找。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>向前查找（和向后查找）匹配本身其实是有返回结果的，只是这个结果的字节长度永远是0而已。因此，前后查找有时也被称为零宽度（zero-width）匹配操作。</li>
+</ul>
+<h3 id="8-3-向后查找"><a href="#8-3-向后查找" class="headerlink" title="8.3 向后查找"></a>8.3 向后查找</h3><p>如果编程语言支持向后查找的话，那么向后查找操作符为<code>?&lt;=</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$23.45  获取价格</span><br><span class="line">使用表达式 &apos;\$[0-9.]+&apos;,将匹配到 &apos;$23.45&apos;</span><br><span class="line">将表达式修改为 &apos;(?&lt;=\$)[0-9.]+&apos;，将匹配到 &apos;23.45&apos;。</span><br><span class="line"></span><br><span class="line">所以在子表达式内开头添加&apos;？&lt;=&apos;将排除匹配到的该子表达式，</span><br><span class="line">返回子表达式后面的内容，这就是向后查找。</span><br></pre></td></tr></table></figure>
+<p><strong>向前查找模式的长度是可变的，它们可以包含<code>.</code>和<code>+</code>之类的元字符。而向后查找模式只能是固定的长度。</strong></p>
+<h3 id="8-4-把向前查找和向后查找结合起来"><a href="#8-4-把向前查找和向后查找结合起来" class="headerlink" title="8.4 把向前查找和向后查找结合起来"></a>8.4 把向前查找和向后查找结合起来</h3><p>这样当需要匹配<code>Html</code>内的标题是，就不会匹配到<code>&lt;title&gt;</code>和<code>&lt;/title&gt;</code>这些不需要的内容了。</p>
+<h3 id="8-5-对前后查找取非"><a href="#8-5-对前后查找取非" class="headerlink" title="8.5 对前后查找取非"></a>8.5 对前后查找取非</h3><p>使用前后查找来搜索要匹配的内容，被称为正前后查找（正向前查找，正向后查找）。而不搜索表达式中匹配的内容，被称为负前后查找。就是上文提到的取非，不过这时是在前后查找中实现，在这时，上文的<code>^</code>将换成<code>！</code>来表示取非。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">操作符								说明</span><br><span class="line">(?=)							正向前查找</span><br><span class="line">(?!)							负向前查找</span><br><span class="line">(?&lt;=)							正向后查找</span><br><span class="line">(?&lt;!)							负向后查找</span><br></pre></td></tr></table></figure>
+<h2 id="9-嵌入条件"><a href="#9-嵌入条件" class="headerlink" title="9. 嵌入条件"></a>9. 嵌入条件</h2><h3 id="9-1-为什么要嵌入条件"><a href="#9-1-为什么要嵌入条件" class="headerlink" title="9.1 为什么要嵌入条件"></a>9.1 为什么要嵌入条件</h3><p>某些表达式的后面部分取决于前面部分匹配到的内容，比如前面匹配到了<br><code>(</code>，才会有后面配对的<code>)</code>,否则都没有。这时就需要条件语句来处理。</p>
+<h3 id="9-2-正则表达式里的条件"><a href="#9-2-正则表达式里的条件" class="headerlink" title="9.2 正则表达式里的条件"></a>9.2 正则表达式里的条件</h3><p>条件使用<code>?</code>来定义。前期铺垫：</p>
+<ol>
+<li><code>?</code>匹配前一个字符或表达式，如果它存在的话。</li>
+<li><code>?=</code>和<code>?&lt;=</code>匹配前面或后面的文本，如果它存在的话。</li>
+</ol>
+<p>嵌入条件使用情况：</p>
+<ol>
+<li>根据一个回溯引用来进行条件处理。</li>
+<li>根据一个前后查找来进行条件处理。</li>
+</ol>
+<h4 id="9-2-1-回溯引用条件"><a href="#9-2-1-回溯引用条件" class="headerlink" title="9.2.1 回溯引用条件"></a>9.2.1 回溯引用条件</h4><p>回溯引用条件只在一个前面的子表达式搜索取得成功的情况下才允许使用一个表达式。定义的条件语法<code>(?(backreference)true-regex)</code>，其中<code>?</code>表示这是一个条件，<code>backreference</code>是一个回溯引用，<code>true-regex</code>是条件达成时要执行的子表达式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(&lt;[Aa]\s+[^&gt;]+&gt;\s*)?&lt;[Ii][Mm][Gg]\s+[^&gt;]+&gt;(?(1)\s*&lt;/Aa&gt;)</span><br><span class="line">此表达式中的条件为，如果存在`&lt;a&gt;`的起始标签，那么就匹配闭合便签，否则不用匹配。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>条件正则表达式往往十分复杂，建议分成各部分进行调试成功之后拼装。</li>
+</ul>
+<h4 id="9-2-2-前后查找条件"><a href="#9-2-2-前后查找条件" class="headerlink" title="9.2.2 前后查找条件"></a>9.2.2 前后查找条件</h4><p>前后查找条件只在一个向前查找或向后查找操作取得成功的情况下才允许一个表达式被使用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">如果只要匹配 &apos;41444&apos; 或者 &apos;41444-4444&apos; 这样格式的文本</span><br><span class="line">使用表达式 &apos;\d&#123;5&#125;(-\d&#123;4&#125;)?&apos; 会匹配到除了要匹配的目</span><br><span class="line">标文本之外的形如 &apos;55555-&apos; 的文本</span><br><span class="line">此时使用条件表达式 &apos;\d&#123;5&#125;(?(?=-)-\d&#123;4&#125;)&apos;</span><br><span class="line">该表达式的意思是，如果存在连字符，才会进行后面的匹配。</span><br></pre></td></tr></table></figure>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p><a href="http://php.net/manual/zh/reference.pcre.pattern.modifiers.php" target="_blank" rel="noopener">模式修饰符（PHP）</a></p>
+<p>IP地址：<br>    (((\d{1,2})|(1\d{2})|(2[0-4]\d)|(25[0-5])).){3}((\d{1,2})|(1\d{2})|(2[0-4]\d)|(25[0-5]))</p>
+<p>URL地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这里看不懂[-\w.]</span><br><span class="line">https?://[-\w.]+(:\d+)?(/([\w/_.]*)?)?</span><br></pre></td></tr></table></figure>
+<p>完整URL地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">疑问同上</span><br><span class="line">https?://(\w*:\w*@)?[-\w.]+(:\d+)?(/([\w/_.]*(\?\S+)?)?)?</span><br></pre></td></tr></table></figure>
+<p>电子邮件地址：<br>    (\w+.)*\w+@(\w+.)+[A-Za-z]+</p>
+<p>HTML注释</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-&#123;2&#125;.*?-&#123;2&#125;&gt;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/preg/" rel="tag"># preg</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/06/小说阅读工具/" rel="next" title="小说阅读工具">
+                <i class="fa fa-chevron-left"></i> 小说阅读工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/20/大型网站技术架构-概述-读书笔记/" rel="prev" title="大型网站技术架构-概述-读书笔记">
+                大型网站技术架构-概述-读书笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-匹配单个字符"><span class="nav-number">1.</span> <span class="nav-text">1. 匹配单个字符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-纯文本匹配。"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 纯文本匹配。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-匹配任意字符"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 匹配任意字符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-匹配特殊字符"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 匹配特殊字符</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-匹配一组字符"><span class="nav-number">2.</span> <span class="nav-text">2. 匹配一组字符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-匹配多个字符中的一个"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 匹配多个字符中的一个</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-利用字符集合区间"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 利用字符集合区间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-取非匹配"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 取非匹配</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-使用元字符"><span class="nav-number">3.</span> <span class="nav-text">3. 使用元字符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-对特殊字符进行转义"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 对特殊字符进行转义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-匹配空白字符"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 匹配空白字符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-匹配特定的字符类别"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 匹配特定的字符类别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-1-匹配数字（与非数字）"><span class="nav-number">3.3.1.</span> <span class="nav-text">3.3.1 匹配数字（与非数字）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-2-匹配字母和数字（与非字母和数字）"><span class="nav-number">3.3.2.</span> <span class="nav-text">3.3.2 匹配字母和数字（与非字母和数字）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-3-匹配空白字符（与非空白字符）"><span class="nav-number">3.3.3.</span> <span class="nav-text">3.3.3 匹配空白字符（与非空白字符）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-4-匹配16进制或8进制数值"><span class="nav-number">3.3.4.</span> <span class="nav-text">3.3.4 匹配16进制或8进制数值</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-重复匹配"><span class="nav-number">4.</span> <span class="nav-text">4. 重复匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-有多少个匹配"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 有多少个匹配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-匹配的重复次数"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 匹配的重复次数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-防止过度匹配"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 防止过度匹配</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-位置匹配"><span class="nav-number">5.</span> <span class="nav-text">5. 位置匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-边界"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-单词边界"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 单词边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-字符串边界"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 字符串边界</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-使用子表达式"><span class="nav-number">6.</span> <span class="nav-text">6. 使用子表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-什么是子表达式"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 什么是子表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-子表达式"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 子表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-子表达式的嵌套"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 子表达式的嵌套</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-回溯引用：前后一致匹配"><span class="nav-number">7.</span> <span class="nav-text">7. 回溯引用：前后一致匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-回溯引用有什么用"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 回溯引用有什么用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-回溯引用匹配"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 回溯引用匹配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-回溯引用在替换操作中的应用"><span class="nav-number">7.3.</span> <span class="nav-text">7.3 回溯引用在替换操作中的应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-前后查找"><span class="nav-number">8.</span> <span class="nav-text">8 前后查找</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-前后查找"><span class="nav-number">8.1.</span> <span class="nav-text">8.1 前后查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-向前查找"><span class="nav-number">8.2.</span> <span class="nav-text">8.2 向前查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-向后查找"><span class="nav-number">8.3.</span> <span class="nav-text">8.3 向后查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-把向前查找和向后查找结合起来"><span class="nav-number">8.4.</span> <span class="nav-text">8.4 把向前查找和向后查找结合起来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-5-对前后查找取非"><span class="nav-number">8.5.</span> <span class="nav-text">8.5 对前后查找取非</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-嵌入条件"><span class="nav-number">9.</span> <span class="nav-text">9. 嵌入条件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-为什么要嵌入条件"><span class="nav-number">9.1.</span> <span class="nav-text">9.1 为什么要嵌入条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-正则表达式里的条件"><span class="nav-number">9.2.</span> <span class="nav-text">9.2 正则表达式里的条件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#9-2-1-回溯引用条件"><span class="nav-number">9.2.1.</span> <span class="nav-text">9.2.1 回溯引用条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-2-2-前后查找条件"><span class="nav-number">9.2.2.</span> <span class="nav-text">9.2.2 前后查找条件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">10.</span> <span class="nav-text">附录</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

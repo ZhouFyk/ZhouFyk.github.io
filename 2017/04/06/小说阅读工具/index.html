@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="完成了一个小说的爬虫工具。 一开始我想做个简洁的小说阅读界面。由于某种不可描述的原因，我一直在看**小说。小说网站极尽了界面空间的利用，将一切可能的地方都塞上了小广告。大部分情况是：  关闭按钮是做在图片上的，点击按钮就是点击图片，就进入了广告页面； 按钮做的很小，能否点中基本看人品； 第一次点击是点击在一个透明广告上的，再次关闭才能真的关闭。">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小说阅读工具">
+<meta property="og:url" content="http://yoursite.com/2017/04/06/小说阅读工具/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="完成了一个小说的爬虫工具。 一开始我想做个简洁的小说阅读界面。由于某种不可描述的原因，我一直在看**小说。小说网站极尽了界面空间的利用，将一切可能的地方都塞上了小广告。大部分情况是：  关闭按钮是做在图片上的，点击按钮就是点击图片，就进入了广告页面； 按钮做的很小，能否点中基本看人品； 第一次点击是点击在一个透明广告上的，再次关闭才能真的关闭。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T14:28:19.755Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小说阅读工具">
+<meta name="twitter:description" content="完成了一个小说的爬虫工具。 一开始我想做个简洁的小说阅读界面。由于某种不可描述的原因，我一直在看**小说。小说网站极尽了界面空间的利用，将一切可能的地方都塞上了小广告。大部分情况是：  关闭按钮是做在图片上的，点击按钮就是点击图片，就进入了广告页面； 按钮做的很小，能否点中基本看人品； 第一次点击是点击在一个透明广告上的，再次关闭才能真的关闭。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/06/小说阅读工具/">
+
+
+
+
+
+  <title>小说阅读工具 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/06/小说阅读工具/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">小说阅读工具</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-06T15:47:14+08:00">
+                2017-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>完成了一个小说的爬虫工具。</p>
+<p>一开始我想做个简洁的小说阅读界面。由于某种不可描述的原因，我一直在看**小说。小说网站极尽了界面空间的利用，将一切可能的地方都塞上了小广告。大部分情况是：</p>
+<ol>
+<li>关闭按钮是做在图片上的，点击按钮就是点击图片，就进入了广告页面；</li>
+<li>按钮做的很小，能否点中基本看人品；</li>
+<li>第一次点击是点击在一个透明广告上的，再次关闭才能真的关闭。</li>
+</ol>
+<a id="more"></a>
+<p>小说阅读，自然需要小说内容。百度一下，就可以搜索到各种小说网站。简单分析一下页面的代码，最后选定了目标。</p>
+<ul>
+<li><p>简单说下该小说网站的url:</p>
+<p><a href="http://www.novel.com/novel-dir/novel-chapter" target="_blank" rel="noopener">http://www.novel.com/novel-dir/novel-chapter</a></p>
+<pre><code>↑小说网站域名  ↑小说目录     ↑小说章节
+</code></pre></li>
+</ul>
+<h4 id="1-curl"><a href="#1-curl" class="headerlink" title="1. curl"></a>1. curl</h4><p>利用php扩展curl,来获取需要的页面。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$curl = curl_init();</span><br><span class="line">curl_setopt($curl, CURLOPT_URL, $url); //指定的url</span><br><span class="line">//将执行结果以字符串返回而不是直接输出</span><br><span class="line">curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); </span><br><span class="line">//CURLOPT_HEADER:启用时会将头文件的信息作为数据流输出。</span><br><span class="line">curl_setopt($curl, CURLOPT_HEADER, 0);</span><br><span class="line">//CURLOPT_FOLLOWLOCATION:TRUE 时将会根据服务器返回 HTTP 头中的 &quot;Location: &quot; 重定向</span><br><span class="line">curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);</span><br><span class="line">//CURLOPT_HTTPHEADER: 设置 HTTP 头字段的数组。格式： array(&apos;Content-type: text/plain&apos;, &apos;Content-length: 100&apos;)</span><br><span class="line">curl_setopt($curl, CURLOPT_HTTPHEADER, array(&quot;application/x-www-form-urlencoded;charset=utf-8&quot;, &apos;Accept-Encoding: gzip&apos;));</span><br><span class="line">//CURLOPT_ENCODING: HTTP请求头中&quot;Accept-Encoding: &quot;的值。 这使得能够解码响应的内容。 支持的编码有&quot;identity&quot;，&quot;deflate&quot;和&quot;gzip&quot;。如果为空字符串&quot;&quot;，会发送所有支持的编码类型。</span><br><span class="line">curl_setopt($curl, CURLOPT_ENCODING, &apos;gzip&apos;);</span><br><span class="line">$cpage = curl_exec($curl);</span><br><span class="line">$cpage = mb_convert_encoding($cpage, &apos;utf-8&apos;, &apos;GBK,UTF-8,ASCII&apos;); //编码格式调整为utf-8</span><br><span class="line">curl_close($curl);</span><br></pre></td></tr></table></figure>
+<p>以上就是我试验成功的代码。期间浏览了一遍手册中curl里的配置选项。在成功执行之前出现的问题是<strong>中文乱码</strong>，google了一下，说是网页在传输时通过gzip压缩过，所以直接获取的是经过压缩的数据，不是原来的数据，所以展示出来就是乱码了。通过<a href="http://php.net/manual/zh/function.curl-setopt.php" target="_blank" rel="noopener"><strong>curlopt_encoding</strong></a>设为gzip可以解决。然而并没有。继续搜索，说是字符集的问题，比如GBK，utf8等字符集的问题，没有统一。可以通过<a href="http://php.net/manual/zh/function.mb-convert-encoding.php" target="_blank" rel="noopener"><strong>mb</strong> _<strong>convert</strong> _<strong>encoding</strong></a>来转换字符串的编码。加上这个之后，确实成功了。那么以上的收获就是，<strong>根据服务器的数据，以相应的压缩格式接收，解码，然后字符串本身的字符集与浏览器的字符集要一致。</strong>我将要设置的字符集都设置为utf8了。『<a href="https://zh.wikipedia.org/wiki/UTF-8" target="_blank" rel="noopener">utf8</a>是个好东西。』</p>
+<h4 id="2-正则匹配"><a href="#2-正则匹配" class="headerlink" title="2.正则匹配"></a>2.正则匹配</h4><p>小说内容成功获取到了之后，要从其中提取出需要的内容，『把那些恶心的广告都抛掉抛掉。』查看页面的代码，根据需要内容的标签结构，构造相应的正则表达式。利用<a href="http://php.net/manual/zh/function.preg-match.php" target="_blank" rel="noopener">preg_match</a>以及<a href="http://php.net/manual/zh/function.preg-match-all.php" target="_blank" rel="noopener">preg_match _all</a>两个函数，可以方便的获取第一条，或者所有符合匹配的内容。一开始出现错误的原因是我把这两个函数的返回当作匹配到的内容来编程了。然而，返回的只是是否匹配到内容，或者匹配到几次的标识符。。。。我所需要的内容保存在函数的第三个参数里，然后它是个可选的，所以在一开始没匹配结果我很忧郁。翻了手册才知道原因。『翻手册很重要啊。』然后因为翻手册，我收到了一个更大的惊喜。我本来是想对于获取的内容比如章节链接进行后续处理，因为它本身的链接是站内的相对路径，我需要取出来与站点url组合处理，才能使用这个章节链接。上面的两个匹配函数的第四个可选参数，就是决定匹配到的内容在数组内的组织形式，根据需要设置，让我在后续的循环处理中方便了很多。『及时翻手册的重要性，以及实践的重要性，因为我原来通读手册的时候，是没看懂的，有些稀里糊涂的，这次使用让我对这个参数的作用有了切身的体会。』</p>
+<h4 id="3-面向对象编程–小说保存在数据库"><a href="#3-面向对象编程–小说保存在数据库" class="headerlink" title="3.面向对象编程–小说保存在数据库"></a>3.面向对象编程–小说保存在数据库</h4><p>我在这时对该工具的打算是：输入小说名，获取相应的小说内容，将其存入数据库，以后就可以本地，或者在自己的站点看小说了。我将一系列操作写成了函数方法，比如搜索小说，获取页面内容，正则匹配内容等方法。写了几个方法之后，发现这些方法用到的一些参数属性是通用的，比如小说相关信息。我就决定写成<code>novel</code>类。类属性即小说相关信息，如名字，作者，类型，小说列表<code>Url</code>,章节<code>url</code>等。这样方法处理过的结果可以保存在类属性中，方便其他函数使用。获取数据的一系列操作完成之后，对数据库的操作我无法确定。理论上数据库链接是唯一的，<code>database</code>类是不是需要写成单例？这样在每次对数据库进行操作时，不用每次都<code>new</code>一个对象；或者将数据库对象存在小说类的属性中，初始化时就<code>new</code>一个数据库对象，存进去，这样其他方法在调用的时候就只调用这一个对象；或者让小说类继承数据库类，直接在本类内即可调用方法。没想明白。最后是第二种方法，将<code>database</code>类的实例化写在<code>novel</code>类的构造函数里，这样<code>novel</code>类创建对象时，<code>database</code>类也会被<code>new</code>，存入<code>novel</code>的<code>db</code>属性，<code>Novel</code>对象的方法在用到数据库时，直接使用<code>db</code>。</p>
+<p>编写<code>database</code>类时，基础方法很容易就确定，就是增删改查。我考虑到小说章节的存的过程是一个大量重复的过程，应该<code>prepare</code>一下比较好。要存小说的基本信息，要存小说的章节信息，我就写了两个<code>insert</code>方法。写的时候我发现两个函数基本没有差别，只有表和参数不同。我觉得应该要合成一个函数，使用数组的<code>key-value</code>来动态建立<code>sql</code>语句。『此处我的感受是良好的命名规范以及逻辑对项目真的很有利啊，这个学习自CI框架。』因为传入参数是数组，<code>key</code>值对应数据库表内字段名，<code>value</code>为值。所以将传入的参数<code>key</code>作为字段名，将其与值分别相应处理，然后组合<code>sql</code>语句。如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private function insPre($table, $vals) &#123;</span><br><span class="line">	//获取字段名</span><br><span class="line">	$keys = array_keys($vals);</span><br><span class="line">	//组合字段</span><br><span class="line">	$col = implode(&apos;,&apos;, $keys);</span><br><span class="line">	//组合参数 参数形式 &apos;：param&apos;</span><br><span class="line">	$val = implode(&apos;,:&apos;, $keys);</span><br><span class="line">	$val = &quot;:&quot; . $val;</span><br><span class="line">	$sql = &quot;INSERT INTO &quot; . $table . &quot;(&quot; . $col . &quot;)VALUES(&quot; . $val . &quot;)&quot;;</span><br><span class="line">	return $sql;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上是最后成功的代码。此外这期间还有一些其他问题。我一开始是使用<a href="http://php.net/manual/zh/book.mysqli.php" target="_blank" rel="noopener">mysqli</a>来进行数据库的操作。根据手册，需要填入的参数部分用<code>？</code>来替代，然后使用<a href="http://php.net/manual/zh/mysqli-stmt.bind-param.php" target="_blank" rel="noopener">bind_param</a>来绑定传入的参数。然后执行sql语句。我使用了循环来依次绑定参数，最后执行。然而没有成功。因为bind_param的用法是如<code>$stmt-&gt;bind_param(&quot;sss&quot;, $firstname, $lastname, $email);</code>这样一次性绑定所有参数，而我却通过循环依次传入参数，连函数使用都不对了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">foreach ($values as $key =&gt; $value) &#123;</span><br><span class="line">	$stmt-&gt;bind_param(&apos;s&apos;,$param);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是我当时想不出办法来解决，因为我认为动态sql，无法得知传入的数组的具体情况，无法动态的建立bind_param的参数。</p>
+<hr>
+<ul>
+<li><p>现在我有个想法，与动态sql原理一样，将该语句动态生成,如下,然后通过<a href="http://php.net/manual/zh/function.eval.php" target="_blank" rel="noopener">eval</a>执行该语句。</p>
+<p>function bind_param($vals) {</p>
+<pre><code>    $array = [&apos;string&apos;=&gt; &apos;s&apos;,&apos;integer&apos;=&gt;&apos;i&apos;,&apos;double&apos;=&gt;&apos;d&apos;,&apos;BLOB&apos;=&gt;&apos;b&apos;];
+    $str1 = &apos;&apos;;
+    foreach ($vals as $key =&gt; $val) {
+        $type = gettype($val);
+        if (isset($array[&quot;$type&quot;])) {
+        $str1 .= &quot;$array[&apos;type&apos;]&quot;;
+        }
+    }
+    $str2 = implode(&apos;,&apos;, $vals);
+    $str = &quot;bind_param(\&quot;$str1\&quot;,$str2);&quot;;
+    return $str;
+}
+</code></pre></li>
+</ul>
+<hr>
+<p>好吧，当时没有想到，然后考虑到另一种prepare的参数形式是<code>：$param</code>,是<a href="http://php.net/manual/zh/book.pdo.php" target="_blank" rel="noopener">PDO</a>的prepare的一种形式。参数绑定如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">foreach ($vals as $key =&gt; $value) &#123;</span><br><span class="line">	$key = &quot;:&quot; . $key;</span><br><span class="line">	$stmt-&gt;bindValue($key, $value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上是正确的代码。当时使用的是<a href="http://php.net/manual/zh/pdostatement.bindparam.php" target="_blank" rel="noopener">binaParam</a>。使用的结果就是存入数据库的值都是最后一次传入的参数。好吧，根据手册，该函数是通过引用来绑定参数的。原型如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">bool PDOStatement::bindParam ( mixed $parameter , </span><br><span class="line">							   mixed &amp;$variable </span><br><span class="line">							[, int $data_type = PDO::PARAM_STR </span><br><span class="line">							[, int $length </span><br><span class="line">							[, mixed $driver_options ]]] )</span><br><span class="line">绑定一个PHP变量到用作预处理的SQL语句中的对应命名占位符或问号占位符。</span><br><span class="line">不同于 PDOStatement::bindValue() ，此变量作为引用被绑定，</span><br><span class="line">并只在 PDOStatement::execute() 被调用的时候才取其值。</span><br><span class="line"></span><br><span class="line">大多数参数是输入参数，即，参数以只读的方式用来建立查询。</span><br><span class="line">一些驱动支持调用存储过程并作为输出参数返回数据，一些支持</span><br><span class="line">作为输入/输出参数，既发送数据又接收更新后的数据</span><br></pre></td></tr></table></figure>
+<ul>
+<li><a href="http://www.laruence.com/2012/10/16/2831.html" target="_blank" rel="noopener">PHP大拿Laruence的博客中一篇博文有对此进行阐述，点此可传送</a></li>
+</ul>
+<p>所以我给替换成了<a href="http://php.net/manual/zh/pdostatement.bindvalue.php" target="_blank" rel="noopener">bianValue</a></p>
+<p><strong>结果：可执行，但是由于我无法理解的原因，在十分钟之后，报错500。该次运行，获得了579个页面。apache错误日志记录为</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[core:error] [pid 4352:tid 1756] [client ::1:60162] </span><br><span class="line">End of script output before headers: index.php, </span><br><span class="line">referer: http://localhost/</span><br></pre></td></tr></table></figure>
+<p>google搜索到的一些结果是</p>
+<ol>
+<li>没有输出头:(但是我的index.php上是有的)<br><code>header(&quot;Content-Type:text/html; charset=utf-8&quot;);</code></li>
+<li>文件权限问题，需要将文件权限更改为755，不过他们都是一开始就不能运行，而我是运行一段时间后出现的错误。当前是在本地开发的，所以不太清楚怎么去改权限，只是在该文件属性的安全里面尝试了更改。<br><a href="http://stackoverflow.com/questions/28265735/apache-cgi-in-user-directory-end-of-script-output-before-headers" target="_blank" rel="noopener">帖子传送门</a></li>
+<li><a href="https://en.wikibooks.org/wiki/Apache/CGI" target="_blank" rel="noopener">End of script output before headers: missing header (eg: move the importation before print “Content-Type: text/plain;charset=utf-8”). But it can also be the symptom of a compilation error in the script language.</a>看这意思，除了缺少头，也可能是编译出错。。。</li>
+<li>好吧，我现在『写记录的此刻』找到了一篇<a href="https://www.knownhost.com/wiki/developmental/what-is-the-premature-end-of-script-headers-php-error" target="_blank" rel="noopener">《PHP “premature end of script headers” error》</a>我想应该可以解释我的问题。以下为简述：</li>
+</ol>
+<blockquote>
+<p>为何产生：任何导致脚本在返回输出给web服务器之前就停止运行的原因</p>
+<p>解决方案列举：</p>
+<ol>
+<li>PHP版本的改变导致与之前的其他环境不匹配</li>
+<li>包含文件的路径更改，找不到文件</li>
+<li>脚本所需资源超过配置文件限定的数值，将会被强制停止</li>
+<li>日志文件容量超过限定最大值</li>
+<li>CGI脚本文件只能被在httpd.conf配置文件里指定的用户和组执行，如果没有权限也会出现这种错误</li>
+<li>开启PHP错误报告 <code>&lt;?php error_reporting(E_ALL); ?&gt;</code></li>
+<li>PHP关闭标签之后无内容，但是有空格，也可能导致此问题</li>
+</ol>
+</blockquote>
+<ul>
+<li>那么看起来就是我的代码太差，导致cpu或者内存耗尽了。。毕竟是在执行过程中报错的。代码需要优化。到现在这个时候，我又想起来，其实我在<code>database</code>类中写的<code>prepare</code>语句并没有起到实际作用，因为写在方法内，每次都调用这个方法，相当于每次都在<code>prepare</code>，并没有利用起来。囧。</li>
+</ul>
+<h4 id="4-面向函数编程–不保存小说"><a href="#4-面向函数编程–不保存小说" class="headerlink" title="4. 面向函数编程–不保存小说"></a>4. 面向函数编程–不保存小说</h4><p>总之，在当时，我一时想不到上面的那些解决的办法。于是想从另外一个角度来实现目的。因为小说的存储出了问题，就考虑不存储了。反正小说都能获取到，直接显示在页面上就好了。问题就是TCP连接可能会成为瓶颈，不过就跟上面那个方案即使成功了，而出现IO瓶颈一样，这些问题都不在考虑范围内，因为我默认的用户就是我爸和我。。。</p>
+<p>对代码重写，数据库操作部分舍弃。修改了一下数据获取展示的代码。我自以为可以了。然而还是太天真。囧。</p>
+<p>这里的问题是这样的：因为之前我把处理小说的过程封装成了一个novel类。各个方法都会用到的小说相关属性被设为类属性。然后用户通过搜索小说获取到了小说的列表，没问题。点击小说章节进入章节内容页面的时候出问题了。因为搜索小说和展示小说章节列表是在方法<code>getNovelList()</code>内，而获取小说章节和展示章节页面是在方法<code>getChapter()</code>内。由于之前的封装，程序在搜索小说时就将小说的<code>Url</code>保存在了<code>baseurl</code>属性内，在调用<code>getChapter</code>方法时，需要将该<code>baseurl</code>与章节的路径组合在一起 『 为什么要组合？因为小说网站对小说章节列表页的<code>Url</code>是完整的路径，而小说章节的<code>Url</code>是相对路径，所以在它本站内阅读小说是没有问题的 』，才能使用这个完整的<code>Url</code>来进行下一步的操作。那么现在的情况是，在调用<code>getChapter</code>方法的时候，baseurl是空的，所以无法组成完整的<code>url</code>来让我愉快的进行下一步。</p>
+<p>好吧，这个时候我是很懵逼的，我十分想不通，为什么为什么为什么呢？『这个问题一下子想不通只能说明我基础不好。』我想了很久。好吧，其实是这样的，第一次确实<code>new了novel</code>对象没错，设置了属性没错，成功执行没错。然而点击列表页的链接的时候是属于第二次了。没错，第二次http请求。当时我没有想到什么http协议无状态的问题，我想到的是时间作用域：<strong>执行第二次的脚本，不会获取到第一次执行脚本时设置的属性值，即每一次脚本执行结束，该次脚本执行时产生的数据就消失了，而每一次链接的点击，每一次成功进入网页，就是该网页脚本在服务器的重复执行。『所以这也是http无状态的解释吗？』</strong>找到了原因，解决起来就有方向了。我重新构造了<code>Url</code>,包含了我下次操作的必要信息，这样我的每一次操作都可以从链接中获取我需要的信息来支持我的本次操作。『所以这类似于<code>Url</code>重写？』这样最后这部分的代码基本与类的特性无关了。</p>
+<p>简单地写了阅读的界面。好吧，只是必要的几个用来输出内容的html标签而已。</p>
+<p><strong>程序成功执行。此时我的想法是面向对象，反而产生了副作用。简单的几个函数就可以圆满完成任务了。所以要根据实际情况来选定编程思想。『还有，基础很重要啊同学。』</strong></p>
+<h4 id="5-MVC思想"><a href="#5-MVC思想" class="headerlink" title="5.MVC思想"></a>5.MVC思想</h4><p>从以上描述可知，我的编程还是很朴素很直白的，一点没有拐弯，可能单个方法内的编程运用了一些粗糙的小技巧，但是整个流程来说，还是很过程的，『说到这个，我忽然觉得我上面说的面向函数编程是错误的，我只是在面向过程编程而已，囧。』然而，到这里的我并没有结束。</p>
+<ul>
+<li><p>在刚接触MVC的时候，是慕课网上看的视频。里面有个视频，刚刚在重新找也不知道是哪个了。那个视频简单介绍了一下<code>MVC</code>的原理，大概就是在三个文件里面进行引用，因为作为简单的示例介绍，并不复杂。V视图文件里也是一句<code>hello world</code>。而后面的YII框架介绍，当时学起来很吃力，学习效率很低，就放弃了。各个层面调用相应的类，我还是能理解的，比如控制器要调用模型类，只要加载该类，<code>NEW</code>一个对象就可以用了，我当时最无法理解的是在视图中的变量，在调用该视图的方法后面传入键值对应变量名的参数就能将视图中的变量替换为值。感觉实在是牛逼啊。如下所示。</p>
+<p>$data = [‘title’ =&gt; ‘test’];</p>
+<pre><code>load_view(&apos;page&apos;,$data);
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/page.php				浏览器界面</span><br><span class="line">echo $title;  ------&gt;     test</span><br></pre></td></tr></table></figure>
+<p>所以我找框架来读，选择了laravel。YII。THINKPHP。然后我傻逼了。『我并不知道为什么我搜到的是它们。』读一个弃一个。后来在亲爱的superbear学长的建议下，我接触到CI，当然一开始读起来是有点吃力的。然后硬着头皮依次读核心代码文件。我还记得当我终于知道展现视图的原理后，我激动的不行，一是原理竟然这么简单，二是我竟然这么蠢。囧。原理就是通过<a href="http://php.net/manual/zh/function.extract.php" target="_blank" rel="noopener">extract</a>函数将数组的键值对转换成变量。如下：</p>
+</li>
+</ul>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$data[&apos;fruit&apos;=&gt;&apos;apple&apos;];</span><br><span class="line">extract($data);</span><br><span class="line">-----&gt;$fruit = &apos;apple&apos;;</span><br></pre></td></tr></table></figure>
+<p>  那是我第一次清晰知道还有这么个函数。『为什么是’第一次清晰知道’，因为可能之前浏览手册的时候看到过，但是当时没有记住。因为我在看到这个函数的时候有种轻微脸熟的感觉。— —。』在这个函数转换数组之后，将视图文件通过require包含进来，这样变量和程序就在一个文件，那么视图中的变量自然就有了值，程序就可以运行了。</p>
+<p>以上就是背景了。所以在完成此次的基本功能之后，我尝试起<code>MVC</code>的模式，嗯，还有单一入口机制。所有的链接都从<code>index.php</code>进入。在该入口文件内，对POST/GET参数进行简单过滤，根据传入参数不同调用不同的控制器方法。『控制器类和模型类都只有一个，模型类就是<code>novel</code>类。』然后控制器方法再调用对应的模型类方法。我写了两个函数，简单粗暴的直接使用了<code>extract与require_once</code>来封装成<code>load_view($page,$data)</code>函数，使用<code>file_exist()与class_exist()还有require_once</code>来封装成<code>load_class($class,$param)</code>函数。</p>
+<p>程序还是可以执行的，就是有点不优雅。『其实就是丑陋。我听见我的程序在哭泣。』</p>
+<p>除了MVC模型外，我对于目录的规划也进行了尝试。模仿CI框架的目录划分。目录如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">novel</span><br><span class="line">  |-app		------------------应用目录</span><br><span class="line">  | |-config	 -------------配置目录</span><br><span class="line">  |	|   |-config.php ---------配置文件</span><br><span class="line">  | |-controller	 ---------控制器目录</span><br><span class="line">  |	|	|-controller.php------控制器类文件</span><br><span class="line">  |	|-model     --------------模型目录</span><br><span class="line">  |	|	|-model.php   --------模型类</span><br><span class="line">  |	|-view     ---------------视图目录</span><br><span class="line">  |	|	|-view.php    --------视图文件</span><br><span class="line">  |-system      --------------系统目录</span><br><span class="line">  	|-library(core) ----------类库目录或者核心类目录</span><br><span class="line">	|	|-common.php     -----通用函数</span><br><span class="line">	|	|-novel.php    -------小说类</span><br><span class="line">  |-index.php           ------------入口文件</span><br></pre></td></tr></table></figure>
+<p>在<code>index.php</code>文件中，写最基础的代码，比如<code>header()</code>，还有将配置文件加载进来。配置文件中是项目的配置。本项目的话就是一些常量定义，还有正则表达式。『正则又臭又长，写在程序里碍眼，如果将正则与对应的键名对应好，保存在配置文件当中，不论是使用还是修改都十分方便。大部分的配置文件，以及在配置文件中的配置参数的设定基本都是这个原因吧。』然后对传入的变量进行简单过滤，根据变量值调用相应的控制器方法，控制器方法调用相应的模型类的方法，接收模型方法返回的结果作为参数，控制器加载视图文件，并传入参数。一切结束。</p>
+<hr>
+<ul>
+<li><p>之前对MVC有个误解，就是控制器类调用模型类，模型类连接数据库进行数据的处理，返回处理结果给控制器，控制器调用视图并传入参数，视图展示界面。一开始听起来很完美。后来写代码的时候发现一些问题。绝大部分网站并不仅仅局限于数据的处理，更多的是业务逻辑的处理。那么这部分代码是写在哪里呢，写在控制器，控制器会很臃肿，特别是大型应用，这么写，控制器就不能看了，写在模型也十分臃肿啊。另外根据用户权限展现不同界面，那这个条件判断是在控制器呢还是视图呢。感觉不论写在哪里，都违背了MVC分层的思想。后来看到一篇文章，给了我很大的启发。『没有收录网站，只是看了文章。』控制器与模型之间有一层业务层，用来放业务逻辑的代码。控制器-业务-模型。视图的选择也另有一层。控制器-视图选择逻辑-控制器-视图。这样逻辑层都可以无限扩展，其他三层尽可能的减少代码。感觉很有道理。而前一段时间，我看到TP5。『虽然之前只是简单的看了TP3的代码，但这次看到TP5我简直不敢相信，变化太大了。感觉变成了另一个框架。』我看到TP5手册中<a href="http://www.kancloud.cn/manual/thinkphp5/122950" target="_blank" rel="noopener">架构总览里关于模型的一段话。点击进入传送门。</a>摘取如下：</p>
+<blockquote>
+<p>模型类并不一定要访问数据库，而且在5.0的架构设计中，只有进行实际的数据库查询操作的时候，才会进行数据库的连接，是真正的惰性连接。</p>
+<p>ThinkPHP的模型层支持多层设计，你可以对模型层进行更细化的设计和分工，例如把模型层分为逻辑层/服务层/事件层等等。</p>
+</blockquote>
+<p>说实话，这段话真的对我是醍醐灌顶的感觉。我之前执拗于MVC的定义，由于一些受限的条件，接收到不完全的信息而产生了无意义的纠结。在看到那段话的时候，我才有了更清晰的认识。MVC是一种思想，不是一种死板的公式或者定理。体会到分层的思想，是根据需求分层，如果为了分层而分层则没有任何意义。</p>
+</li>
+</ul>
+<h4 id="6-结束"><a href="#6-结束" class="headerlink" title="6. 结束"></a>6. 结束</h4><p>刚写完代码，没写这篇记录之前，我觉得这个东西做的没多少价值。没有多少让我学习到的东西。然而写完记录之后，才发现我能写这么多。不知道其中啰嗦的部分占了多少。总之，对于我个人来说，相当于重新做了一遍项目，沉淀收获的还是感觉蛮有质量的。写记录也熟悉了一下markdown的语法。希望自己以后能保持写记录的习惯。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/06/小说阅读工具-2/" rel="next" title="小说阅读工具 2">
+                <i class="fa fa-chevron-left"></i> 小说阅读工具 2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/08/正则表达式学习记录/" rel="prev" title="正则表达式学习记录">
+                正则表达式学习记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-curl"><span class="nav-number">1.</span> <span class="nav-text">1. curl</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-正则匹配"><span class="nav-number">2.</span> <span class="nav-text">2.正则匹配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-面向对象编程–小说保存在数据库"><span class="nav-number">3.</span> <span class="nav-text">3.面向对象编程–小说保存在数据库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-面向函数编程–不保存小说"><span class="nav-number">4.</span> <span class="nav-text">4. 面向函数编程–不保存小说</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-MVC思想"><span class="nav-number">5.</span> <span class="nav-text">5.MVC思想</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-结束"><span class="nav-number">6.</span> <span class="nav-text">6. 结束</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

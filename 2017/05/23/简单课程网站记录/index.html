@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php ci notes,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="使用CI框架，实现功能：CMS的基本功能  一开始，我用了一个控制器pages来控制页面跳转，其他操作都用model实现。随着页面增多，控制器里的方法越来越多，并且不再只是页面跳转，更多的是一些操作方法，比如登录验证方法checklogin，除非出错才会跳转回登录页面，如果一切成功，就会跳转到成功页面。 于是想隔离开页面跳转和操作两种，将某种流程单独作为一个控制器，比如login控制器用来进行登">
+<meta name="keywords" content="php ci notes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单课程网站记录">
+<meta property="og:url" content="http://yoursite.com/2017/05/23/简单课程网站记录/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="使用CI框架，实现功能：CMS的基本功能  一开始，我用了一个控制器pages来控制页面跳转，其他操作都用model实现。随着页面增多，控制器里的方法越来越多，并且不再只是页面跳转，更多的是一些操作方法，比如登录验证方法checklogin，除非出错才会跳转回登录页面，如果一切成功，就会跳转到成功页面。 于是想隔离开页面跳转和操作两种，将某种流程单独作为一个控制器，比如login控制器用来进行登">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:01:16.566Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简单课程网站记录">
+<meta name="twitter:description" content="使用CI框架，实现功能：CMS的基本功能  一开始，我用了一个控制器pages来控制页面跳转，其他操作都用model实现。随着页面增多，控制器里的方法越来越多，并且不再只是页面跳转，更多的是一些操作方法，比如登录验证方法checklogin，除非出错才会跳转回登录页面，如果一切成功，就会跳转到成功页面。 于是想隔离开页面跳转和操作两种，将某种流程单独作为一个控制器，比如login控制器用来进行登">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/23/简单课程网站记录/">
+
+
+
+
+
+  <title>简单课程网站记录 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/23/简单课程网站记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">简单课程网站记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-23T19:20:22+08:00">
+                2017-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>使用<code>CI</code>框架，实现功能：<code>CMS</code>的基本功能</li>
+</ul>
+<h2 id="一"><a href="#一" class="headerlink" title="一"></a>一</h2><p>开始，我用了一个控制器<code>pages</code>来控制页面跳转，其他操作都用<code>model</code>实现。随着页面增多，控制器里的方法越来越多，并且不再只是页面跳转，更多的是一些操作方法，比如登录验证方法<code>checklogin</code>，除非出错才会跳转回登录页面，如果一切成功，就会跳转到成功页面。</p>
+<p>于是想隔离开页面跳转和操作两种，将某种流程单独作为一个控制器，比如<code>login</code>控制器用来进行登录验证，退出等一些关于登录相关的控制。<code>register</code>控制器用来进行注册相关控制。<code>pages</code>控制器只用作第一个页面的跳转，里面的方法只有一些简单的逻辑判断，主要代码为加载视图。比如点击登录注册按钮，通过<code>pages</code>控制器进入登录注册页面。然后对登录注册页面进行操作提交之后，通过<code>login</code>，<code>register</code>等控制器中转处理。</p>
+<a id="more"></a>
+<p>界面跳转以及一些操作如发布课程等功能完成之后，接下来要完成用户的权限相关的功能，直白地讲，就是身份为老师的用户界面要比身份为学生的用户的界面多出一些功能按钮，像发布课程等功能。但是在控制器中进行用户身份判断的话，会用到条件语句。而<code>pages</code>控制器的每个方法都是一个页面，那就会有很多的条件语句重复，而这些条件不能够抽象出来，因为只是条件判断的形式相同，判断之后的代码又是不同的。这就像加载视图一样，虽然都是<code>$this-&gt;load-&gt;view()</code>，但是视图并不相同，所以每个方法内也都存在大量的关于视图加载的代码重复的情况。而视图中也有需要判断用户身份而有区别地显示界面的情况，所以视图当中有存在条件语句的情况。所以我整个代码写的很凌乱，一下子也理不清思路，于是干脆按用户身份进行独立的编程。</p>
+<h2 id="二"><a href="#二" class="headerlink" title="二"></a>二</h2><p>通过<code>visitor/student/teacher</code>三个控制器控制不同身份的用户的页面跳转以及相关操作，以及所有身份的用户都有自己的一套视图，控制器方法，即使相差很小。所以导致代码重复严重，不过起码理解起来算作简单粗暴的简洁明了。</p>
+<p>而关于一些接口的设计，我并没有提前比较完整的考虑好，只是下意识的过了一遍，凭直觉觉的可以就这么写了。比如，我先写的简单的页面跳转，比如点击查看课程章节，就跳转到该课程的章节列表页面，在该链接中我将课程名称<code>cou_name</code>作为参数传递，业务逻辑将通过这个参数从数据库获取课程章节数据。同样跳转进章节详情的页面，链接的传递参数为章节的名称<code>ch_name</code>，通过传递的参数作为条件从数据库获取数据，然后展示在页面上。但是在之后，我需要增加一个记录参与学习的课程和记录课程中最近学习的章节的功能时，上面传递的参数就不正确了。因为记录课程中最近学习的章节的功能，需要课程名称和章节名称，而我在进入章节页面时，仅仅传递了章节名称<code>ch_name</code>参数，所以无法一次性完成对数据库的操作，不过，这在极度简单的情况下的可以完成的，但是如果有两门课的章节名称一样，那么不管记录功能的，连页面跳转的章节详情页都会出错。这种情况就是我之前没有考虑到的情况。所以接口要修改，而且数据表中相关的字段还要做修改，或者增加冗余。而接口的修改，还要设计到页面的修改，如何传递必须的参数。</p>
+<p><strong>所以开发前的理论方面的设计要做好，并且要考虑到增加功能的情况。不过我觉得这应该算是经验的问题。首先我觉得前期就能将一切准备都做的很完善的情况是不可能存在的，不管如何<code>bug</code>可能依旧存在。再次，即使有人能做到，然而我个人并没有足够的能力在一开始就能将准备工作做的很好，所以我会在后期开发时发现问题，而进行修补。我觉得重要的是在后面发现问题解决问题的经验，就像这次的开发，下回我对相关的设计就会有更多经验了，错漏就会减少。</strong></p>
+<p>从目前的情况来看，三个控制器的关键差别是用户身份的确认，然后以此身份进行该身份相关的操作。如果要进行优化的话，我暂时的想法是，从控制器来说，可以通过一个判断身份的方法来确定身份，然后调用各自的操作。</p>
+<h2 id="三"><a href="#三" class="headerlink" title="三"></a>三</h2><p>记录的时候，思路不断发散，直觉上觉得应该能解决当前的问题。同第一步，将登陆注册发布等功能分解成独立的控制器，控制各自相关的操作和视图。比如登录页面由<code>login</code>控制器控制，而我原来的写法是登陆页面由<code>pages</code>控制器控制，然后提交之后交由<code>login</code>控制器处理，然后登录验证没有通过，就再加载登录的视图，所以此时的<code>url</code>为<code>/path/checkLogin</code>，从<code>url</code>来说我觉得不合适，(我现在想到可以使用<code>redirect()</code>来重新请求到登录页面，不过这样错误提示就没有了,因为如果登录雁阵更没有通过会有相应的错误信息提示)，所以可以在<code>login</code>控制器中的<code>login</code>方法内首先检测是否提交表单，提交表单就调用私有方法<code>checkLogin()</code>，如果没有提交表单就加载登录视图，这样从<code>url</code>上看不管哪种情况都是<code>/path/login</code>，而且错误提示也不会丢失。<code>checkLogin()</code>中调用模型类<code>login()</code>，而该模型类应该加载类库中的<code>user</code>类，并调用其验证方法,这样的写法似乎还显得麻烦，登录验证在模型中可以直接写，没必要再使用<code>user</code>类。</p>
+<p>不过从发布功能上可以看的更清楚。目前我的发布功能就是一个<code>post</code>模型类，里面既有发布课程的相关方法，也有发布章节的相关方法，从功能上来看似乎没什么不对，都是发布。但是其实里面并不是只有两个发布的方法，因为遵循单个方法完整最小单位的工作（大概是这么说吧，也忘记从哪里看到的，不过我觉得确实很有道理），所以<code>post</code>模型类当中还有发布课程，发布章节的相关操作，比如<code>checkCourse（）</code>/<code>checkChapter（）</code>等对上传的表单检查的方法，所以这样就有点不合适了。不仅是方法，类的属性也是，课程属性和章节属性都存在于<code>post</code>模型中，那么即使是将<code>post</code>模型拆成<code>postcourse</code> 以及<code>postchapter</code>可能更好一点吧。关于当前<code>post</code>的写法和它的考虑是这样的。然后在我后面取课程数据展示的时候，我想都没想，直接写了<code>course</code>模型类，里面写获取课程数据的方法。考虑到之前的<code>post</code>，我觉得奇怪，怎么我没有想到使用两个获取资源的模型类，<code>getcourse</code>，<code>getchapter</code>。应该是我潜意识觉得就应该这么写，<code>course</code>，<code>chapter</code>两个类在这里应该是属于类库的类而不是模型类。此时我似乎是在面向对象，<code>course</code>类拥有保存编辑等一系列属于课程的相关操作。虽然两种方式都能完成功能，但是如果同时存在我觉得很奇怪，也不应该吧，显得不伦不类的。</p>
+<p>所以要么是</p>
+<ol>
+<li><code>postcourse</code></li>
+<li><code>postchapter</code></li>
+<li><code>getcourse</code></li>
+<li><code>getchapter</code></li>
+</ol>
+<p>要么应该是</p>
+<ol>
+<li><code>course</code> - <code>postcourse()</code>/<code>savecourse()</code>/<code>delcourse()</code>/···</li>
+<li><code>chapter</code> - <code>postchapter()</code>/<code>savechapter()</code>/<code>dlechapter()</code>/···</li>
+</ol>
+<h2 id="四"><a href="#四" class="headerlink" title="四"></a>四</h2><p>在完成发布者对自己发表的课程信息进行修改的功能之后，出现了问题。因为允许对课程信息进行修改，那么其他表，如章节表中使用课程名称做冗余就不行了，因为可能会造成两张表的数据不一致，由此，不同表的冗余信息应该是不变的。如在<code>chapter</code>表中保存的当前章节所属的课程的信息时，不要使用<code>cou_name</code>课程名称，因为如果课程信息被修改，那么必须对<code>chapter</code>中的数据进行修改，同理，对其他相关的表也需要修改，会造成比较麻烦的操作，所以<code>chapter</code>表中关于课程的信息应该是<code>cou_id</code>课程ID这种几乎不变的数据。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-ci-notes/" rel="tag"># php ci notes</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/20/大型网站技术架构-架构-1-读书笔记/" rel="next" title="大型网站技术架构-架构(1)-读书笔记">
+                <i class="fa fa-chevron-left"></i> 大型网站技术架构-架构(1)-读书笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/23/CI网站上线记录/" rel="prev" title="CI网站上线记录">
+                CI网站上线记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一"><span class="nav-number">1.</span> <span class="nav-text">一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二"><span class="nav-number">2.</span> <span class="nav-text">二</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三"><span class="nav-number">3.</span> <span class="nav-text">三</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四"><span class="nav-number">4.</span> <span class="nav-text">四</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

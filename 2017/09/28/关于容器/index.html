@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php framework container,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="phalcon 框架 3.2 文档中有个 DI Container。laravel 框架 5.5 文档中有个 Service Container。">
+<meta name="keywords" content="php framework container">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于容器">
+<meta property="og:url" content="http://yoursite.com/2017/09/28/关于容器/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="phalcon 框架 3.2 文档中有个 DI Container。laravel 框架 5.5 文档中有个 Service Container。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T09:50:29.703Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于容器">
+<meta name="twitter:description" content="phalcon 框架 3.2 文档中有个 DI Container。laravel 框架 5.5 文档中有个 Service Container。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/09/28/关于容器/">
+
+
+
+
+
+  <title>关于容器 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/28/关于容器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于容器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-28T16:03:28+08:00">
+                2017-09-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>phalcon</code> 框架 <code>3.2</code> 文档中有个 <a href="https://docs.phalconphp.com/zh/3.2/di" target="_blank" rel="noopener"><code>DI Container</code></a>。<code>laravel</code> 框架 <code>5.5</code> 文档中有个 <a href="https://laravel.com/docs/5.5/container" target="_blank" rel="noopener"><code>Service Container</code></a>。</p>
+<a id="more"></a>
+<p>我接触的第一个框架是 <code>CodeIgniter</code>，看 <code>CI</code> 框架 <code>3.1.*</code> (忘记哪个版本了，现在是 <code>3.1.6</code>) 的文档时，并没有看到 <code>container</code>(容器) 的说法，只有个超级对象 <code>$CI</code>，所有需要的类库都会实例化保存在该对象的属性中。如果该超级对象还未实例化，就通过一个全局函数获取它。我的理解大概类似于 <a href="https://zh.wikipedia.org/wiki/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F" target="_blank" rel="noopener">单例模式</a>：</p>
+<blockquote>
+<p>在应用这个模式时，单例对象的类必须保证只有一个实例存在。<strong>许多时候整个系统只需要拥有一个的全局对象</strong>，这样有利于我们协调系统整体的行为。比如在某个服务器程序中，该服务器的配置信息存放在一个文件中，这些配置数据由一个单例对象统一读取，然后服务进程中的其他对象再通过这个单例对象获取这些配置信息。</p>
+<p>实现单例模式的思路是：一个类能返回对象一个引用(永远是同一个)和一个获得该实例的方法（必须是静态方法，通常使用getInstance这个名称）；当我们调用这个方法时，如果类持有的引用不为空就返回这个引用，如果类保持的引用为空就创建该类的实例并将实例的引用赋予该类保持的引用；同时我们还将该类的构造函数定义为私有方法，这样其他处的代码就无法通过调用该类的构造函数来实例化该类的对象，只有通过该类提供的静态方法来得到该类的唯一实例。</p>
+</blockquote>
+<p>引用的第一段是单例的思想和应用场景举例。第二段是具体实现的思路。</p>
+<p>超级对象 <code>$CI</code> 只要在初始化时，将需要的类实例化，保存在属性中，下回使用直接使用这个属性 <code>$CI-&gt;classname</code> 就好了。而继承了该类的子类中要使用对应的类，那么使用 <code>$this-&gt;classname</code> 即可。而 <code>CI</code> 保证属性中的类对象按引用返回，使用了两个全局函数来控制 - <code>&amp;load_class()/&amp;is_loaded()</code>。前者用来返回要加载的类的对象，如果已经实例化了，就返回保存的对象，后者用来记录已经实例化了的类。</p>
+<p>能够很直观的理解这样的做法，效果如引用的第一段中所说：</p>
+<blockquote>
+<p>有利于我们协调系统整体的行为。</p>
+</blockquote>
+<p>当然不可能和单例模式一模一样。我只是说我的理解是该超级对象实现类似单例模式的效果。</p>
+<p>后来在 <code>laravel</code> 的文档中见到了 <code>service container / dependency injection</code>(服务容器 / 依赖注入) 这样的词：</p>
+<blockquote>
+<p>The Laravel <strong>service container</strong> is a powerful tool for managing class dependencies and performing <strong>dependency injection</strong>. Dependency injection is a fancy phrase that essentially means this: class dependencies are “injected” into the class via the constructor or, in some cases, “setter” methods. </p>
+<p>from <a href="https://laravel.com/docs/5.5/container" target="_blank" rel="noopener">laravel-document</a></p>
+</blockquote>
+<blockquote>
+<p>Laravel <strong>服务容器</strong>是用于管理类的依赖和执行<strong>依赖注入</strong>的工具。依赖注入这个花俏名词实质上是指：类的依赖项通过构造函数，或者某些情况下通过「setter」方法「注入」到类中。</p>
+<p>来自 <a href="https://d.laravel-china.org/docs/5.5/container" target="_blank" rel="noopener">laravel-china 文档译文</a>。</p>
+</blockquote>
+<p>初一见到我很迷惑。可以网上搜索到相关的 「依赖注入」 等解释，也能够理解它的好处。但是总觉得有些别扭。就像数据公式，我知道这个式子的用法，使用场景，也知道肯定是能由一定的基础推导出来，但是心里还是有点别扭，因为不知道实际是如何推导出来的。</p>
+<p>今天看到 <code>phalcon</code> 框架文档中的 <a href="https://docs.phalconphp.com/zh/3.2/di#di-explained" target="_blank" rel="noopener"><code>Dependency Injection / Service Location</code></a> 这部分内容，才算有了清晰的认识。</p>
+<p>我对这部分内容的简单理解就是，内里是上述 <code>CI</code> 超级对象部分的解释，外名叫 <code>container</code>。文档中详细举例，为什么要 「直接实例化要使用的类」 到 「使用容器，通过依赖注入的方式来使用需要的类对象」。</p>
+<p>按我的理解，<code>CI</code> 超级对象十分通俗易懂，很接地气。<code>laravel</code>则算是一种抽象到一定高度。所以 <code>CI</code> 对刚开始接触框架的新手很友好，简单粗暴，什么都明明白白的和你说了。如果新手直接上手 <code>laravel</code> 的话，学习成本比较高，但也仅此而已了，根据它自身的描述，也不是为了给新手的，是给有一定经验的开发者使用的，这些开发者能够看到 「服务容器 / 依赖注入」 就能够直接理解这个词背后的意义，以及了解框架关于这部分的思想。</p>
+<p>如上所述，三种框架这部分的思想都一样，只是各自实现的方式不相同。其实大多数框架实现的基本功能的思想都是相同的，除了容器，还有路由，输入输出等，而各自框架的特点部分可能有各自独特的地方而思想不一样。不过之前也只是知道，现在有了更具体的体会。</p>
+<p>好像偏题了。哈哈哈哈哈哈。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>大概是框架的定位不同吧，文档手册的内容的描述方式和详细程度也不相同。总之今天看到 <code>phalcon</code> 容器这部分内容，让我更好的理解了 <code>CI</code> 和 <code>laravel</code> 的容器部分的思想，消除了我之前看到 <code>laravel</code> 容器部分的别扭感。</p>
+<p><code>phalcon</code> 官网上并没有中文版本，搜索引擎出来的中文文档都是之前的旧版本，简单看了一下这部分，差别还是有的。简单记录一下这部分。</p>
+<h2 id="DI-解释-DI-explained"><a href="#DI-解释-DI-explained" class="headerlink" title="DI 解释 - DI explained"></a>DI 解释 - <a href="https://docs.phalconphp.com/zh/3.2/di#di-explained" target="_blank" rel="noopener"><code>DI explained</code></a></h2><p>假设我们要开发一个叫 <code>SomeComponent</code> 的组件用来执行一些任务。这个组件需要连接数据库，那么我们说组件对数据库有一个依赖。</p>
+<p>在第一个例子中，我们在组件内部创建连接。虽然这个方法很直观有效，但是比较死板，因为硬编码，所以组件只能创建固定的数据库连接，而不能修改连接参数，或者要连接的数据库系统：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class SomeComponent</span><br><span class="line">&#123;</span><br><span class="line">    public function someDbTask()</span><br><span class="line">    &#123;</span><br><span class="line">        $connection = new Connection(</span><br><span class="line">            [</span><br><span class="line">                &apos;host&apos;     =&gt; &apos;localhost&apos;,</span><br><span class="line">                &apos;username&apos; =&gt; &apos;root&apos;,</span><br><span class="line">                &apos;password&apos; =&gt; &apos;secret&apos;,</span><br><span class="line">                &apos;dbname&apos;   =&gt; &apos;invo&apos;,</span><br><span class="line">            ]</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        // ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$some = new SomeComponent();</span><br><span class="line"></span><br><span class="line">$some-&gt;someDbTask();</span><br></pre></td></tr></table></figure>
+<p>为了解决这个问题，我们增加一个方法，这个方法会在使用依赖之前，在这里，就是在使用数据库之前，从外面获得一个数据库连接。这个方法也有其缺点：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">class SomeComponent</span><br><span class="line">&#123;</span><br><span class="line">    private $connection;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Sets the connection externally</span><br><span class="line">     *</span><br><span class="line">     * @param Connection $connection</span><br><span class="line">     */</span><br><span class="line">    public function setConnection(Connection $connection)</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;connection = $connection;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function someDbTask()</span><br><span class="line">    &#123;</span><br><span class="line">        $connection = $this-&gt;connection;</span><br><span class="line"></span><br><span class="line">        // ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$some = new SomeComponent();</span><br><span class="line"></span><br><span class="line">// Create the connection</span><br><span class="line">$connection = new Connection(</span><br><span class="line">    [</span><br><span class="line">        &apos;host&apos;     =&gt; &apos;localhost&apos;,</span><br><span class="line">        &apos;username&apos; =&gt; &apos;root&apos;,</span><br><span class="line">        &apos;password&apos; =&gt; &apos;secret&apos;,</span><br><span class="line">        &apos;dbname&apos;   =&gt; &apos;invo&apos;,</span><br><span class="line">    ]</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">// Inject the connection in the component</span><br><span class="line">$some-&gt;setConnection($connection);</span><br><span class="line"></span><br><span class="line">$some-&gt;someDbTask();</span><br></pre></td></tr></table></figure>
+<p>由原文的代码注释也可以清晰理解。创建连接的代码被分离出来由一个连接类 <code>Connection</code> 来专门操作。组件 <code>SomeComponent</code> 只需要在使用一个数据库连接之前，通过方法 <code>setConnection(Connection $connection)</code> 从外部获得连接就可以了。</p>
+<p>但是，考虑一下，如果我们在一个应用中，要多次使用到组件，那么就要在使用组件前，多次实例化 <code>Connection</code> 类来创建连接，然后传给 <code>SomeComponent</code> 组件来使用。可以很直观的知道，这很麻烦，也是在浪费资源。 「让我想起了高中的时候总是三天两头要交一个个人信息的表格，因为学校各个要用到学生信息的部门的信息不共享，都是各干各的，所以真的烦。」 那么，我们就使用一个全局注册的机制来存储连接的对象，在任何我们想使用连接的时候，直接使用该连接就好了。「就好像学校终于建立了学生信息统一管理处，学校部门要是需要用到学生信息只需要到管理处拿就好了。」：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br></pre></td><td class="code"><pre><span class="line">class Registry</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * Returns the connection</span><br><span class="line">     */</span><br><span class="line">    public static function getConnection()</span><br><span class="line">    &#123;</span><br><span class="line">        return new Connection(</span><br><span class="line">            [</span><br><span class="line">                &apos;host&apos;     =&gt; &apos;localhost&apos;,</span><br><span class="line">                &apos;username&apos; =&gt; &apos;root&apos;,</span><br><span class="line">                &apos;password&apos; =&gt; &apos;secret&apos;,</span><br><span class="line">                &apos;dbname&apos;   =&gt; &apos;invo&apos;,</span><br><span class="line">            ]</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class SomeComponent</span><br><span class="line">&#123;</span><br><span class="line">    protected $connection;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Sets the connection externally</span><br><span class="line">     *</span><br><span class="line">     * @param Connection $connection</span><br><span class="line">     */</span><br><span class="line">    public function setConnection(Connection $connection)</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;connection = $connection;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function someDbTask()</span><br><span class="line">    &#123;</span><br><span class="line">        $connection = $this-&gt;connection;</span><br><span class="line"></span><br><span class="line">        // ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$some = new SomeComponent();</span><br><span class="line"></span><br><span class="line">// Pass the connection defined in the registry</span><br><span class="line">$some-&gt;setConnection(Registry::getConnection());</span><br><span class="line"></span><br><span class="line">$some-&gt;someDbTask();</span><br><span class="line"></span><br><span class="line">------------------------------------------------</span><br><span class="line">//增加单例</span><br><span class="line">class Registry</span><br><span class="line">&#123;</span><br><span class="line">    protected static $connection;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Creates a connection</span><br><span class="line">     *</span><br><span class="line">     * @return Connection</span><br><span class="line">     */</span><br><span class="line">    protected static function createConnection(): Connection</span><br><span class="line">    &#123;</span><br><span class="line">        return new Connection(</span><br><span class="line">            [</span><br><span class="line">                &apos;host&apos;     =&gt; &apos;localhost&apos;,</span><br><span class="line">                &apos;username&apos; =&gt; &apos;root&apos;,</span><br><span class="line">                &apos;password&apos; =&gt; &apos;secret&apos;,</span><br><span class="line">                &apos;dbname&apos;   =&gt; &apos;invo&apos;,</span><br><span class="line">            ]</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Creates a connection only once and returns it</span><br><span class="line">     *</span><br><span class="line">     * @return Connection</span><br><span class="line">     */</span><br><span class="line">    public static function getSharedConnection(): Connection</span><br><span class="line">    &#123;</span><br><span class="line">        if (self::$connection === null) &#123;</span><br><span class="line">            self::$connection = self::createConnection();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return self::$connection;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Always returns a new connection</span><br><span class="line">     *</span><br><span class="line">     * @return Connection</span><br><span class="line">     */</span><br><span class="line">    public static function getNewConnection(): Connection</span><br><span class="line">    &#123;</span><br><span class="line">        return self::createConnection();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class SomeComponent</span><br><span class="line">&#123;</span><br><span class="line">    protected $connection;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Sets the connection externally</span><br><span class="line">     *</span><br><span class="line">     * @param Connection $connection</span><br><span class="line">     */</span><br><span class="line">    public function setConnection(Connection $connection)</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;connection = $connection;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * This method always needs the shared connection</span><br><span class="line">     */</span><br><span class="line">    public function someDbTask()</span><br><span class="line">    &#123;</span><br><span class="line">        $connection = $this-&gt;connection;</span><br><span class="line"></span><br><span class="line">        // ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * This method always needs a new connection</span><br><span class="line">     *</span><br><span class="line">     * @param Connection $connection</span><br><span class="line">     */</span><br><span class="line">    public function someOtherDbTask(Connection $connection)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$some = new SomeComponent();</span><br><span class="line"></span><br><span class="line">// This injects the shared connection</span><br><span class="line">$some-&gt;setConnection(</span><br><span class="line">    Registry::getSharedConnection()</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">$some-&gt;someDbTask();</span><br><span class="line"></span><br><span class="line">// Here, we always pass a new connection as parameter</span><br><span class="line">$some-&gt;someOtherDbTask(</span><br><span class="line">    Registry::getNewConnection()</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>可以看出，创建连接的部分被单独放到一个注册类 <code>Registry</code> 中了。在需要的时候可以通过 <code>Registry::getConnection()</code> 来获取数据库连接对象。如果有其他需要，在 <code>Registry</code> 类中增加创建新类对象的方法，然后在要使用的类中增加一个方法来接受这个依赖的注入即可。</p>
+<p>以上部分，我们可以理解如何通过依赖注入来解决我们的问题。而将依赖作为参数传入而不是在类内硬编码，这样的解耦可以让我们的应用更具可维护性。</p>
+<p>但是简单应用是可以的，如果是长期使用上面讲述的方式来执行依赖注入就会有一些麻烦出现。举例来说，如果一个组件有许多依赖，那我们就需要创建很多的对应的方法或者才构造函数中传递许多参数。而且在使用组件前还要实例化大量的类，可以预见大量的重复代码，应用维护起来也很难受：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// Create the dependencies or retrieve them from the registry</span><br><span class="line">$connection = new Connection();</span><br><span class="line">$session    = new Session();</span><br><span class="line">$fileSystem = new FileSystem();</span><br><span class="line">$filter     = new Filter();</span><br><span class="line">$selector   = new Selector();</span><br><span class="line"></span><br><span class="line">// Pass them as constructor parameters</span><br><span class="line">$some = new SomeComponent($connection, $session, $fileSystem, $filter, $selector);</span><br><span class="line"></span><br><span class="line">// ... Or using setters</span><br><span class="line">$some-&gt;setConnection($connection);</span><br><span class="line">$some-&gt;setSession($session);</span><br><span class="line">$some-&gt;setFileSystem($fileSystem);</span><br><span class="line">$some-&gt;setFilter($filter);</span><br><span class="line">$some-&gt;setSelector($selector);</span><br><span class="line"></span><br><span class="line">// or</span><br><span class="line">$some-&gt;setConnection(Registry::getConnection());</span><br><span class="line">$some-&gt;setSession(Registry::getSession());</span><br><span class="line">$some-&gt;setFileSystem(Registry::getFileSystem());</span><br><span class="line">$some-&gt;setFilter(Registry::getFilter());</span><br><span class="line">$some-&gt;setSelector(Registry::getSelector());</span><br></pre></td></tr></table></figure>
+<p>考虑到组件在应用中可能有多次使用，那每次都要这么干。而如果以后有发生什么变化，比如不再需要某些依赖，还要一个一个的删除。看到这些大量重复的代码，可能最直观的解决办法是在注册类中集中管理：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Registry</span><br><span class="line">&#123;</span><br><span class="line">    public static function factory()</span><br><span class="line">    &#123;</span><br><span class="line">        $connection = new Connection();</span><br><span class="line">        $session = new Session();</span><br><span class="line">        $fileSystem = new FileSystem();</span><br><span class="line">        $filter = new Filter();</span><br><span class="line">        $selector = new Selector();</span><br><span class="line"></span><br><span class="line">        return new SomeComponent($connection, $session, $fileSystem, $filter, $selector);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样只需要修改一处代码即可。但是仔细想想，这样的写法和下面的代码又有什么区别呢，完全可以不使用注册类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class SomeComponent</span><br><span class="line">&#123;</span><br><span class="line">    // ...</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Define a factory method to create SomeComponent instances injecting its dependencies</span><br><span class="line">     */</span><br><span class="line">    public static function factory()</span><br><span class="line">    &#123;</span><br><span class="line">        $connection = new Connection();</span><br><span class="line">        $session    = new Session();</span><br><span class="line">        $fileSystem = new FileSystem();</span><br><span class="line">        $filter     = new Filter();</span><br><span class="line">        $selector   = new Selector();</span><br><span class="line"></span><br><span class="line">        return new self($connection, $session, $fileSystem, $filter, $selector);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到又回到了原点，我们又在组件内部建立了依赖。所以需要一个解决方法来防止我们重复掉进这个陷阱。</p>
+<p>一个优雅的可行方法是使用依赖容器。容器扮演的角色就相当于之前提到的 「全局注册」。但是和之前的注册类不同，之前的注册类内部依旧是硬编码，但是在容器中注册服务是动态的。其实也就是将之前的注册类再次进行依赖注入的处理：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">use Phalcon\Di;</span><br><span class="line">use Phalcon\DiInterface;</span><br><span class="line"></span><br><span class="line">class SomeComponent</span><br><span class="line">&#123;</span><br><span class="line">    protected $di;</span><br><span class="line"></span><br><span class="line">    public function __construct(DiInterface $di)</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;di = $di;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function someDbTask()</span><br><span class="line">    &#123;</span><br><span class="line">        // Get the connection service</span><br><span class="line">        // Always returns a new connection</span><br><span class="line">        $connection = $this-&gt;di-&gt;get(&apos;db&apos;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function someOtherDbTask()</span><br><span class="line">    &#123;</span><br><span class="line">        // Get a shared connection service,</span><br><span class="line">        // this will return the same connection every time</span><br><span class="line">        $connection = $this-&gt;di-&gt;getShared(&apos;db&apos;);</span><br><span class="line"></span><br><span class="line">        // This method also requires an input filtering service</span><br><span class="line">        $filter = $this-&gt;di-&gt;get(&apos;filter&apos;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$di = new Di();</span><br><span class="line"></span><br><span class="line">// Register a &apos;db&apos; service in the container</span><br><span class="line">$di-&gt;set(</span><br><span class="line">    &apos;db&apos;,</span><br><span class="line">    function () &#123;</span><br><span class="line">        return new Connection(</span><br><span class="line">            [</span><br><span class="line">                &apos;host&apos;     =&gt; &apos;localhost&apos;,</span><br><span class="line">                &apos;username&apos; =&gt; &apos;root&apos;,</span><br><span class="line">                &apos;password&apos; =&gt; &apos;secret&apos;,</span><br><span class="line">                &apos;dbname&apos;   =&gt; &apos;invo&apos;,</span><br><span class="line">            ]</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">// Register a &apos;filter&apos; service in the container</span><br><span class="line">$di-&gt;set(</span><br><span class="line">    &apos;filter&apos;,</span><br><span class="line">    function () &#123;</span><br><span class="line">        return new Filter();</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">// Register a &apos;session&apos; service in the container</span><br><span class="line">$di-&gt;set(</span><br><span class="line">    &apos;session&apos;,</span><br><span class="line">    function () &#123;</span><br><span class="line">        return new Session();</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">// Pass the service container as unique parameter</span><br><span class="line">$some = new SomeComponent($di);</span><br><span class="line"></span><br><span class="line">$some-&gt;someDbTask();</span><br></pre></td></tr></table></figure>
+<p><code>$di</code> 其实相当于之前的 <code>Registry</code> 类优化版。之前在注册类内硬编码的创建并返回各种对象的方法换成依赖注入的方式。与之前的方式比较，虽然创建实例依旧需要手动创建，但是在组件中使用的时候，只需要传入容器，而不需要一个个的传入所有的依赖。另外，由于容器使用了动态创建方式，而不是像注册类那样将创建对象的代码硬编码在内部，所以可以按需注册，当需要某个服务时，才注册。而对于框架来说，已经做了许多工作，比如要注册的服务都被集中在一个配置文件中，只需要在配置中填入相应的参数即可。将服务注册到容器这个工作就交由框架来完成了。当然开发者也是可以自己手动注册服务的。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-framework-container/" rel="tag"># php framework container</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/08/Configuring-HTTPS-servers-翻译/" rel="next" title="Configuring HTTPS servers 翻译">
+                <i class="fa fa-chevron-left"></i> Configuring HTTPS servers 翻译
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/15/EOS-合约/" rel="prev" title="EOS 合约">
+                EOS 合约 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DI-解释-DI-explained"><span class="nav-number">2.</span> <span class="nav-text">DI 解释 - DI explained</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

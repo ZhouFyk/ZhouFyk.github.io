@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="从某种意义上来说，这篇记录毫无意义。   深入理解PHP原理之变量(Variables inside PHP)，鸟哥的这篇文章已经介绍了关于 PHP 的弱类型是如何实现的，其中讲到 PHP 根据变量的类型去存储和获取变量值。然而里面没提到在最初是如何确定变量的类型的。 比如在 PHP 中： 1$a=&amp;apos;string&amp;apos;; 那么在保存该变量时，是怎么确定它的类型呢，不像其他语言可以">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP 的变量思考记录">
+<meta property="og:url" content="http://yoursite.com/2017/06/14/php-variable/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="从某种意义上来说，这篇记录毫无意义。   深入理解PHP原理之变量(Variables inside PHP)，鸟哥的这篇文章已经介绍了关于 PHP 的弱类型是如何实现的，其中讲到 PHP 根据变量的类型去存储和获取变量值。然而里面没提到在最初是如何确定变量的类型的。 比如在 PHP 中： 1$a=&amp;apos;string&amp;apos;; 那么在保存该变量时，是怎么确定它的类型呢，不像其他语言可以">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:47:55.055Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP 的变量思考记录">
+<meta name="twitter:description" content="从某种意义上来说，这篇记录毫无意义。   深入理解PHP原理之变量(Variables inside PHP)，鸟哥的这篇文章已经介绍了关于 PHP 的弱类型是如何实现的，其中讲到 PHP 根据变量的类型去存储和获取变量值。然而里面没提到在最初是如何确定变量的类型的。 比如在 PHP 中： 1$a=&amp;apos;string&amp;apos;; 那么在保存该变量时，是怎么确定它的类型呢，不像其他语言可以">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/14/php-variable/">
+
+
+
+
+
+  <title>PHP 的变量思考记录 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/14/php-variable/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PHP 的变量思考记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-14T20:18:33+08:00">
+                2017-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>从某种意义上来说，这篇记录毫无意义。</li>
+</ul>
+<p><a href="http://www.laruence.com/2008/08/22/412.html" target="_blank" rel="noopener"> 深入理解PHP原理之变量(Variables inside PHP)</a>，鸟哥的这篇文章已经介绍了关于 PHP 的弱类型是如何实现的，其中讲到 PHP 根据变量的类型去存储和获取变量值。然而里面没提到在最初是如何确定变量的类型的。</p>
+<p>比如在 PHP 中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a=&apos;string&apos;;</span><br></pre></td></tr></table></figure>
+<p>那么在保存该变量时，是怎么确定它的类型呢，不像其他语言可以在定义变量时就指定了类型：<code>int a=1</code>。虽然不知道其他语言是如何保存变量，但是就 PHP 的模式联想起来，在变量定义时就声明了类型，那么保存该变量的时候就可以很自然的使用该类型来保存。</p>
+<p><a href="http://www.php-internals.com/book/?p=chapt03/03-01-00-variables-structure" target="_blank" rel="noopener">TIPI 第一节 变量的结构和类型</a> 中也没有提及。</p>
+<a id="more"></a>
+<p>想想，PHP 有个内置函数 <code>gettype()</code>，可以查看这个函数的源码看看：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">PHP_FUNCTION(gettype)</span><br><span class="line">&#123;</span><br><span class="line">	zval *arg;</span><br><span class="line"></span><br><span class="line">	if (zend_parse_parameters(ZEND_NUM_ARGS(), &quot;z&quot;, &amp;arg) == FAILURE) &#123;</span><br><span class="line">		return;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	switch (Z_TYPE_P(arg)) &#123;</span><br><span class="line">		case IS_NULL:</span><br><span class="line">			RETVAL_STRING(&quot;NULL&quot;);</span><br><span class="line">			break;</span><br><span class="line"></span><br><span class="line">		case IS_FALSE:</span><br><span class="line">		case IS_TRUE:</span><br><span class="line">			RETVAL_STRING(&quot;boolean&quot;);</span><br><span class="line">			break;</span><br><span class="line"></span><br><span class="line">		case IS_LONG:</span><br><span class="line">			RETVAL_STRING(&quot;integer&quot;);</span><br><span class="line">			break;</span><br><span class="line"></span><br><span class="line">		case IS_DOUBLE:</span><br><span class="line">			RETVAL_STRING(&quot;double&quot;);</span><br><span class="line">			break;</span><br><span class="line"></span><br><span class="line">		case IS_STRING:</span><br><span class="line">			RETVAL_STRING(&quot;string&quot;);</span><br><span class="line">			break;</span><br><span class="line"></span><br><span class="line">		case IS_ARRAY:</span><br><span class="line">			RETVAL_STRING(&quot;array&quot;);</span><br><span class="line">			break;</span><br><span class="line"></span><br><span class="line">		case IS_OBJECT:</span><br><span class="line">			RETVAL_STRING(&quot;object&quot;);</span><br><span class="line">			break;</span><br><span class="line"></span><br><span class="line">		case IS_RESOURCE:</span><br><span class="line">			&#123;</span><br><span class="line">				const char *type_name = zend_rsrc_list_get_rsrc_type(Z_RES_P(arg));</span><br><span class="line"></span><br><span class="line">				if (type_name) &#123;</span><br><span class="line">					RETVAL_STRING(&quot;resource&quot;);</span><br><span class="line">					break;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		default:</span><br><span class="line">			RETVAL_STRING(&quot;unknown type&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不过看起来也没有什么启发。该函数主要功能是直接从变量的结构体内获取变量类型，然后对该变量类型进行逐一比较判断，碰到正确的就返回。</p>
+<p>尝试从别的地方看看有没有相关的源码。从网上来看，查看源码的似乎很少，从上文中鸟哥的文章中提到的文件路径，也和现在 PHP7 有所差别了，除了路径，代码也有很大的变化啊。我现在找到位于 <code>php-7.0.8-src/Zend/zend_types.h</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">struct _zval_struct &#123;</span><br><span class="line">	zend_value        value;			/* value */</span><br><span class="line">	union &#123;</span><br><span class="line">		struct &#123;</span><br><span class="line">			ZEND_ENDIAN_LOHI_4(</span><br><span class="line">				zend_uchar    type,			/* active type */</span><br><span class="line">				zend_uchar    type_flags,</span><br><span class="line">				zend_uchar    const_flags,</span><br><span class="line">				zend_uchar    reserved)	    /* call info for EX(This) */</span><br><span class="line">		&#125; v;</span><br><span class="line">		uint32_t type_info;</span><br><span class="line">	&#125; u1;</span><br><span class="line">	union &#123;</span><br><span class="line">		uint32_t     var_flags;</span><br><span class="line">		uint32_t     next;                 /* hash collision chain */</span><br><span class="line">		uint32_t     cache_slot;           /* literal cache slot */</span><br><span class="line">		uint32_t     lineno;               /* line number (for ast nodes) */</span><br><span class="line">		uint32_t     num_args;             /* arguments number for EX(This) */</span><br><span class="line">		uint32_t     fe_pos;               /* foreach position */</span><br><span class="line">		uint32_t     fe_iter_idx;          /* foreach iterator index */</span><br><span class="line">	&#125; u2;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>而在此结构体之前即是变量的联合体：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">typedef union _zend_value &#123;</span><br><span class="line">	zend_long         lval;				/* long value */</span><br><span class="line">	double            dval;				/* double value */</span><br><span class="line">	zend_refcounted  *counted;</span><br><span class="line">	zend_string      *str;</span><br><span class="line">	zend_array       *arr;</span><br><span class="line">	zend_object      *obj;</span><br><span class="line">	zend_resource    *res;</span><br><span class="line">	zend_reference   *ref;</span><br><span class="line">	zend_ast_ref     *ast;</span><br><span class="line">	zval             *zv;</span><br><span class="line">	void             *ptr;</span><br><span class="line">	zend_class_entry *ce;</span><br><span class="line">	zend_function    *func;</span><br><span class="line">	struct &#123;</span><br><span class="line">		uint32_t w1;</span><br><span class="line">		uint32_t w2;</span><br><span class="line">	&#125; ww;</span><br><span class="line">&#125; zend_value;</span><br></pre></td></tr></table></figure>
+<p>我几乎没有特地去看过 PHP 各版本之间的差别，因为我自己学的时候就是看基础，按照手册说的来就好了，所以也没有特意去记住在哪个版本哪些特性有什么变化。现在查看该源码，可以看到和鸟哥的文章中，有了比较多的差别，文章中的版本应该是很老了的吧。 PHP7 中将引用相关的参数放在了变量值的联合体当中了。除此之外，变量的结构体和联合体都增加了一些代码，我也看不懂，暂时就当眼熟一下吧。不过关于对新变量的类型确定方式，还是没有找到。</p>
+<p>找了半天，想着在论坛发帖问问看，但是在写帖子的时候也会在思考怎么明确的表达我的问题。所以来来去去，我忽然想到，即使是强类型的语言，必须要声明变量的类型，但是当变量的类型和变量实际值的类型对不上的时候，是会报错的。所以说，其实变量的类型声明，从某种意义上说是可以不存在的，就像 PHP。不管怎么样，变量的类型总是有一个规定的标准的，怎么样才是 int，怎么样是 string，只要按照这个标准比较就行。而强类型的语言则是该语言为了安全或者是其他某个目的规定必须声明变量定义，这就像 PHP 为了方便开发，不用特意声明变量类型，把这相关的交给 PHP 自己来做。</p>
+<p>除了 <code>gettype()</code> 函数，还有其他的一系列 <code>is_(type)()</code> 类型判断函数。我从 <code>is_string()</code> 看起：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PHP_FUNCTION(is_string)</span><br><span class="line">&#123;</span><br><span class="line">	php_is_type(INTERNAL_FUNCTION_PARAM_PASSTHRU, IS_STRING);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到虽然依旧有 <code>IS_STRING</code> 这个常量，但是还是需要另外的操作的。继续查看 <code>php_is_type()</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">static inline void php_is_type(INTERNAL_FUNCTION_PARAMETERS, int type)</span><br><span class="line">&#123;</span><br><span class="line">	zval *arg;</span><br><span class="line"></span><br><span class="line">#ifndef FAST_ZPP</span><br><span class="line">	if (zend_parse_parameters(ZEND_NUM_ARGS(), &quot;z&quot;, &amp;arg) == FAILURE) &#123;</span><br><span class="line">		RETURN_FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">	ZVAL_DEREF(arg);</span><br><span class="line">#else</span><br><span class="line">	ZEND_PARSE_PARAMETERS_START(1, 1)</span><br><span class="line">		Z_PARAM_ZVAL_DEREF(arg)</span><br><span class="line">	ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">	if (Z_TYPE_P(arg) == type) &#123;</span><br><span class="line">		if (type == IS_OBJECT) &#123;</span><br><span class="line">			zend_class_entry *ce = Z_OBJCE_P(arg);</span><br><span class="line">			if (ZSTR_LEN(ce-&gt;name) == sizeof(INCOMPLETE_CLASS) - 1</span><br><span class="line">					&amp;&amp; !memcmp(ZSTR_VAL(ce-&gt;name), INCOMPLETE_CLASS, sizeof(INCOMPLETE_CLASS) - 1)) &#123;</span><br><span class="line">				RETURN_FALSE;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; else if (type == IS_RESOURCE) &#123;</span><br><span class="line">			const char *type_name = zend_rsrc_list_get_rsrc_type(Z_RES_P(arg));</span><br><span class="line">			if (!type_name) &#123;</span><br><span class="line">				RETURN_FALSE;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		RETURN_TRUE;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		RETURN_FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不过 <code>#ifndef ... endif#</code> 之后的代码虽然看不懂 if 内部代码，但是判断条件还是可以看懂的，又回到了之前，这个判断条件是从变量本身直接获取的类型。</p>
+<p>让我来看看 <code>#ifndef ... endif#</code> 里的内容。<code>#ifndef ... else#</code> 间的代码继续追踪下去，嗯，有点绝望，完全看不懂代码，猜都猜不到。不过从返回值都是布尔值来看，这些函数的作用应该是进行一系列的判断。不过也只能猜到这了。因为虽然可以知道是判断，但不知道继续追踪下去是否又是上面 「直接获取变量类型判断」 的形式，不过还是猜测，应该不会这样了吧，不然有什么意义呢。然后，验证自己的猜想（并不算猜想，这个应该是可以很明确的事实了），简单查了一下 「c语言是如何确定变量类型的」 可以看到确实是有方法的。既然 PHP 是由 C 语言实现，道理应该差不多（应该是所有的语言都差不多吧）。</p>
+<p>最后，为什么会想到这个问题，前因在文章前面说过了，一下子钻进了牛角尖，就想知道 PHP 是怎么实现变量类型的确定的，而没有考虑其他。搞到最后虽然没有彻底解决，但也算有了了解和思路。总体看来，还是自己基础薄弱，C 语言的基础还是要打好，以及需要继续深入学习。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/12/PHP-编译模版记录/" rel="next" title="PHP 编译模版记录">
+                <i class="fa fa-chevron-left"></i> PHP 编译模版记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/21/微信-token-验证失败记录/" rel="prev" title="微信 token 验证失败记录">
+                微信 token 验证失败记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

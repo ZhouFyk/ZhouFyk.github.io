@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="notes,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第四章 瞬时响应：网站的高性能架构4.1 网站性能测试4.1.1 不同视角下的网站性能 用户视角：直观感受。前端架构优化手段：优化页面HTML、CSS，利用浏览器端并发和异步特性，调整浏览器缓存策略，使用CDN服务，反向代理。 开发人员视角：关注应用程序本身及其相关子系统的性能（响应延迟、系统吞吐量、并发处理能力、系统稳定性等）。主要优化手段：缓存加速数据读取，使用集群提高吞吐能力，异步消息加快请">
+<meta name="keywords" content="notes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大型网站技术架构-架构(1)-读书笔记">
+<meta property="og:url" content="http://yoursite.com/2017/04/20/大型网站技术架构-架构-1-读书笔记/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="第四章 瞬时响应：网站的高性能架构4.1 网站性能测试4.1.1 不同视角下的网站性能 用户视角：直观感受。前端架构优化手段：优化页面HTML、CSS，利用浏览器端并发和异步特性，调整浏览器缓存策略，使用CDN服务，反向代理。 开发人员视角：关注应用程序本身及其相关子系统的性能（响应延迟、系统吞吐量、并发处理能力、系统稳定性等）。主要优化手段：缓存加速数据读取，使用集群提高吞吐能力，异步消息加快请">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T09:49:48.087Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="大型网站技术架构-架构(1)-读书笔记">
+<meta name="twitter:description" content="第四章 瞬时响应：网站的高性能架构4.1 网站性能测试4.1.1 不同视角下的网站性能 用户视角：直观感受。前端架构优化手段：优化页面HTML、CSS，利用浏览器端并发和异步特性，调整浏览器缓存策略，使用CDN服务，反向代理。 开发人员视角：关注应用程序本身及其相关子系统的性能（响应延迟、系统吞吐量、并发处理能力、系统稳定性等）。主要优化手段：缓存加速数据读取，使用集群提高吞吐能力，异步消息加快请">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/20/大型网站技术架构-架构-1-读书笔记/">
+
+
+
+
+
+  <title>大型网站技术架构-架构(1)-读书笔记 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/20/大型网站技术架构-架构-1-读书笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">大型网站技术架构-架构(1)-读书笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-20T15:50:04+08:00">
+                2017-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="第四章-瞬时响应：网站的高性能架构"><a href="#第四章-瞬时响应：网站的高性能架构" class="headerlink" title="第四章 瞬时响应：网站的高性能架构"></a>第四章 瞬时响应：网站的高性能架构</h2><h3 id="4-1-网站性能测试"><a href="#4-1-网站性能测试" class="headerlink" title="4.1 网站性能测试"></a>4.1 网站性能测试</h3><h4 id="4-1-1-不同视角下的网站性能"><a href="#4-1-1-不同视角下的网站性能" class="headerlink" title="4.1.1 不同视角下的网站性能"></a>4.1.1 不同视角下的网站性能</h4><ol>
+<li>用户视角：直观感受。前端架构优化手段：优化页面HTML、CSS，利用浏览器端并发和异步特性，调整浏览器缓存策略，使用CDN服务，反向代理。</li>
+<li>开发人员视角：关注应用程序本身及其相关子系统的性能（响应延迟、系统吞吐量、并发处理能力、系统稳定性等）。主要优化手段：缓存加速数据读取，使用集群提高吞吐能力，异步消息加快请求响应及实现消峰，代码优化。</li>
+<li>运维人员视角：关注基础设施性能和资源利用率（网络运营商的带宽能力、服务器硬件的配置、数据中心网络架构、服务器和网络带宽的资源利用率等）。优化手段：建设优化骨干网、使用高性价比定制服务器、利用虚拟化技术优化资源利用。</li>
+</ol>
+<a id="more"></a>
+<h4 id="4-1-2-性能测试指标"><a href="#4-1-2-性能测试指标" class="headerlink" title="4.1.2 性能测试指标"></a>4.1.2 性能测试指标</h4><ol>
+<li>响应时间：应用执行一个操作需要的时间，包括从发出请求开始到收到最后响应数据所需时间。</li>
+<li>并发数：系统能够同时处理的请求数。</li>
+<li>吞吐量：单位时间内系统处理的请求数量。（请求数/秒，页面数/秒，访问人数/天，处理业务数/小时。）TPS-每秒事务数，HPS-每秒HTTP请求数，QPS-每秒查询数。</li>
+<li>性能计数器：描述服务器或操作系统性能的一些数据指标（系统负载，对象与线程数，内存使用，CPU使用，磁盘与网络I/O等）。</li>
+</ol>
+<h4 id="4-1-3-性能测试方法"><a href="#4-1-3-性能测试方法" class="headerlink" title="4.1.3 性能测试方法"></a>4.1.3 性能测试方法</h4><ol>
+<li>性能测试：对系统不断施加压力，检测系统是否能到达预期。</li>
+<li>负载测试：对系统不断增加并发请求，检测达到安全临界值时承担的最大数。</li>
+<li>压力测试：超过安全负载的情况下，继续施压，直到系统崩溃无法提供服务，获得系统最大压力承受能力。</li>
+<li>稳定性测试：模拟实际的生产环境，对系统进行一定时间的业务压力检测，检测系统是否稳定。</li>
+</ol>
+<h4 id="4-1-4-性能测试报告"><a href="#4-1-4-性能测试报告" class="headerlink" title="4.1.4 性能测试报告"></a>4.1.4 性能测试报告</h4><p>提供数据进行分析，获得相关的重要信息。</p>
+<h4 id="4-1-5-性能优化策略"><a href="#4-1-5-性能优化策略" class="headerlink" title="4.1.5 性能优化策略"></a>4.1.5 性能优化策略</h4><ol>
+<li>性能分析：检查请求处理的各个环节的日志，分析哪个环节响应时间不合理、超过预期；然后检查监控数据，分析影响性能的主要因素是内存、磁盘、网络还是CPU，是代码问题还是架构不合理，或者系统资源不足。</li>
+<li>性能优化：针对产生性能的具体原因，进行性能优化。根据网站分层架构，可分为 <code>Web</code> 前端优化、应用服务器优化、存储服务器优化。</li>
+</ol>
+<h3 id="4-2-Web-前端性能优化"><a href="#4-2-Web-前端性能优化" class="headerlink" title="4.2 Web 前端性能优化"></a>4.2 Web 前端性能优化</h3><h4 id="4-2-1-浏览器访问优化"><a href="#4-2-1-浏览器访问优化" class="headerlink" title="4.2.1 浏览器访问优化"></a>4.2.1 浏览器访问优化</h4><ol>
+<li>减少 http 请求：合并 CSS、合并 JavaScript、合并图片。</li>
+<li>使用浏览器缓存</li>
+<li>启用压缩</li>
+<li>CSS 放在页面最上面、JavaScript 放在页面最下面：根据实际情况决定 js 的位置。</li>
+<li>减少 cookie 传输</li>
+</ol>
+<h4 id="4-2-2-CDN-加速"><a href="#4-2-2-CDN-加速" class="headerlink" title="4.2.2 CDN 加速"></a>4.2.2 CDN 加速</h4><p>CDN 缓存静态资源加速响应。</p>
+<h4 id="4-2-3-反向代理"><a href="#4-2-3-反向代理" class="headerlink" title="4.2.3 反向代理"></a>4.2.3 反向代理</h4><h3 id="4-3-应用服务器性能优化"><a href="#4-3-应用服务器性能优化" class="headerlink" title="4.3 应用服务器性能优化"></a>4.3 应用服务器性能优化</h3><h4 id="4-3-1-分布式缓存"><a href="#4-3-1-分布式缓存" class="headerlink" title="4.3.1 分布式缓存"></a>4.3.1 分布式缓存</h4><ol>
+<li>缓存的基本原理：本质为一个内存 Hash 表。</li>
+<li>合理使用缓存。<strong>频繁修改的数据</strong> 以及 <strong>没有热点的访问</strong> 不适用于缓存。缓存更新导致的数据 <strong>不一致和脏读</strong> 一般是可以接受的。但是也要根据实际情况来处理。<strong>缓存可用性</strong> 可利用缓存集群来提高。防止 <strong>缓存穿透</strong> 的情况出现。</li>
+<li>分布式缓存架构：</li>
+<li>更新同步的分布式缓存</li>
+<li>不互相通信的分布式缓存</li>
+<li>Memcached</li>
+<li>简单的通信协议：通信协议（TCP/UDP都支持）；通信序列化协议（基于文本的自定义协议）。</li>
+<li>丰富的客户端程序：Java，C/C++/C#,Perl,Python,PHP,Ruby等。</li>
+<li>高性能的网络通信：服务端通信模块基于 Libevent。</li>
+<li>高效的内存管理：需要合理配置，不然会造成浪费。</li>
+<li>互不通信的服务器集群架构</li>
+</ol>
+<h4 id="4-3-2-异步操作"><a href="#4-3-2-异步操作" class="headerlink" title="4.3.2 异步操作"></a>4.3.2 异步操作</h4><h4 id="4-3-3-使用集群"><a href="#4-3-3-使用集群" class="headerlink" title="4.3.3 使用集群"></a>4.3.3 使用集群</h4><h4 id="4-3-4-代码优化"><a href="#4-3-4-代码优化" class="headerlink" title="4.3.4 代码优化"></a>4.3.4 代码优化</h4><ol>
+<li>多线程：解决线程安全的主要手段：</li>
+<li>将对象设计为无状态对象</li>
+<li>使用局部对象</li>
+<li>并发访问资源时使用锁</li>
+<li>资源复用：</li>
+<li>单例</li>
+<li>对象池</li>
+<li>数据结构：Hash散列算法 Time33 算法：hash(i) = hash(i-1) * 33 + str[i]。（解决相似字符串 hashcode 相似的方法：对字符串提取信息指纹再进行 hash 散列求值。）</li>
+<li>垃圾回收</li>
+</ol>
+<h3 id="4-4-存储性能优化"><a href="#4-4-存储性能优化" class="headerlink" title="4.4 存储性能优化"></a>4.4 存储性能优化</h3><h4 id="4-4-1-机械硬盘-VS-固态硬盘"><a href="#4-4-1-机械硬盘-VS-固态硬盘" class="headerlink" title="4.4.1 机械硬盘 VS 固态硬盘"></a>4.4.1 机械硬盘 VS 固态硬盘</h4><h4 id="4-4-2-B-树-VS-LSM树"><a href="#4-4-2-B-树-VS-LSM树" class="headerlink" title="4.4.2 B+树 VS LSM树"></a>4.4.2 B+树 VS LSM树</h4><h4 id="4-4-3-RAID-VS-HDFS"><a href="#4-4-3-RAID-VS-HDFS" class="headerlink" title="4.4.3 RAID VS HDFS"></a>4.4.3 RAID VS HDFS</h4><h2 id="第五章-万无一失：网站的高可用架构"><a href="#第五章-万无一失：网站的高可用架构" class="headerlink" title="第五章 万无一失：网站的高可用架构"></a>第五章 万无一失：网站的高可用架构</h2><h3 id="5-1-网站可用性的度量和考核"><a href="#5-1-网站可用性的度量和考核" class="headerlink" title="5.1 网站可用性的度量和考核"></a>5.1 网站可用性的度量和考核</h3><h3 id="5-2-高可用的网站架构"><a href="#5-2-高可用的网站架构" class="headerlink" title="5.2 高可用的网站架构"></a>5.2 高可用的网站架构</h3><p>硬件故障的常态，网站的高可用架构设计的主要目的就是保证服务器硬件故障时服务依然可用，数据依然保持并能被访问。实现的主要手段：数据和服务的冗余备份及失效转移。</p>
+<h3 id="5-3-高可用的应用"><a href="#5-3-高可用的应用" class="headerlink" title="5.3 高可用的应用"></a>5.3 高可用的应用</h3><h4 id="5-3-1-通过负载均衡进行无状态服务的失效转移"><a href="#5-3-1-通过负载均衡进行无状态服务的失效转移" class="headerlink" title="5.3.1 通过负载均衡进行无状态服务的失效转移"></a>5.3.1 通过负载均衡进行无状态服务的失效转移</h4><h4 id="5-3-2-应用服务器集群的-Session-管理"><a href="#5-3-2-应用服务器集群的-Session-管理" class="headerlink" title="5.3.2 应用服务器集群的 Session 管理"></a>5.3.2 应用服务器集群的 Session 管理</h4><ol>
+<li>Session 复制:大规模下无法实现</li>
+<li>Session 绑定：用户的请求都在同一台服务器上处理。一旦服务器宕机，服务将不可用。</li>
+<li>利用 Cookie 记录 Session：</li>
+</ol>
+<ul>
+<li>Cookie 大小限制，能记录的信息有限</li>
+<li>每次请求响应都要传输 Cookie， 影响性能</li>
+<li>用户关闭 Cookie，服务将不正常。</li>
+<li>简单易用，可用性高，支持应用服务器的线性伸缩，大部分需要记录的 Session 信息较小。因此依旧在使用此方式。</li>
+</ul>
+<ol start="4">
+<li>Session 服务器：利用独立部署的 Session 服务器集群统一管理 Session，在应用服务器每次读写 Session 时，都访问 Session 服务器。这种解决方案是将应用服务器的状态分离，分为无状态和有状态，针对各自特性分别设计架构。</li>
+</ol>
+<h3 id="5-4-高可用的服务"><a href="#5-4-高可用的服务" class="headerlink" title="5.4 高可用的服务"></a>5.4 高可用的服务</h3><ol>
+<li>分级管理：对不同优先级的应用和服务进行不同的管理。</li>
+<li>超时设置</li>
+<li>异步调用：针对实际业务，如果可以不即时反馈结果，可以使用异步的方式。</li>
+<li>服务降级：对不影响核心功能的服务进行下列处理：</li>
+<li>拒绝服务</li>
+<li>关闭功能</li>
+<li>幂等性设计</li>
+</ol>
+<h3 id="5-5-高可用的数据"><a href="#5-5-高可用的数据" class="headerlink" title="5.5 高可用的数据"></a>5.5 高可用的数据</h3><p>主要手段：数据备份和失效转移机制。</p>
+<h4 id="5-5-1-CAP原理"><a href="#5-5-1-CAP原理" class="headerlink" title="5.5.1 CAP原理"></a>5.5.1 CAP原理</h4><p>高可用数据含义：</p>
+<ol>
+<li>数据持久性：保证数据可持久存储，在各种情况下都不会出现数据丢失的问题。</li>
+<li>数据可访问性：如果一个数据存储设备损坏，及时将数据访问切换到好的设备上，保证数据一直可以被访问。</li>
+<li>数据一致性：所有的数据都保持一致。</li>
+</ol>
+<p>CAP原理：一个提供数据服务的存储系统无法同时满足数据一致性、数据可用性、分区耐受性。在大型网站中，通常选择强化分布式存储系统的可用性（A）和伸缩性（P），在某种程度上放弃一致性（C）。</p>
+<p>数据一致性：</p>
+<ol>
+<li>数据强一致：全部数据必须一致，没有不确定的状态。</li>
+<li>数据用户一致：即使存储的数据不一致，但是经过一系列纠错和校验机制，返回给用户的数据是一致且正确的。</li>
+<li>数据最终一致：数据不一定一致，返回给用户不一定一致，但是在经过一定比较短的时间段之后，数据最终会达到一致。</li>
+</ol>
+<h4 id="5-5-2-数据备份"><a href="#5-5-2-数据备份" class="headerlink" title="5.5.2 数据备份"></a>5.5.2 数据备份</h4><p>数据冷备：定期将数据复制保存。但是如果数据丢失，无法实时恢复，只能恢复到最近一次冷备时的数据。</p>
+<p>数据热备：</p>
+<ol>
+<li>异步热备：存储服务器分为主从服务器，写入主服务器一次，然后由主服务器写入从服务器。</li>
+<li>同步热备：同时对所有存储服务器进行写入数据。</li>
+</ol>
+<h4 id="5-5-3-失效转移"><a href="#5-5-3-失效转移" class="headerlink" title="5.5.3 失效转移"></a>5.5.3 失效转移</h4><ol>
+<li>失效确认：心跳检测、应用程序访问失败报告。</li>
+<li>访问转移</li>
+<li>数据恢复</li>
+</ol>
+<h3 id="5-6-高可用网站的软件质量保证"><a href="#5-6-高可用网站的软件质量保证" class="headerlink" title="5.6 高可用网站的软件质量保证"></a>5.6 高可用网站的软件质量保证</h3><h4 id="5-6-1-网站发布"><a href="#5-6-1-网站发布" class="headerlink" title="5.6.1 网站发布"></a>5.6.1 网站发布</h4><p>每次更新一部分服务器，分批发布。</p>
+<h4 id="5-6-2-自动化测试"><a href="#5-6-2-自动化测试" class="headerlink" title="5.6.2 自动化测试"></a>5.6.2 自动化测试</h4><p>发布之后要对服务进行测试，保证服务没有 bug。</p>
+<h4 id="5-6-3-预发布验证"><a href="#5-6-3-预发布验证" class="headerlink" title="5.6.3 预发布验证"></a>5.6.3 预发布验证</h4><p>预发布服务器除了无法被用户访问，其余与生产环境的服务器一致。如果在预发布服务器上的测试是正确的，那么可以基本保证生产环境的服务器部署时也没问题。另，在启动时发现问题，要及时停止启动，排查错误，而不是启动后执行错误的操作。</p>
+<h4 id="5-6-4-代码控制"><a href="#5-6-4-代码控制" class="headerlink" title="5.6.4 代码控制"></a>5.6.4 代码控制</h4><p>通过代码管理工具对代码进行开发管理。</p>
+<h4 id="5-6-5-自动化发布"><a href="#5-6-5-自动化发布" class="headerlink" title="5.6.5 自动化发布"></a>5.6.5 自动化发布</h4><h4 id="5-6-6-灰度发布"><a href="#5-6-6-灰度发布" class="headerlink" title="5.6.6 灰度发布"></a>5.6.6 灰度发布</h4><p>将集群服务器分为若干部分，每天只发布一部分服务器，如果正常，继续下一批。发现问题，及时处理该批服务器，直到全部发布完毕，一切正常。</p>
+<h3 id="5-7-网站运行监控"><a href="#5-7-网站运行监控" class="headerlink" title="5.7 网站运行监控"></a>5.7 网站运行监控</h3><h4 id="5-7-1-监控数据采集"><a href="#5-7-1-监控数据采集" class="headerlink" title="5.7.1 监控数据采集"></a>5.7.1 监控数据采集</h4><ol>
+<li>用户行为日志收集</li>
+</ol>
+<ul>
+<li>服务器端日志收集</li>
+<li>客户端浏览器日志收集</li>
+</ul>
+<ol start="2">
+<li>服务器性能监控</li>
+<li>运行数据报告</li>
+</ol>
+<h4 id="5-7-2-监控管理"><a href="#5-7-2-监控管理" class="headerlink" title="5.7.2 监控管理"></a>5.7.2 监控管理</h4><ol>
+<li>系统报警</li>
+<li>失效转移</li>
+<li>自动优雅降级</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/notes/" rel="tag"># notes</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/20/大型网站技术架构-概述-读书笔记/" rel="next" title="大型网站技术架构-概述-读书笔记">
+                <i class="fa fa-chevron-left"></i> 大型网站技术架构-概述-读书笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/23/简单课程网站记录/" rel="prev" title="简单课程网站记录">
+                简单课程网站记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第四章-瞬时响应：网站的高性能架构"><span class="nav-number">1.</span> <span class="nav-text">第四章 瞬时响应：网站的高性能架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-网站性能测试"><span class="nav-number">1.1.</span> <span class="nav-text">4.1 网站性能测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-1-不同视角下的网站性能"><span class="nav-number">1.1.1.</span> <span class="nav-text">4.1.1 不同视角下的网站性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-2-性能测试指标"><span class="nav-number">1.1.2.</span> <span class="nav-text">4.1.2 性能测试指标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-3-性能测试方法"><span class="nav-number">1.1.3.</span> <span class="nav-text">4.1.3 性能测试方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-4-性能测试报告"><span class="nav-number">1.1.4.</span> <span class="nav-text">4.1.4 性能测试报告</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-5-性能优化策略"><span class="nav-number">1.1.5.</span> <span class="nav-text">4.1.5 性能优化策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Web-前端性能优化"><span class="nav-number">1.2.</span> <span class="nav-text">4.2 Web 前端性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-1-浏览器访问优化"><span class="nav-number">1.2.1.</span> <span class="nav-text">4.2.1 浏览器访问优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-2-CDN-加速"><span class="nav-number">1.2.2.</span> <span class="nav-text">4.2.2 CDN 加速</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-3-反向代理"><span class="nav-number">1.2.3.</span> <span class="nav-text">4.2.3 反向代理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-应用服务器性能优化"><span class="nav-number">1.3.</span> <span class="nav-text">4.3 应用服务器性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-1-分布式缓存"><span class="nav-number">1.3.1.</span> <span class="nav-text">4.3.1 分布式缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-2-异步操作"><span class="nav-number">1.3.2.</span> <span class="nav-text">4.3.2 异步操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-3-使用集群"><span class="nav-number">1.3.3.</span> <span class="nav-text">4.3.3 使用集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-4-代码优化"><span class="nav-number">1.3.4.</span> <span class="nav-text">4.3.4 代码优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-存储性能优化"><span class="nav-number">1.4.</span> <span class="nav-text">4.4 存储性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-1-机械硬盘-VS-固态硬盘"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.4.1 机械硬盘 VS 固态硬盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-2-B-树-VS-LSM树"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.4.2 B+树 VS LSM树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-3-RAID-VS-HDFS"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.4.3 RAID VS HDFS</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五章-万无一失：网站的高可用架构"><span class="nav-number">2.</span> <span class="nav-text">第五章 万无一失：网站的高可用架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-网站可用性的度量和考核"><span class="nav-number">2.1.</span> <span class="nav-text">5.1 网站可用性的度量和考核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-高可用的网站架构"><span class="nav-number">2.2.</span> <span class="nav-text">5.2 高可用的网站架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-高可用的应用"><span class="nav-number">2.3.</span> <span class="nav-text">5.3 高可用的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-1-通过负载均衡进行无状态服务的失效转移"><span class="nav-number">2.3.1.</span> <span class="nav-text">5.3.1 通过负载均衡进行无状态服务的失效转移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-2-应用服务器集群的-Session-管理"><span class="nav-number">2.3.2.</span> <span class="nav-text">5.3.2 应用服务器集群的 Session 管理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-高可用的服务"><span class="nav-number">2.4.</span> <span class="nav-text">5.4 高可用的服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-高可用的数据"><span class="nav-number">2.5.</span> <span class="nav-text">5.5 高可用的数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-1-CAP原理"><span class="nav-number">2.5.1.</span> <span class="nav-text">5.5.1 CAP原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-2-数据备份"><span class="nav-number">2.5.2.</span> <span class="nav-text">5.5.2 数据备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-3-失效转移"><span class="nav-number">2.5.3.</span> <span class="nav-text">5.5.3 失效转移</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-高可用网站的软件质量保证"><span class="nav-number">2.6.</span> <span class="nav-text">5.6 高可用网站的软件质量保证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-1-网站发布"><span class="nav-number">2.6.1.</span> <span class="nav-text">5.6.1 网站发布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-2-自动化测试"><span class="nav-number">2.6.2.</span> <span class="nav-text">5.6.2 自动化测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-3-预发布验证"><span class="nav-number">2.6.3.</span> <span class="nav-text">5.6.3 预发布验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-4-代码控制"><span class="nav-number">2.6.4.</span> <span class="nav-text">5.6.4 代码控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-5-自动化发布"><span class="nav-number">2.6.5.</span> <span class="nav-text">5.6.5 自动化发布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-6-灰度发布"><span class="nav-number">2.6.6.</span> <span class="nav-text">5.6.6 灰度发布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-网站运行监控"><span class="nav-number">2.7.</span> <span class="nav-text">5.7 网站运行监控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-7-1-监控数据采集"><span class="nav-number">2.7.1.</span> <span class="nav-text">5.7.1 监控数据采集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-7-2-监控管理"><span class="nav-number">2.7.2.</span> <span class="nav-text">5.7.2 监控管理</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

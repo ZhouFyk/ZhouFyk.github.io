@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php framework ci,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Input class：为了增强安全性，在使用数据之前对数据进行相应的处理。">
+<meta name="keywords" content="php framework ci">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ci - core - input">
+<meta property="og:url" content="http://yoursite.com/2017/07/12/ci-core-input/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="Input class：为了增强安全性，在使用数据之前对数据进行相应的处理。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:50:43.883Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ci - core - input">
+<meta name="twitter:description" content="Input class：为了增强安全性，在使用数据之前对数据进行相应的处理。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/12/ci-core-input/">
+
+
+
+
+
+  <title>ci - core - input | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/12/ci-core-input/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ci - core - input</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-12T21:24:12+08:00">
+                2017-07-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://github.com/bcit-ci/CodeIgniter/blob/develop/system/core/Input.php" target="_blank" rel="noopener">Input class</a>：为了增强安全性，在使用数据之前对数据进行相应的处理。</p>
+<a id="more"></a>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><ol>
+<li><code>$ip_address</code>：当前用户 IP。</li>
+<li><code>$headers</code>：所有的 http 请求头列表。</li>
+<li><code>$_raw_input_stream</code>：原生的输入流数据。</li>
+<li><code>$_input_stream</code>：解析了的输入数据。</li>
+<li><code>$security</code>：安全类对象。</li>
+</ol>
+<h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><p><code>__construct(CI_Security &amp;$security)</code>：</p>
+<p>传入参数为安全类的对象，将其保存在属性中。记录日志。</p>
+<h2 id="从全局数组中获取值"><a href="#从全局数组中获取值" class="headerlink" title="从全局数组中获取值"></a>从全局数组中获取值</h2><p><code>_fetch_from_array(&amp;$array, $index = NULL, $xss_clean = FALSE)</code>：</p>
+<p>首先判断索引在不在，因为这个方法可以获取指定的键值对。如果索引存在，那么就要看看是不是索引数组。如果是索引数组就通过 <code>foreach</code> 递归调用本方法。另外，如果索引不存在，则使用 <code>array_keys()</code> 直接从数组中获取所有的键值，这样索引也就成了一个索引数组，然后就是同样如前的操作。</p>
+<p>那么经过这样的处理，到了这里，索引就是一个标量了。直接作为键 [1]，检测数组中是否存在该键值对即可，不存在则返回 Null。存在则看看方法的参数中 <code>xss_clean</code> 标识符，来返回过滤或者不过滤的值。</p>
+<p>在上面 [1] 处，当索引直接作为键时，如果该键值对不存在，代码这里还有个判断条件是 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">($count = preg_match_all(&apos;/(?:^[^\[]+)|\[[^]]*\]/&apos;, $index, $matches)) &gt; 1</span><br></pre></td></tr></table></figure>
+<p>依据正则表达式来看，索引应该有可能形如 <code>$a[&#39;a&#39;][&#39;b&#39;]</code> 这样，才会有这样的匹配。以这个为例的话，结果就是 <code>$matches=[[0]=&gt;[&quot;[a]&quot;,&quot;[b]&quot;]]</code>。代码很直观，摘录代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">for ($i = 0; $i &lt; $count; $i++)</span><br><span class="line">&#123;</span><br><span class="line">	$key = trim($matches[0][$i], &apos;[]&apos;);</span><br><span class="line">	if ($key === &apos;&apos;) // Empty notation will return the value as array</span><br><span class="line">	&#123;</span><br><span class="line">		break;</span><br><span class="line">	&#125;</span><br><span class="line">	if (isset($value[$key]))</span><br><span class="line">	&#123;</span><br><span class="line">		$value = $value[$key];</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">	return NULL;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="从-GET-中获取指定索引的值"><a href="#从-GET-中获取指定索引的值" class="headerlink" title="从 $_GET 中获取指定索引的值"></a>从 $_GET 中获取指定索引的值</h2><p><code>get($index = NULL, $xss_clean = FALSE)</code>：</p>
+<p>直接调用了上面这个方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return $this-&gt;_fetch_from_array($_GET, $index, $xss_clean);</span><br></pre></td></tr></table></figure>
+<h2 id="从-POST-中获取指定索引的值"><a href="#从-POST-中获取指定索引的值" class="headerlink" title="从 $_POST 中获取指定索引的值"></a>从 $_POST 中获取指定索引的值</h2><p><code>post($index = NULL, $xss_clean = FALSE)</code>：</p>
+<p>同样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return $this-&gt;_fetch_from_array($_POST, $index, $xss_clean);</span><br></pre></td></tr></table></figure>
+<h2 id="依次尝试从-POST-到-GET-中获取指定索引的值"><a href="#依次尝试从-POST-到-GET-中获取指定索引的值" class="headerlink" title="依次尝试从 $_POST 到 $_GET 中获取指定索引的值"></a>依次尝试从 $_POST 到 $_GET 中获取指定索引的值</h2><p><code>post_get($index, $xss_clean = FALSE)</code>：</p>
+<p>调用上面两个方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">return isset($_POST[$index])</span><br><span class="line">		? $this-&gt;post($index, $xss_clean)</span><br><span class="line">		: $this-&gt;get($index, $xss_clean);</span><br></pre></td></tr></table></figure>
+<p>运用了三目运算符，看着很简洁优雅。</p>
+<h2 id="依次尝试从-GET-到-POST-中获取指定索引的值"><a href="#依次尝试从-GET-到-POST-中获取指定索引的值" class="headerlink" title="依次尝试从 $_GET 到 $_POST 中获取指定索引的值"></a>依次尝试从 $_GET 到 $_POST 中获取指定索引的值</h2><p><code>get_post($index, $xss_clean = FALSE)</code>：</p>
+<p>与上个方法相反：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">return isset($_GET[$index])</span><br><span class="line">		? $this-&gt;get($index, $xss_clean)</span><br><span class="line">		: $this-&gt;post($index, $xss_clean);</span><br></pre></td></tr></table></figure>
+<h2 id="从-COOKIE-中获取指定索引的值"><a href="#从-COOKIE-中获取指定索引的值" class="headerlink" title="从 $_COOKIE 中获取指定索引的值"></a>从 $_COOKIE 中获取指定索引的值</h2><p><code>cookie($index = NULL, $xss_clean = FALSE)</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return $this-&gt;_fetch_from_array($_COOKIE, $index, $xss_clean);</span><br></pre></td></tr></table></figure>
+<h2 id="从-SERVER-中获取指定索引的值"><a href="#从-SERVER-中获取指定索引的值" class="headerlink" title="从 $_SERVER 中获取指定索引的值"></a>从 $_SERVER 中获取指定索引的值</h2><p><code>server($index, $xss_clean = FALSE)</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return $this-&gt;_fetch_from_array($_SERVER, $index, $xss_clean);</span><br></pre></td></tr></table></figure>
+<h2 id="从-php-输入流中获取指定索引的值"><a href="#从-php-输入流中获取指定索引的值" class="headerlink" title="从 php 输入流中获取指定索引的值"></a>从 php 输入流中获取指定索引的值</h2><p><code>input_stream($index = NULL, $xss_clean = FALSE)</code>：</p>
+<p>根据注释，这个方法在使用通过 put / delete / patch 来请求数据时很有用。</p>
+<p>首先看输入流中的数据是否已经接收过了，判断条件是 <code>$_input_stream</code> 是否是数组，不是的话就从原生的输入流数据中解析到这个属性中，然后再检测这个属性是否是数组，是的话就没问题，不是的话就设为空数组。做好了这些处理，就调用 <code>_fetch_from_array()</code> 方法来返回最后的结果。</p>
+<h2 id="设置-cookie"><a href="#设置-cookie" class="headerlink" title="设置 cookie"></a>设置 cookie</h2><p><code>set_cookie($name, $value = &#39;&#39;, $expire = 0, $domain = &#39;&#39;, $path = &#39;/&#39;, $prefix = &#39;&#39;, $secure = NULL, $httponly = NULL)</code>：</p>
+<p>参数多至八个。除了一个一个传参，也可以统一作为关联数组一次传入。这个方法，PHP 中有内置的 <a href="https://secure.php.net/manual/zh/function.setcookie.php" target="_blank" rel="noopener"><code>setcookie</code></a> 与 <a href="https://secure.php.net/manual/zh/function.setrawcookie.php" target="_blank" rel="noopener"><code>setrawcookie()</code></a>。参数几乎一样。从代码来看，这个方法在最后直接调用了 <code>setcookie()</code>，之前都是在对参数做相关的处理。</p>
+<p>首先对 <code>$name</code> 做处理，如果是数组，就取出其中的值。这里的处理是有一些条件的。代码是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">foreach (array(&apos;value&apos;, &apos;expire&apos;, &apos;domain&apos;, &apos;path&apos;, &apos;prefix&apos;, &apos;secure&apos;, &apos;httponly&apos;, &apos;name&apos;) as $item)</span><br></pre></td></tr></table></figure>
+<p>将 <code>name</code> 放在最后是为了保证不陷入循环。</p>
+<p>接下来对这些变量进行同样原理的判断，如果是默认值，即没有传进来数据，而配置文件中有这些配置参数，则使用配置参数。这里的代码形式是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if ($prefix === &apos;&apos; &amp;&amp; config_item(&apos;cookie_prefix&apos;) !== &apos;&apos;)</span><br></pre></td></tr></table></figure>
+<p>使用了逻辑与 <code>&amp;&amp;</code> 的操作，简化了代码。不然麻烦的话会这么写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if ($prefix === &apos;&apos;) &#123;</span><br><span class="line">	if (config_item(&apos;cookie_prefix&apos;) ！== &apos;&apos;) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而 <code>$secure</code> 和 <code>$httponly</code> 的处理又是另一种写法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$secure = ($secure === NULL &amp;&amp; config_item(&apos;cookie_secure&apos;) !== NULL)</span><br><span class="line">		? (bool) config_item(&apos;cookie_secure&apos;)</span><br><span class="line">		: (bool) $secure;</span><br></pre></td></tr></table></figure>
+<p>看了一下参数的类型，只有这两个参数是布尔型的，默认值为 Null。一下子看不出为什么这么写的原因，那就改写成之前的写法看看：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if ($secure === null &amp;&amp; config_item(&apos;cookie_secure&apos;) !== null) &#123;</span><br><span class="line">	$secure = (bool) config_item(&apos;cookie_secure&apos;)；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这么比较起来，如果能偶进入 <code>if</code> 是没问题的。但是如果没进去，那么 <code>$secure</code> 并不能保证是布尔型的，可能是整型，可能是字符串，那么还是要把其他类型强制转换成布尔型的。如果还是这种写法，那就需要在 <code>if</code> 后面加上 <code>else</code> 来强制转换 Null 为 false。</p>
+<p>所以这里修改了一下之前的写法，在之前 <code>&amp;&amp;</code> 的基础上使用了三目运算符。其实就是将 <code>if...else...</code> 通过了三目运算符实现。</p>
+<p>然后是最后一个参数 <code>$expire</code>。这里的写法较之前又有了改变，出现了 <code>else</code>。在这个判断语句内，有 <code>OR</code> 和 <code>?:</code>。既然之前的写法看起来更好，再次尝试一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$expire = ((!is_numeric($expire) OR $expire &lt; 0) ? 1:(($expire &gt; 0) ? time() + $expire : 0));</span><br></pre></td></tr></table></figure>
+<p>可以感受到一点，就算是我对照着源代码修改，写起来也有点吃力。别说看了。如果真这么写，理解起来还是要花点功夫的，可能还要手动转化成  <code>if...else...</code> 来帮助理解。所以这里源代码的方式是更好的。简洁直观易理解。</p>
+<p>最后 调用 PHP 内置的 <code>setcookie()</code>，将参数传递进去即可。</p>
+<p>比较这个方法和 PHP 内置的函数，参数几乎一致，而且此方法最后依旧调用了内置函数。那么这个方法的本质作用其实是处理配置文件中的配置参数。但是如果配置文件中相关参数并没有设置，那依旧和内置函数一样了。所以这个方法的意义到底在哪里呢。等看其他代码，看到它的使用场景时可能会有助于理解。</p>
+<h2 id="获取用户-IP"><a href="#获取用户-IP" class="headerlink" title="获取用户 IP"></a>获取用户 IP</h2><p><code>ip_address()</code>：</p>
+<p>首先检测属性 <code>ip_address</code> 是否已经存在了。已经存在直接返回。</p>
+<p>从配置中获取代理 ip 地址。因为允许两种格式，所以如果 ip 存在，且不是数组，就把另一种格式转换成数组格式的。</p>
+<p>调用本类方法 <code>server(&#39;REMOTE_ADDR&#39;)</code> 获取到客户端 ip。</p>
+<p>如果代理 ip 存在，则使用 <code>foreach</code> 对所有与 ip 相关的头部信息的值进行获取判断，如果通过了验证，则跳出循环。结束这个循环有两种方式，一种就是 ip 通过了验证，一种就是所有的 ip 都没有通过验证。所以要检测看 ip 存在不存在，存在就再对 ip 进行处理。</p>
+<p>然后对 ip 进行验证。没通过返回 <code>0.0.0.0</code>。通过就返回正确的 ip。</p>
+<h2 id="验证-IP"><a href="#验证-IP" class="headerlink" title="验证 IP"></a>验证 IP</h2><p><code>valid_ip($ip, $which = &#39;&#39;)</code>：</p>
+<p>十分简单。首先根据 <code>$which</code> 判断 ip 的的协议。这里通过 <code>switch</code> 来指定判断，除了 <code>ipv4</code> 和 <code>ipv6</code>，就是 Null。然后直接调用内置函数 <code>filter_var($ip, FILTER_VALIDATE_IP, $which)</code> 对 ip 进行过滤，最后返回。</p>
+<h2 id="获得用户代理"><a href="#获得用户代理" class="headerlink" title="获得用户代理"></a>获得用户代理</h2><p><code>user_agent($xss_clean = FALSE)</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return $this-&gt;_fetch_from_array($_SERVER, &apos;HTTP_USER_AGENT&apos;, $xss_clean);</span><br></pre></td></tr></table></figure>
+<h2 id="获取所有请求头信息"><a href="#获取所有请求头信息" class="headerlink" title="获取所有请求头信息"></a>获取所有请求头信息</h2><p><code>request_headers($xss_clean = FALSE)</code>：</p>
+<p>首先看请求头是否已经存在，已经存在则直接返回。</p>
+<p>然后检测是哪个 web 服务器，这里只有两种情况，要么是 apache，要么是其他。判断条件是判断方法 <code>apache_request_headers()</code> 是否存在。现在则调用该方法获得请求头部信息。否则通过 <code>foreach</code> 从预定义变量 <code>$_SERVER</code> 中逐一获取，以键值对的形式存入数组中。最后调用 <code>_fetch_from_array()</code> 返回。</p>
+<h2 id="获取指定请求头信息"><a href="#获取指定请求头信息" class="headerlink" title="获取指定请求头信息"></a>获取指定请求头信息</h2><p><code>get_request_header($index, $xss_clean = FALSE)</code>：</p>
+<p>同样的讨论，先检测请求头信息存在不存在，不存在则调用上一个方法获取，然后将键都转成小写，防止意外。然后判断请求头信息数组中是否有指定的键值对，有则返回，无则会 Null。</p>
+<p>可以看到之前的几个方法中都有参数 <code>$xss_clean</code>，这个参数是用来判断是否进行 xss 过滤的。</p>
+<h2 id="判断是否通过-ajax-请求"><a href="#判断是否通过-ajax-请求" class="headerlink" title="判断是否通过 ajax 请求"></a>判断是否通过 ajax 请求</h2><p><code>is_ajax_request()</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return ( ! empty($_SERVER[&apos;HTTP_X_REQUESTED_WITH&apos;]) &amp;&amp; strtolower($_SERVER[&apos;HTTP_X_REQUESTED_WITH&apos;]) === &apos;xmlhttprequest&apos;);</span><br></pre></td></tr></table></figure>
+<h2 id="获取请求的方法"><a href="#获取请求的方法" class="headerlink" title="获取请求的方法"></a>获取请求的方法</h2><p><code>method($upper = FALSE)</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">return ($upper)</span><br><span class="line">		? strtoupper($this-&gt;server(&apos;REQUEST_METHOD&apos;))</span><br><span class="line">		: strtolower($this-&gt;server(&apos;REQUEST_METHOD&apos;));</span><br></pre></td></tr></table></figure>
+<h2 id="魔术方法-get"><a href="#魔术方法-get" class="headerlink" title="魔术方法 __get"></a>魔术方法 __get</h2><p><code>__get($name)</code>：</p>
+<p>代码中写死了只提供原生输入流 <code>raw_input_stream</code> 和 <code>ip_address</code>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>学习到了很多新写法和新用法。可能是受到了 CI 框架源码的影响，这两天看公司的代码的时候，总是想把简单的判断语句改成逻辑运算符。从代码来说更优雅。而易读性的话，这个比较主观，不过判断语句作为基础语法，是更普通常见。以及怕出现只是「自我臆想的代码优化，其实代码运行效率反而降低」的情况，写了个测试，然而太简单了，两种情况根本没有差别。那么就我个人来说，还是比较喜欢逻辑运算符的。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-framework-ci/" rel="tag"># php framework ci</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/10/ci-core-hooks/" rel="next" title="ci - core - hooks">
+                <i class="fa fa-chevron-left"></i> ci - core - hooks
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/13/ci-core-lang/" rel="prev" title="ci-core-lang">
+                ci-core-lang <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#属性"><span class="nav-number">1.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造方法"><span class="nav-number">2.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从全局数组中获取值"><span class="nav-number">3.</span> <span class="nav-text">从全局数组中获取值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从-GET-中获取指定索引的值"><span class="nav-number">4.</span> <span class="nav-text">从 $_GET 中获取指定索引的值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从-POST-中获取指定索引的值"><span class="nav-number">5.</span> <span class="nav-text">从 $_POST 中获取指定索引的值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依次尝试从-POST-到-GET-中获取指定索引的值"><span class="nav-number">6.</span> <span class="nav-text">依次尝试从 $_POST 到 $_GET 中获取指定索引的值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依次尝试从-GET-到-POST-中获取指定索引的值"><span class="nav-number">7.</span> <span class="nav-text">依次尝试从 $_GET 到 $_POST 中获取指定索引的值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从-COOKIE-中获取指定索引的值"><span class="nav-number">8.</span> <span class="nav-text">从 $_COOKIE 中获取指定索引的值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从-SERVER-中获取指定索引的值"><span class="nav-number">9.</span> <span class="nav-text">从 $_SERVER 中获取指定索引的值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从-php-输入流中获取指定索引的值"><span class="nav-number">10.</span> <span class="nav-text">从 php 输入流中获取指定索引的值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置-cookie"><span class="nav-number">11.</span> <span class="nav-text">设置 cookie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取用户-IP"><span class="nav-number">12.</span> <span class="nav-text">获取用户 IP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#验证-IP"><span class="nav-number">13.</span> <span class="nav-text">验证 IP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获得用户代理"><span class="nav-number">14.</span> <span class="nav-text">获得用户代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取所有请求头信息"><span class="nav-number">15.</span> <span class="nav-text">获取所有请求头信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取指定请求头信息"><span class="nav-number">16.</span> <span class="nav-text">获取指定请求头信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#判断是否通过-ajax-请求"><span class="nav-number">17.</span> <span class="nav-text">判断是否通过 ajax 请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取请求的方法"><span class="nav-number">18.</span> <span class="nav-text">获取请求的方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#魔术方法-get"><span class="nav-number">19.</span> <span class="nav-text">魔术方法 __get</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">20.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="algo,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="内容来自牛客网《剑指OFFER》刷题。有些算法是自己想的，大部分不会的是改自网友代码。">
+<meta name="keywords" content="algo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单算法记录-3">
+<meta property="og:url" content="http://yoursite.com/2017/03/16/简单算法记录-3/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="内容来自牛客网《剑指OFFER》刷题。有些算法是自己想的，大部分不会的是改自网友代码。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:03:36.686Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简单算法记录-3">
+<meta name="twitter:description" content="内容来自牛客网《剑指OFFER》刷题。有些算法是自己想的，大部分不会的是改自网友代码。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/16/简单算法记录-3/">
+
+
+
+
+
+  <title>简单算法记录-3 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/16/简单算法记录-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">简单算法记录-3</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-16T19:38:43+08:00">
+                2017-03-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>内容来自<a href="https://www.nowcoder.com/ta/coding-interviews" target="_blank" rel="noopener">牛客网《剑指OFFER》刷题</a>。有些算法是自己想的，大部分不会的是改自网友代码。</li>
+</ul>
+<a id="more"></a>
+<h3 id="6-在一个字符串-1-lt-字符串长度-lt-10000，全部由大写字母组成-中找到第一个只出现一次的字符-并返回它的位置"><a href="#6-在一个字符串-1-lt-字符串长度-lt-10000，全部由大写字母组成-中找到第一个只出现一次的字符-并返回它的位置" class="headerlink" title="6. 在一个字符串(1&lt;=字符串长度&lt;=10000，全部由大写字母组成)中找到第一个只出现一次的字符,并返回它的位置"></a>6. 在一个字符串(1&lt;=字符串长度&lt;=10000，全部由大写字母组成)中找到第一个只出现一次的字符,并返回它的位置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">function FirstNotRepeatingChar($str)</span><br><span class="line">&#123;</span><br><span class="line">	if(empty($str))&#123;</span><br><span class="line">    	return -1;</span><br><span class="line">	&#125;</span><br><span class="line">	$n = strlen($str);</span><br><span class="line">	$str = str_split($str);</span><br><span class="line">	$counts = array_count_values($str);</span><br><span class="line">	foreach($counts as $key =&gt; $count)&#123;</span><br><span class="line">    	if($count == 1)&#123;</span><br><span class="line">        	$k = $key;</span><br><span class="line">        	break;</span><br><span class="line">    	&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	if(!isset($k))&#123;</span><br><span class="line">    	return null;</span><br><span class="line">	&#125;</span><br><span class="line">	$i=0;</span><br><span class="line">	foreach($str as $char)&#123;</span><br><span class="line">    	if($char == $k)&#123;</span><br><span class="line">        	return $i;</span><br><span class="line">    	&#125;</span><br><span class="line">    	$i++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="7-输入一个递增排序的数组和一个数字S，在数组中查找两个数，是的他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。"><a href="#7-输入一个递增排序的数组和一个数字S，在数组中查找两个数，是的他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。" class="headerlink" title="7. 输入一个递增排序的数组和一个数字S，在数组中查找两个数，是的他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。"></a>7. 输入一个递增排序的数组和一个数字S，在数组中查找两个数，是的他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">function FindNumbersWithSum($array, $sum)</span><br><span class="line">&#123;</span><br><span class="line">	$a = [];</span><br><span class="line">	foreach ($array as $val) &#123;</span><br><span class="line">	    $an = $sum - $val;</span><br><span class="line">	    if ((array_search($an, $array)) !== false) &#123;</span><br><span class="line">	        $a[] = [$val, $an];</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	if (empty($a)) &#123;</span><br><span class="line">	    return null;</span><br><span class="line">	&#125;</span><br><span class="line">	$count = count($a);</span><br><span class="line">	$val = $a[0][0] * $a[0][1];</span><br><span class="line">	$b = $val;</span><br><span class="line">	$key = 0;</span><br><span class="line">	for ($i = 1; $i &lt; $count; $i++) &#123;</span><br><span class="line">	    $val = $a[$i][0] * $a[$i][1];</span><br><span class="line">	    if ($val &lt; $b) &#123;</span><br><span class="line">	        $key = $i;</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	asort($a[$key]);</span><br><span class="line">	return $a[$key];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="8-找出数组中任意一个重复的数字"><a href="#8-找出数组中任意一个重复的数字" class="headerlink" title="8. 找出数组中任意一个重复的数字"></a>8. 找出数组中任意一个重复的数字</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function duplicate($numbers, &amp;$duplication)</span><br><span class="line">&#123;</span><br><span class="line">	$count = array_count_values($numbers);</span><br><span class="line">	foreach ($count as $key =&gt; $value) &#123;</span><br><span class="line">	    if ($value &gt; 1) &#123;</span><br><span class="line">	        $duplication[0] = $key;</span><br><span class="line">	        return true;</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="9-输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树"><a href="#9-输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树" class="headerlink" title="9. 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树"></a>9. 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">// class TreeNode &#123;</span><br><span class="line">//     var $val;</span><br><span class="line">//     var $left = NULL;</span><br><span class="line">//     var $right = NULL;</span><br><span class="line">//     function __construct($val) &#123;</span><br><span class="line">//         $this-&gt;val = $val;</span><br><span class="line">//     &#125;</span><br><span class="line">// &#125;</span><br><span class="line">function reConstructBinaryTree($pre, $vin)</span><br><span class="line">&#123;</span><br><span class="line">	if ($pre == null || $vin == null) &#123;</span><br><span class="line">	    return null;</span><br><span class="line">	&#125;</span><br><span class="line">	$head = new TreeNode($pre[0]);</span><br><span class="line">	$count = count($pre);</span><br><span class="line">	for ($i = 0; $i &lt; $count; $i++) &#123;</span><br><span class="line">	    if ($pre[0] == $vin[$i]) &#123;</span><br><span class="line">	        $pre1 = array_slice($pre, 1, $i);</span><br><span class="line">	        $pre2 = array_slice($pre, $i + 1);</span><br><span class="line">	        $vin1 = array_slice($vin, 0, $i);</span><br><span class="line">	        $vin2 = array_slice($vin, $i + 1);</span><br><span class="line">	        $head-&gt;left = reConstructBinaryTree($pre1, $vin1);</span><br><span class="line">        	$head-&gt;right = reConstructBinaryTree($pre2, $vin2);</span><br><span class="line">    	&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return $head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="10-输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。"><a href="#10-输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。" class="headerlink" title="10. 输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。"></a>10. 输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">/*class ListNode&#123;</span><br><span class="line">	var $val;</span><br><span class="line">	var $next = NULL;</span><br><span class="line">	function __construct($x)&#123;</span><br><span class="line">		$this-&gt;val = $x;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;*/</span><br><span class="line">function Merge($pHead1, $pHead2)</span><br><span class="line">&#123;</span><br><span class="line">	if ($pHead1 == null &amp;&amp; $pHead2 == null) &#123;</span><br><span class="line">    	return false;</span><br><span class="line">	&#125;</span><br><span class="line">	if ($pHead2 == null) &#123;</span><br><span class="line">    	return $pHead1;</span><br><span class="line">	&#125;</span><br><span class="line">	if ($pHead1 == null) &#123;</span><br><span class="line">    	return $pHead2;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	$x = 0;</span><br><span class="line">	$head = new ListNode($x);</span><br><span class="line"></span><br><span class="line">	if (($pHead1-&gt;val) &gt; ($pHead2-&gt;val)) &#123;</span><br><span class="line">    	$head = $pHead2;</span><br><span class="line">    	$head-&gt;next = Merge($pHead1, $pHead2-&gt;next);</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">    	$head = $pHead1;</span><br><span class="line">    	$head-&gt;next = Merge($pHead1-&gt;next, $pHead2);</span><br><span class="line">	&#125;</span><br><span class="line">	return $head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="11-输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）"><a href="#11-输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）" class="headerlink" title="11. 输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）"></a>11. 输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">function HasSubtree($pRoot1, $pRoot2)</span><br><span class="line">&#123;</span><br><span class="line">	if ($pRoot1 == null || $pRoot2 == null) &#123;</span><br><span class="line">	    return false;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return isSubtree($pRoot1, $pRoot2) ||</span><br><span class="line">	HasSubtree($pRoot1-&gt;left, $pRoot2) ||</span><br><span class="line">	HasSubtree($pRoot1-&gt;right, $pRoot2);</span><br><span class="line">&#125;</span><br><span class="line">function isSubtree($pRoot1, $pRoot2)</span><br><span class="line">&#123;</span><br><span class="line">	if ($pRoot2 == null) &#123;</span><br><span class="line">	    return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if ($pRoot1 == null) &#123;</span><br><span class="line">	    return false;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if ($pRoot2-&gt;val == $pRoot1-&gt;val) &#123;</span><br><span class="line">	    return isSubtree($pRoot1-&gt;left, $pRoot2-&gt;left)</span><br><span class="line">	    &amp;&amp; isSubtree($pRoot1-&gt;right, $pRoot2-&gt;right);</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">	    return false;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="12-从上往下打印出二叉树的每个节点，同层节点从左至右打印"><a href="#12-从上往下打印出二叉树的每个节点，同层节点从左至右打印" class="headerlink" title="12. 从上往下打印出二叉树的每个节点，同层节点从左至右打印"></a>12. 从上往下打印出二叉树的每个节点，同层节点从左至右打印</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">function PrintFromTopToBottom($root)</span><br><span class="line">&#123;</span><br><span class="line">	$a = [];</span><br><span class="line">	if ($root == null) &#123;</span><br><span class="line">	    return $a;</span><br><span class="line">	&#125;</span><br><span class="line">	$q = new SplQueue();</span><br><span class="line">	$q-&gt;enqueue($root);</span><br><span class="line">	while (!$q-&gt;isEmpty()) &#123;</span><br><span class="line">	    $b = $q-&gt;dequeue();</span><br><span class="line">	    $a[] = $b-&gt;val;</span><br><span class="line">	    if ($b-&gt;left != null) &#123;</span><br><span class="line">	        $q-&gt;enqueue($b-&gt;left);</span><br><span class="line">	    &#125;</span><br><span class="line"></span><br><span class="line">	    if ($b-&gt;right != null) &#123;</span><br><span class="line">	        $q-&gt;enqueue($b-&gt;right);</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return $a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="13-输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes-否则输出No。假设输入的数组的任意两个数字都互不相同"><a href="#13-输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes-否则输出No。假设输入的数组的任意两个数字都互不相同" class="headerlink" title="13. 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同"></a>13. 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">function VerifySquenceOfBST($sequence)</span><br><span class="line">&#123;</span><br><span class="line">	if ($sequence == null) &#123;</span><br><span class="line">	    return null;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	$count = count($sequence);</span><br><span class="line">	return isTree($sequence, 0, $count - 1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function isTree($sequence, $l, $r)</span><br><span class="line">&#123;</span><br><span class="line">	if ($l &gt;= $r) &#123;</span><br><span class="line">	    return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	$i = $l;</span><br><span class="line">	for (; $i &lt; $r; $i++) &#123;</span><br><span class="line">	    if ($sequence[$i] &gt; end($sequence)) &#123;</span><br><span class="line">	        break;</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	for ($j = $i; $j &lt; $r; $j++) &#123;</span><br><span class="line">    	if ($sequence[$j] &lt; end($sequence)) &#123;</span><br><span class="line">    	    return false;</span><br><span class="line">    	&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return isTree($sequence, $l, $i - 1) &amp;&amp; isTree($sequence, $i, $r - 1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="14-输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。"><a href="#14-输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。" class="headerlink" title="14. 输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。"></a>14. 输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">function FindPath($root, $num)</span><br><span class="line">&#123;</span><br><span class="line">    $a = $q = [];</span><br><span class="line">    if (!$root) &#123;</span><br><span class="line">        return $a;</span><br><span class="line">    &#125;</span><br><span class="line">    find($root, $num, $q, $a);</span><br><span class="line">    return $a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function find($root, $sum, $q, &amp;$a)</span><br><span class="line">&#123;</span><br><span class="line">    if ($root !== null) &#123;</span><br><span class="line">        $sum -= $root-&gt;val;</span><br><span class="line">        $q[] = $root-&gt;val;</span><br><span class="line">        if ($sum &gt; 0) &#123;</span><br><span class="line">            find($root-&gt;left, $sum, $q, $a);</span><br><span class="line">            find($root-&gt;right, $sum, $q, $a);</span><br><span class="line">        &#125; elseif ($sum == 0 &amp;&amp; $root-&gt;left == null &amp;&amp; $root-&gt;right == null) &#123;</span><br><span class="line">            $a[] = $q;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="15-输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。"><a href="#15-输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。" class="headerlink" title="15. 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。"></a>15. 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">function Convert($root)</span><br><span class="line">&#123;</span><br><span class="line">	if ($root == null) &#123;</span><br><span class="line">	    return null;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if ($root-&gt;left == null &amp;&amp; $root-&gt;right == null) &#123;</span><br><span class="line">	    return $root;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	$left = Convert($root-&gt;left);</span><br><span class="line">	$p = $left;</span><br><span class="line"></span><br><span class="line">	while ($p != null &amp;&amp; $p-&gt;right != null) &#123;</span><br><span class="line">	    $p = $p-&gt;right;</span><br><span class="line">	&#125;</span><br><span class="line">	if ($left != null) &#123;</span><br><span class="line">	    $p-&gt;right = $root;</span><br><span class="line">	    $root-&gt;left = $p;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	$right = Convert($root-&gt;right);</span><br><span class="line">	if ($right != null) &#123;</span><br><span class="line">	    $root-&gt;right = $right;</span><br><span class="line">	    $right-&gt;left = $root;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return $left != null ? $left : $root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="16-输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。"><a href="#16-输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。" class="headerlink" title="16. 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。"></a>16. 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">function IsPopOrder($pushV, $popV)</span><br><span class="line">&#123;</span><br><span class="line">	$pushv = count($pushV);</span><br><span class="line">	$popv = count($popV);</span><br><span class="line">	if ($pushV == null || $popV == null || $pushv == 0 || $popv == 0 || $pushv !== $popv) &#123;</span><br><span class="line">    	return false;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	$stack = new SplStack();</span><br><span class="line">	$i = $j = 0;</span><br><span class="line">	//$i是压栈序列的索引号</span><br><span class="line">	$stack-&gt;push($pushV[$i++]);</span><br><span class="line">	while ($j &lt;= ($popv - 1)) &#123;</span><br><span class="line">    	while ($popV[$j] != $stack-&gt;top()) &#123;</span><br><span class="line">    	    if ($i == $pushv) &#123;</span><br><span class="line">    	        return false;</span><br><span class="line">    	    &#125;</span><br><span class="line">    	    $stack-&gt;push($pushV[$i++]);</span><br><span class="line">    	&#125;</span><br><span class="line">    	$j++;</span><br><span class="line">    	$stack-&gt;pop();</span><br><span class="line">	&#125;</span><br><span class="line">	return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="17-输入一棵二叉树，判断该二叉树是否是平衡二叉树。"><a href="#17-输入一棵二叉树，判断该二叉树是否是平衡二叉树。" class="headerlink" title="17. 输入一棵二叉树，判断该二叉树是否是平衡二叉树。"></a>17. 输入一棵二叉树，判断该二叉树是否是平衡二叉树。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">function IsBalanced_Solution($pRoot)</span><br><span class="line">&#123;</span><br><span class="line">	if ($pRoot == null) &#123;</span><br><span class="line">	    return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if (abs(getHeight($pRoot-&gt;left) - getHeight($pRoot-&gt;right)) &gt; 1) &#123;</span><br><span class="line">	    return false;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return IsBalanced_Solution($pRoot-&gt;left) &amp;&amp; IsBalanced_Solution($pRoot-&gt;right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function getHeight($pRoot)</span><br><span class="line">&#123;</span><br><span class="line">	if ($pRoot == null) &#123;</span><br><span class="line">	    return 0;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return max(getHeight($pRoot-&gt;left), getHeight($pRoot-&gt;right)) + 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="18-将一个字符串转换成一个整数，要求不能使用字符串转换整数的库函数。-数值为0或者字符串不是一个合法的数值则返回0"><a href="#18-将一个字符串转换成一个整数，要求不能使用字符串转换整数的库函数。-数值为0或者字符串不是一个合法的数值则返回0" class="headerlink" title="18. 将一个字符串转换成一个整数，要求不能使用字符串转换整数的库函数。 数值为0或者字符串不是一个合法的数值则返回0"></a>18. 将一个字符串转换成一个整数，要求不能使用字符串转换整数的库函数。 数值为0或者字符串不是一个合法的数值则返回0</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">function StrToInt($str)</span><br><span class="line">&#123;</span><br><span class="line">	$n = strlen($str);</span><br><span class="line">	if ($n == 0 || $str == null) &#123;</span><br><span class="line">	    return 0;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    $str = str_split($str);</span><br><span class="line">    for ($i = 0; $i &lt; $n; $i++) &#123;</span><br><span class="line">        if (48 &lt;= ord($str[$i]) &amp;&amp; ord($str[$i]) &lt;= 57 || ord($str[$i]) == 43 || ord($str[$i]) == 45) &#123;</span><br><span class="line">        	continue;</span><br><span class="line">    	&#125; else &#123;</span><br><span class="line">        	$flag = true;</span><br><span class="line">        	break;</span><br><span class="line">    	&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	if (isset($flag) &amp;&amp; $flag == true) &#123;</span><br><span class="line">    	return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	$str = implode(&apos;&apos;, $str);</span><br><span class="line">	return (int) ($str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="19-给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。"><a href="#19-给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。" class="headerlink" title="19. 给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。"></a>19. 给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">function GetNext($pNode)</span><br><span class="line">&#123;</span><br><span class="line">	if ($pNode == null) &#123;</span><br><span class="line">	    return null;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if ($pNode-&gt;right != null) &#123;</span><br><span class="line">	    $pNode = $pNode-&gt;right;</span><br><span class="line">	    while ($pNode-&gt;left != null) &#123;</span><br><span class="line">	        $pNode = $pNode-&gt;left;</span><br><span class="line">	    &#125;</span><br><span class="line">      return $pNode;</span><br><span class="line">    &#125;</span><br><span class="line">    while ($pNode-&gt;next != null) &#123;</span><br><span class="line">        if ($pNode-&gt;next-&gt;left == $pNode) &#123;</span><br><span class="line">            return $pNode-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        $pNode = $pNode-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="20-在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。"><a href="#20-在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。" class="headerlink" title="20. 在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。"></a>20. 在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">function deleteDuplication($pHead)</span><br><span class="line">&#123;</span><br><span class="line">	$first = new ListNode(-1);</span><br><span class="line">	$first-&gt;next = $pHead;</span><br><span class="line">	$p = $pHead;</span><br><span class="line">	$last = $first;</span><br><span class="line"></span><br><span class="line">	while ($p != null &amp;&amp; $p-&gt;next != null) &#123;</span><br><span class="line">	    if ($p-&gt;val == $p-&gt;next-&gt;val) &#123;</span><br><span class="line">	        $val = $p-&gt;val;</span><br><span class="line">	        while ($p != null &amp;&amp; $p-&gt;val == $val) &#123;</span><br><span class="line">	            $p = $p-&gt;next;</span><br><span class="line">	        &#125;</span><br><span class="line">	        $last-&gt;next = $p;</span><br><span class="line">	    &#125; else &#123;</span><br><span class="line">	        $last = $p;</span><br><span class="line">	        $p = $p-&gt;next;</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return $first-&gt;next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="21-请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。"><a href="#21-请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。" class="headerlink" title="21. 请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。"></a>21. 请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">function isSymmetrical($pRoot)</span><br><span class="line">&#123;</span><br><span class="line">	if ($pRoot == null) &#123;</span><br><span class="line">	    return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return comRoot($pRoot-&gt;left, $pRoot-&gt;right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function comRoot($left, $right)</span><br><span class="line">&#123;</span><br><span class="line">	if ($left == null) &#123;</span><br><span class="line">	    return $right == null;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if ($right == null) &#123;</span><br><span class="line">	    return false;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if ($left-&gt;val != $right-&gt;val) &#123;</span><br><span class="line">	    return false;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return comRoot($left-&gt;right, $right-&gt;left) &amp;&amp; comRoot($left-&gt;left, $right-&gt;right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/algo/" rel="tag"># algo</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/09/简单算法记录-2/" rel="next" title="简单算法记录-2">
+                <i class="fa fa-chevron-left"></i> 简单算法记录-2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/20/我说的不一定对-梁欢-阅读记录-1/" rel="prev" title="我说的不一定对-梁欢-阅读记录-1">
+                我说的不一定对-梁欢-阅读记录-1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-在一个字符串-1-lt-字符串长度-lt-10000，全部由大写字母组成-中找到第一个只出现一次的字符-并返回它的位置"><span class="nav-number">1.</span> <span class="nav-text">6. 在一个字符串(1&lt;=字符串长度&lt;=10000，全部由大写字母组成)中找到第一个只出现一次的字符,并返回它的位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-输入一个递增排序的数组和一个数字S，在数组中查找两个数，是的他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。"><span class="nav-number">2.</span> <span class="nav-text">7. 输入一个递增排序的数组和一个数字S，在数组中查找两个数，是的他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-找出数组中任意一个重复的数字"><span class="nav-number">3.</span> <span class="nav-text">8. 找出数组中任意一个重复的数字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树"><span class="nav-number">4.</span> <span class="nav-text">9. 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。"><span class="nav-number">5.</span> <span class="nav-text">10. 输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）"><span class="nav-number">6.</span> <span class="nav-text">11. 输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-从上往下打印出二叉树的每个节点，同层节点从左至右打印"><span class="nav-number">7.</span> <span class="nav-text">12. 从上往下打印出二叉树的每个节点，同层节点从左至右打印</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes-否则输出No。假设输入的数组的任意两个数字都互不相同"><span class="nav-number">8.</span> <span class="nav-text">13. 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。"><span class="nav-number">9.</span> <span class="nav-text">14. 输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。"><span class="nav-number">10.</span> <span class="nav-text">15. 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#16-输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。"><span class="nav-number">11.</span> <span class="nav-text">16. 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#17-输入一棵二叉树，判断该二叉树是否是平衡二叉树。"><span class="nav-number">12.</span> <span class="nav-text">17. 输入一棵二叉树，判断该二叉树是否是平衡二叉树。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#18-将一个字符串转换成一个整数，要求不能使用字符串转换整数的库函数。-数值为0或者字符串不是一个合法的数值则返回0"><span class="nav-number">13.</span> <span class="nav-text">18. 将一个字符串转换成一个整数，要求不能使用字符串转换整数的库函数。 数值为0或者字符串不是一个合法的数值则返回0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#19-给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。"><span class="nav-number">14.</span> <span class="nav-text">19. 给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#20-在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。"><span class="nav-number">15.</span> <span class="nav-text">20. 在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#21-请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。"><span class="nav-number">16.</span> <span class="nav-text">21. 请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

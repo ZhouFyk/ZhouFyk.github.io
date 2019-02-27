@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php session,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="参考资料：  关于 PHP 中 Session 的几个问题 如何设置一个严格30分钟过期的Session 深入理解PHP原理之Session Gc的一个小概率Notice PHP核心技术与最佳实践">
+<meta name="keywords" content="php session">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP-SESSION记录">
+<meta property="og:url" content="http://yoursite.com/2017/06/03/PHP-SESSION记录/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="参考资料：  关于 PHP 中 Session 的几个问题 如何设置一个严格30分钟过期的Session 深入理解PHP原理之Session Gc的一个小概率Notice PHP核心技术与最佳实践">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:33:50.172Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP-SESSION记录">
+<meta name="twitter:description" content="参考资料：  关于 PHP 中 Session 的几个问题 如何设置一个严格30分钟过期的Session 深入理解PHP原理之Session Gc的一个小概率Notice PHP核心技术与最佳实践">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/03/PHP-SESSION记录/">
+
+
+
+
+
+  <title>PHP-SESSION记录 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/03/PHP-SESSION记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PHP-SESSION记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-03T17:03:00+08:00">
+                2017-06-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>参考资料：</p>
+<ul>
+<li><a href="https://laravel-china.org/topics/1093/some-problems-about-session-in-php" target="_blank" rel="noopener">关于 PHP 中 Session 的几个问题</a></li>
+<li><a href="http://www.laruence.com/2012/01/10/2469.html" target="_blank" rel="noopener">如何设置一个严格30分钟过期的Session</a></li>
+<li><a href="http://www.laruence.com/2011/03/29/1949.html" target="_blank" rel="noopener">深入理解PHP原理之Session Gc的一个小概率Notice</a></li>
+<li><a href="https://www.amazon.cn/PHP%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-%E5%88%97%E6%97%AD%E6%9D%BE/dp/B00A30JYIG/ref=sr_1_1?ie=UTF8&amp;qid=1496128711&amp;sr=8-1&amp;keywords=php%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF" target="_blank" rel="noopener">PHP核心技术与最佳实践</a></li>
+</ul>
+<a id="more"></a>
+<h3 id="1-Session-的基本概念及设置"><a href="#1-Session-的基本概念及设置" class="headerlink" title="1. Session 的基本概念及设置"></a>1. <code>Session</code> 的基本概念及设置</h3><p>针对 <code>Web</code> 网站来说，<code>Session</code> 是指用户在浏览某个网站时，从进入网站到浏览器关闭这段时间内的会话。所以，<code>Session</code> 是指一个特定的时间概念。</p>
+<p><code>session_start()</code> 在执行前不可以有任何输出，如果一定要有输出或不能控制是否已经有输出，使用缓冲区解决： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ob_start();</span><br><span class="line">session_start();</span><br><span class="line">$_SESSION[&apos;user&apos;]=&apos;name&apos;;</span><br><span class="line">ob_end_flush();</span><br></pre></td></tr></table></figure>
+<p><code>PHP</code> 的 <code>Session</code> 默认通过文件方式实现，存储在服务器中，每个 <code>Session</code> 一个文件。一般文件名形如：<code>sess_[PHPSESSID]</code>。文件内容结构形如：<code>valuename | type : length : value</code>;</p>
+<h3 id="2-Session-的工作原理"><a href="#2-Session-的工作原理" class="headerlink" title="2. Session 的工作原理"></a>2. <code>Session</code> 的工作原理</h3><p>假设是第一次进入网站，那么此时一切用户信息都是空的，<code>cookie</code> 中也不存在任何信息。当用户操作达到一定要求，或者触发了什么条件，比如登录才会有Session相关的操作。当登录之后，服务器端通过<code>session_start()</code>启动，然后检测 <code>cookie</code> 中是否已经有 <code>PHPSESSID</code> （下文有解释）存在，不过因为是第一次当然不存在，所以创建一个新的会话（新会话的标识是一个通过一定算法生成的、变量名为 <code>PHPSESSID</code> 的字符串），然后向浏览器发送 <code>Cookie</code>（可设置<code>Cookie</code> 的存在时间，这次我们给它设定一定的存在时间,默认为 0，即直到此次会话完成，也就是到浏览器关闭为止，由<code>php.ini</code>中<a href="http://php.net/manual/zh/session.configuration.php#ini.session.cookie-lifetime" target="_blank" rel="noopener"><code>session.cookie_lifetime</code></a>决定），设置 <code>Cookie</code> 中保存的 <code>PHPSESSID</code> 的值。以及在服务器端创建 <code>Session</code> 文件（ <code>Session</code> 的默认保存方式是文件形式，可更改。以及该文件的存在时间也可以通过方法设置），文件名形如：<code>sess_PHPSESSID</code>（这样通过 <code>PHPSESSID</code> 将每一次的客户端和服务器端保持状态）。这些准备都做好了之后，由 <code>$_ SESSION</code> 数组记录用户在网站内的操作产生的需要的数据。当用户操作完毕，在用户关闭浏览器，断开了链接之后，服务器端的 <code>Session</code> 管理器就将 <code>$_SESSION</code> 数组内的数据序列化后存入 <code>Session</code> 文件 —— <code>sess_PHPSESSID</code>。</p>
+<p>以上，一次会话过程完成。接下来描述，第二次进入该网站的情况。</p>
+<p>当用户再次进入网站，登录，然后后台 <code>session_start()</code> 开启，检测客户端 <code>Cookie</code> 中是否有 <code>PHPSESSID</code> 传送过来，这次是有的（因为在上一次用户操作时，服务器端设置响应头 <code>set-cookie</code> 中 <code>PHPSESSID</code> 时，我们设置了一定的存在时间），所以就根据该 <code>PHPSESSID</code> 找找看有没有属于该 <code>PHPSESSID</code> 的 <code>Session</code> 文件，咦，有（要是没有，就按传送过来的 <code>PHPSESSID</code> 创建一个 <code>Session</code> 文件啦），就重用这个已经存在的会话，即从 <code>Session</code> 文件 —— <code>sess_PHPSESSID</code> 中反序列化，取出上回存入的数据填充入 <code>$_SESSION</code>。那么上一次的状态就能够被这一次再次利用了。<code>$_ SESSION</code> 数组继续记录本次会话的操作，当用户又关闭了浏览器，那么服务器端的 <code>Session</code> 管理器也再次将 <code>$_SESSION</code> 数组内的数据序列化后存入 <code>Session</code> 文件 —— <code>sess_PHPSESSID</code>。</p>
+<p>如果 <code>cookie</code> 被用户禁止，可以通过在页面内的每个链接后面添加 <code>PHPSESSID</code> 的当时传递 <code>PHPSESSID</code>，服务端通过链接后的 <code>PHPSESSID</code> 来判断当前用户。此方式通过 <code>php.ini</code> 中参数 <a href="http://php.net/manual/zh/session.configuration.php#ini.session.use-trans-sid" target="_blank" rel="noopener"><code>session.use_trans_sid boolean</code></a> 来开启。不过此方式有安全隐患，见手册：</p>
+<blockquote>
+<p>Note: 基于 URL 的会话管理比基于 cookie 的会话管理有更多安全风险。例如用户有可能通过 email 将一个包含有效的会话 ID 的 URL 发给他的朋友，或者用户总是有可能在收藏夹中存有一个包含会话 ID 的 URL 来以同样的会话 ID 去访问站点。</p>
+</blockquote>
+<p>另外此方式应该只在当前的会话中有效，毕竟用户下一次再进网站时，<code>url</code>应该并不带 <code>SID</code>(<code>SID</code>常量展开为 <code>session_name=session_id</code>)，除非被浏览器记住了 <code>url</code>。</p>
+<p>以上 <code>PHPSESSID</code> 部分可见手册 <a href="http://php.net/manual/zh/session.idpassing.php" target="_blank" rel="noopener"><code>传送会话ID</code></a>。</p>
+<h3 id="3-cookie-的设置"><a href="#3-cookie-的设置" class="headerlink" title="3. cookie 的设置"></a>3. <code>cookie</code> 的设置</h3><p>前面提到了关于 <code>cookie</code> 中存储 <code>PHPSESSID</code> 的时间。这里有两个可以设定 <code>Session</code> 相关的 <code>cookie</code> 的函数，<a href="http://php.net/manual/zh/function.setcookie.php" target="_blank" rel="noopener"><code>setcookie</code></a>和<a href="http://php.net/manual/zh/function.session-set-cookie-params.php" target="_blank" rel="noopener"><code>session_set_cookie_params</code></a>。应该从函数名称可以比较直观的看出，<code>setcookie</code> 是设定 <code>cookie</code> 中的键值对，而<code>session_ set_ cookie_ params</code>函数应该是设定与当前会话相关的 <code>cookie</code> 信息。两者原型如下：</p>
+<blockquote>
+<p>bool setcookie ( string $name [, string $value = “” [, int $expire = 0 [, string $path = “” [, string $domain = “” [, bool $secure = false [, bool $httponly = false ]]]]]] )</p>
+<p>void session_ set_ cookie_ params ( int $lifetime [, string $path [, string $domain [, bool $secure = false [, bool $httponly = false ]]]] )</p>
+</blockquote>
+<p>后者相比前者参数少了键值对，可以猜测后者有默认的设定对象，手册中也说了，后者作用为<strong>Set the session cookie parameters</strong>。另一个参数差别为，前者为过期时间，后者为存在时间。</p>
+<p>下面对两个函数进行简单的测试。</p>
+<p>1 . 简单的代码</p>
+<blockquote>
+<p>session_set_cookie_params(15);<br>session_start();<br>$_SESSION[‘user’] = ‘hello’;<br>echo $_SESSION[‘user’];</p>
+</blockquote>
+<p>输出为 <code>hello</code>;</p>
+<p>2 .  将 <code>$_SESSION[&#39;user&#39;]</code> 注释掉：</p>
+<blockquote>
+<p>session_set_cookie_params(15);<br>session_start();<br>// $_SESSION[‘user’] = ‘hello’;<br>echo $_SESSION[‘user’];</p>
+</blockquote>
+<p>在15秒内，刷新页面依旧有输出，直到15秒时候报错。</p>
+<p>3 . 重复1、2步骤，但是这次关闭浏览器，重新打开页面。发现15秒内都有输出，过期之后才会报错。</p>
+<p>这说明 <code>session_set_cookie_params()</code> 函数确实对 <code>cookie</code> 进行了操作。</p>
+<p>4 . 代码</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; session_start();</span><br><span class="line">&gt; setcookie(session_name(), session_id(), time() + 10);</span><br><span class="line">&gt; $_SESSION[&apos;user&apos;] = &apos;hello&apos;;</span><br><span class="line">&gt; echo $_SESSION[&apos;user&apos;];</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>以同样的方式再来一次。由于 <code>Session cookie</code> 的存在，所以不能进行不关闭的测试，因为不关闭的话，该次的 <code>Session cookie</code> 会一直存在，这时 <code>cookie</code> 中存在两个 <code>PHPSESSID</code> 的值，一个是 <code>Session cookie</code>，一个是 <code>setcookie()</code> 设置的。所以我关闭浏览器，再次进入页面。发现也有数据输出。重复操作。直到过期，才报错。</p>
+<p>以上的简单测试说明，在设置 <code>cookie</code> 时，大方面来说，两个函数的作用几乎相等。细节区别如下：</p>
+<p><code>session_set_cookie_params()</code>直接绑定的当前会话，所以直接设置会话 <code>cookie</code> 的相关参数。<code>setcookie()</code>需要设置键值对。不过这也是这两个函数本身的用法。</p>
+<p><s>猜测：<code>PHP</code>本身网络开发具备对 <code>cookie</code> 的操作能力。但是如果 <code>Session</code> 相关的 <code>cookie</code> 也要通过 <code>setcookie()</code> 来操作，每次都要绑定 <code>PHPSESSID</code> 和它的值。所以干脆直接创建一个能够直接操作 <code>session</code> 相关的 <code>cookie</code> 的函数。</s></p>
+<h3 id="4-PHPSESSID-的创建"><a href="#4-PHPSESSID-的创建" class="headerlink" title="4. PHPSESSID 的创建"></a>4. <code>PHPSESSID</code> 的创建</h3><p><code>PHPSESSID</code> 创建源码,在 <code>php-7.0.8</code> 源码中 <code>ext/session/sesscion.c</code> 文件中，在300行(其实我看不懂，暂时摘录于下)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><span class="line">PHPAPI zend_ string *php_ session_ create_ id(PS_ CREATE_ SID_ ARGS) /* &#123;&#123;&#123; */</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">PHP_ MD5_ CTX md5_ context;</span><br><span class="line">PHP_ SHA1_ CTX sha1_ context;</span><br><span class="line">#if defined(HAVE_HASH_EXT) &amp;&amp; !defined(COMPILE_DL_HASH)</span><br><span class="line">void *hash_context = NULL;</span><br><span class="line">#endif</span><br><span class="line">unsigned char *digest;</span><br><span class="line">size_t digest_len;</span><br><span class="line">char *buf;</span><br><span class="line">struct timeval tv;</span><br><span class="line">zval *array;</span><br><span class="line">zval *token;</span><br><span class="line">zend_string *outid;</span><br><span class="line">char *remote_addr = NULL;</span><br><span class="line"></span><br><span class="line">gettimeofday(&amp;tv, NULL);</span><br><span class="line"></span><br><span class="line">if ((array = zend_hash_str_find(&amp;EG(symbol_table), &quot;_SERVER&quot;, sizeof(&quot;_SERVER&quot;) - 1)) &amp;&amp;</span><br><span class="line">	Z_TYPE_P(array) == IS_ARRAY &amp;&amp;</span><br><span class="line">	(token = zend_hash_str_find(Z_ARRVAL_P(array), &quot;REMOTE_ADDR&quot;, sizeof(&quot;REMOTE_ADDR&quot;) - 1)) &amp;&amp;</span><br><span class="line">	Z_TYPE_P(token) == IS_STRING</span><br><span class="line">) &#123;</span><br><span class="line">	remote_addr = Z_STRVAL_P(token);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* maximum 15+19+19+10 bytes */</span><br><span class="line">spprintf(&amp;buf, 0, &quot;%.15s%ld&quot; ZEND_LONG_FMT &quot;%0.8F&quot;, remote_addr ? remote_addr : &quot;&quot;, tv.tv_sec, (zend_long)tv.tv_usec, php_combined_lcg() * 10);</span><br><span class="line"></span><br><span class="line">switch (PS(hash_func)) &#123;</span><br><span class="line">	case PS_HASH_FUNC_MD5:</span><br><span class="line">		PHP_MD5Init(&amp;md5_context);</span><br><span class="line">		PHP_MD5Update(&amp;md5_context, (unsigned char *) buf, strlen(buf));</span><br><span class="line">		digest_len = 16;</span><br><span class="line">		break;</span><br><span class="line">	case PS_HASH_FUNC_SHA1:</span><br><span class="line">		PHP_SHA1Init(&amp;sha1_context);</span><br><span class="line">		PHP_SHA1Update(&amp;sha1_context, (unsigned char *) buf, strlen(buf));</span><br><span class="line">		digest_len = 20;</span><br><span class="line">		break;</span><br><span class="line">#if defined(HAVE_HASH_EXT) &amp;&amp; !defined(COMPILE_DL_HASH)</span><br><span class="line">	case PS_HASH_FUNC_OTHER:</span><br><span class="line">		if (!PS(hash_ops)) &#123;</span><br><span class="line">			efree(buf);</span><br><span class="line">			php_error_docref(NULL, E_ERROR, &quot;Invalid session hash function&quot;);</span><br><span class="line">			return NULL;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		hash_context = emalloc(PS(hash_ops)-&gt;context_size);</span><br><span class="line">		PS(hash_ops)-&gt;hash_init(hash_context);</span><br><span class="line">		PS(hash_ops)-&gt;hash_update(hash_context, (unsigned char *) buf, strlen(buf));</span><br><span class="line">		digest_len = PS(hash_ops)-&gt;digest_size;</span><br><span class="line">		break;</span><br><span class="line">#endif /* HAVE_HASH_EXT */</span><br><span class="line">	default:</span><br><span class="line">		efree(buf);</span><br><span class="line">		php_error_docref(NULL, E_ERROR, &quot;Invalid session hash function&quot;);</span><br><span class="line">		return NULL;</span><br><span class="line">&#125;</span><br><span class="line">efree(buf);</span><br><span class="line"></span><br><span class="line">if (PS(entropy_length) &gt; 0) &#123;</span><br><span class="line">#ifdef PHP_WIN32</span><br><span class="line">	unsigned char rbuf[2048];</span><br><span class="line">	size_t toread = PS(entropy_length);</span><br><span class="line"></span><br><span class="line">	if (php_win32_get_random_bytes(rbuf, MIN(toread, sizeof(rbuf))) == SUCCESS)&#123;</span><br><span class="line"></span><br><span class="line">		switch (PS(hash_func)) &#123;</span><br><span class="line">			case PS_HASH_FUNC_MD5:</span><br><span class="line">				PHP_MD5Update(&amp;md5_context, rbuf, toread);</span><br><span class="line">				break;</span><br><span class="line">			case PS_HASH_FUNC_SHA1:</span><br><span class="line">				PHP_SHA1Update(&amp;sha1_context, rbuf, toread);</span><br><span class="line">				break;</span><br><span class="line"># if defined(HAVE_HASH_EXT) &amp;&amp; !defined(COMPILE_DL_HASH)</span><br><span class="line">			case PS_HASH_FUNC_OTHER:</span><br><span class="line">				PS(hash_ops)-&gt;hash_update(hash_context, rbuf, toread);</span><br><span class="line">				break;</span><br><span class="line"># endif /* HAVE_HASH_EXT */</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">#else</span><br><span class="line">	int fd;</span><br><span class="line"></span><br><span class="line">	fd = VCWD_OPEN(PS(entropy_file), O_RDONLY);</span><br><span class="line">	if (fd &gt;= 0) &#123;</span><br><span class="line">		unsigned char rbuf[2048];</span><br><span class="line">		int n;</span><br><span class="line">		int to_read = PS(entropy_length);</span><br><span class="line"></span><br><span class="line">		while (to_read &gt; 0) &#123;</span><br><span class="line">			n = read(fd, rbuf, MIN(to_read, sizeof(rbuf)));</span><br><span class="line">			if (n &lt;= 0) break;</span><br><span class="line"></span><br><span class="line">			switch (PS(hash_func)) &#123;</span><br><span class="line">				case PS_HASH_FUNC_MD5:</span><br><span class="line">					PHP_MD5Update(&amp;md5_context, rbuf, n);</span><br><span class="line">					break;</span><br><span class="line">				case PS_HASH_FUNC_SHA1:</span><br><span class="line">					PHP_SHA1Update(&amp;sha1_context, rbuf, n);</span><br><span class="line">					break;</span><br><span class="line">#if defined(HAVE_HASH_EXT) &amp;&amp; !defined(COMPILE_DL_HASH)</span><br><span class="line">				case PS_HASH_FUNC_OTHER:</span><br><span class="line">					PS(hash_ops)-&gt;hash_update(hash_context, rbuf, n);</span><br><span class="line">					break;</span><br><span class="line">#endif /* HAVE_HASH_EXT */</span><br><span class="line">			&#125;</span><br><span class="line">			to_read -= n;</span><br><span class="line">		&#125;</span><br><span class="line">		close(fd);</span><br><span class="line">	&#125;</span><br><span class="line">#endif</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">digest = emalloc(digest_len + 1);</span><br><span class="line">switch (PS(hash_func)) &#123;</span><br><span class="line">	case PS_HASH_FUNC_MD5:</span><br><span class="line">		PHP_MD5Final(digest, &amp;md5_context);</span><br><span class="line">		break;</span><br><span class="line">	case PS_HASH_FUNC_SHA1:</span><br><span class="line">		PHP_SHA1Final(digest, &amp;sha1_context);</span><br><span class="line">		break;</span><br><span class="line">#if defined(HAVE_HASH_EXT) &amp;&amp; !defined(COMPILE_DL_HASH)</span><br><span class="line">	case PS_HASH_FUNC_OTHER:</span><br><span class="line">		PS(hash_ops)-&gt;hash_final(digest, hash_context);</span><br><span class="line">		efree(hash_context);</span><br><span class="line">		break;</span><br><span class="line">#endif /* HAVE_HASH_EXT */</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (PS(hash_bits_per_character) &lt; 4</span><br><span class="line">		|| PS(hash_bits_per_character) &gt; 6) &#123;</span><br><span class="line">	PS(hash_bits_per_character) = 4;</span><br><span class="line"></span><br><span class="line">	php_error_docref(NULL, E_WARNING, &quot;The ini setting hash_bits_per_character is out of range (should be 4, 5, or 6) - using 4 for now&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">outid = zend_string_alloc((digest_len + 2) * ((8.0f / PS(hash_bits_per_character) + 0.5)), 0);</span><br><span class="line">ZSTR_LEN(outid) = (size_t)(bin_to_readable((char *)digest, digest_len, ZSTR_VAL(outid), (char)PS(hash_bits_per_character)) - (char *)&amp;ZSTR_VAL(outid));</span><br><span class="line">efree(digest);</span><br><span class="line"></span><br><span class="line">return outid;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5-Session文件垃圾回收机制"><a href="#5-Session文件垃圾回收机制" class="headerlink" title="5. Session文件垃圾回收机制"></a>5. Session文件垃圾回收机制</h3><p>由上所述，当 <code>cookie</code> 中 <code>PHPSESSID</code> 存在，服务器上对应的 <code>Session</code> 文件不存在时，可以创建该 <code>PHPSESSID</code> 的 <code>Session</code> 文件。除此之外，每一个新用户第一次触发关于 <code>Session</code> 的操作时都会新生成一个 <code>Session</code> 文件的话， <code>Session</code> 文件会越来越多，所以有一个 <code>Session</code> 的垃圾回收机制。在每一次 <code>session _start()</code> 时都进行垃圾回收机制的触发，如果触发成功，就开始遍历 <code>Session</code> 文件，删除过期的 <code>Session</code> 文件（默认的文件存储方式的情况下）。</p>
+<p>垃圾回收机制的触发先决条件为 <code>php.ini</code> 中的三个配置参数： <a href="http://php.net/manual/zh/session.configuration.php#ini.session.gc-divisor" target="_blank" rel="noopener"><code>session.gc_ probability / session.gc_ divisor  / session.gc_maxlifetime</code></a>。</p>
+<blockquote>
+<p><code>session.gc_probability integer</code></p>
+<p><code>session.gc_probability</code> 与 <code>session.gc_divisor</code> 合起来用来管理 <code>gc</code>（<code>garbage collection</code> 垃圾回收）进程启动的概率。默认为 1。</p>
+<p><code>session.gc_divisor integer</code></p>
+<p><code>session.gc_ divisor</code> 与 <code>session.gc_ probability</code> 合起来定义了在每个会话初始化时启动 <code>gc</code>（<code>garbage collection</code> 垃圾回收）进程的概率。此概率用 <code>gc_ probability/gc_ divisor</code> 计算得来。例如 1/100 意味着在每个请求中有 1% 的概率启动 gc 进程。<code>session.gc_ divisor</code> 默认为 100。</p>
+<p><code>session.gc_ maxlifetime integer</code></p>
+<p><code>session.gc_ maxlifetime</code> 指定过了多少秒之后数据就会被视为“垃圾”并被清除。 垃圾搜集可能会在 <code>session</code> 启动的时候开始（ 取决于 <code>session.gc_ probability</code> 和 <code>session.gc_divisor</code>）。</p>
+</blockquote>
+<h3 id="6-自定义会话存储函数"><a href="#6-自定义会话存储函数" class="headerlink" title="6. 自定义会话存储函数"></a>6. 自定义会话存储函数</h3><p>使用 <a href="http://php.net/manual/zh/function.session-set-save-handler.php" target="_blank" rel="noopener"><code>session_set_save_handler()</code></a> 函数设置用户自定义会话存储函数。</p>
+<p>用户自定义会话存储函数通过实现接口 <a href="http://php.net/manual/zh/class.sessionhandlerinterface.php" target="_blank" rel="noopener"><code>The SessionHandlerInterface class</code></a> 来创建。在定义了实现了接口的类之后，通过 <code>session_set_save_handler()</code> 设置好，那么之后开启的 <code>session_start()</code> 以后的一系列 <code>session</code> 相关的会话管理器操作就由自定义的会话管理器接管了。</p>
+<p>手册上已经存在一个实现了上述接口的类 <a href="http://php.net/manual/zh/class.sessionhandler.php" target="_blank" rel="noopener"><code>The SessionHandler class</code></a>。该类是 <code>PHP</code> 默认的会话管理器。可以通过继承该类来实现自定义的管理器。从该类的示例上可以更直观地看到与实现上述接口的区别。因为 <code>The SessionHandler class</code> 已经实现 <code>SessionHandlerInterface</code> 接口，所以当我们的需求是只对其中少数部分方法进行自定义的时候，就可以通过继承该类，重写属于我们的自定义方法，让其覆盖父类的方法，再通过 <code>session_set_save_handler()</code> 设置我们继承的类就好了。</p>
+<p>而使用接口来完全自定义的情况，应该是当前 <code>Session</code> 存储系统完全不同于默认系统，即 <code>Session</code> 文件。比如，如果我们使用 <code>Redis</code> 来实现对 <code>session</code> 的管理，那么通过继承来全部重写方法，不如直接创建新的实现了接口的类。而如果不再使用文件系统的话，则要对 <code>php.ini</code> 中的参数 <a href="http://php.net/manual/zh/session.configuration.php#ini.session.save-handler" target="_blank" rel="noopener"><code>session.save_handler string</code></a> 进行相应的修改。</p>
+<h3 id="7-其他形式的-session"><a href="#7-其他形式的-session" class="headerlink" title="7. 其他形式的 session"></a>7. 其他形式的 <code>session</code></h3><p>前文已经提及，<code>session</code> 是一次会话，而我们做的则是保持用户状态。只要实现了能够保持用户状态的方法都可以成为 <code>session</code>。比如除了默认的文件方式存储 <code>session</code> 文件，也可以通过 <code>MySQL</code> 数据库来存储，<code>Redis</code>数据库来存储。当然，要修改相应的配置参数和会话管理器。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-session/" rel="tag"># php session</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/23/CI网站上线记录/" rel="next" title="CI网站上线记录">
+                <i class="fa fa-chevron-left"></i> CI网站上线记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/04/PHP-的持久化连接学习记录-1/" rel="prev" title="PHP 的持久化连接学习记录-1">
+                PHP 的持久化连接学习记录-1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Session-的基本概念及设置"><span class="nav-number">1.</span> <span class="nav-text">1. Session 的基本概念及设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Session-的工作原理"><span class="nav-number">2.</span> <span class="nav-text">2. Session 的工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-cookie-的设置"><span class="nav-number">3.</span> <span class="nav-text">3. cookie 的设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-PHPSESSID-的创建"><span class="nav-number">4.</span> <span class="nav-text">4. PHPSESSID 的创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Session文件垃圾回收机制"><span class="nav-number">5.</span> <span class="nav-text">5. Session文件垃圾回收机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-自定义会话存储函数"><span class="nav-number">6.</span> <span class="nav-text">6. 自定义会话存储函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-其他形式的-session"><span class="nav-number">7.</span> <span class="nav-text">7. 其他形式的 session</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

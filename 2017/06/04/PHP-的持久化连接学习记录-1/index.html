@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="昨天在 v2ex 上碰到这个问题：PHP 短连 mysql，回答了一下。但是基本是靠手册上现成的内容引用。过后，自己再读手册，觉得不是十分理解。那个帖子也没人继续回复了。因为之前没有像现在这样比较深入的去研究这个问题。所以个人主观以为是将持久化连接放入一个连接池，碰到可以复用的情况就复用。所以在稍微研究了一下之后有了一些困惑。">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP 的持久化连接学习记录-1">
+<meta property="og:url" content="http://yoursite.com/2017/06/04/PHP-的持久化连接学习记录-1/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="昨天在 v2ex 上碰到这个问题：PHP 短连 mysql，回答了一下。但是基本是靠手册上现成的内容引用。过后，自己再读手册，觉得不是十分理解。那个帖子也没人继续回复了。因为之前没有像现在这样比较深入的去研究这个问题。所以个人主观以为是将持久化连接放入一个连接池，碰到可以复用的情况就复用。所以在稍微研究了一下之后有了一些困惑。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:28:25.826Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP 的持久化连接学习记录-1">
+<meta name="twitter:description" content="昨天在 v2ex 上碰到这个问题：PHP 短连 mysql，回答了一下。但是基本是靠手册上现成的内容引用。过后，自己再读手册，觉得不是十分理解。那个帖子也没人继续回复了。因为之前没有像现在这样比较深入的去研究这个问题。所以个人主观以为是将持久化连接放入一个连接池，碰到可以复用的情况就复用。所以在稍微研究了一下之后有了一些困惑。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/04/PHP-的持久化连接学习记录-1/">
+
+
+
+
+
+  <title>PHP 的持久化连接学习记录-1 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/04/PHP-的持久化连接学习记录-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PHP 的持久化连接学习记录-1</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-04T22:12:45+08:00">
+                2017-06-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>昨天在 v2ex 上碰到这个问题：<a href="https://www.v2ex.com/t/365621" target="_blank" rel="noopener">PHP 短连 mysql</a>，回答了一下。但是基本是靠手册上现成的内容引用。过后，自己再读手册，觉得不是十分理解。那个帖子也没人继续回复了。因为之前没有像现在这样比较深入的去研究这个问题。所以个人主观以为是<strong>将持久化连接放入一个连接池，碰到可以复用的情况就复用</strong>。所以在稍微研究了一下之后有了一些困惑。</li>
+</ul>
+<a id="more"></a>
+<h3 id="1-数据库持久化连接的意义"><a href="#1-数据库持久化连接的意义" class="headerlink" title="1. 数据库持久化连接的意义"></a>1. 数据库持久化连接的意义</h3><p>首先，对于 PHP 中对数据库的持久化连接的描述，我找到的手册中有以下内容：</p>
+<ul>
+<li><a href="http://php.net/manual/zh/features.persistent-connections.php" target="_blank" rel="noopener">数据库持久连接</a>：</li>
+</ul>
+<blockquote>
+<p>持久的数据库连接是指在脚本结束运行时不关闭的连接。当收到一个持久连接的请求时。PHP 将检查是否已经存在一个（前面已经开启的）相同的持久连接。如果存在，将直接使用这个连接；如果不存在，则建立一个新的连接。所谓“相同”的连接是指用相同的用户名和密码到相同主机的连接。</p>
+</blockquote>
+<ul>
+<li><a href="http://php.net/manual/zh/mysqli.persistconns.php" target="_blank" rel="noopener">mysqli扩展和持久化连接 </a>:</li>
+</ul>
+<blockquote>
+<p>持久化连接背后的思想是客户端进程和数据库之间的连接可以通过一个客户端进程来保持重用， 而不是多次的创建和销毁。这降低了每次需要创建一个新连接的开销，未使用的连接被缓存起来并且准备随时被重用。</p>
+</blockquote>
+<ul>
+<li><a href="http://php.net/manual/zh/pdo.connections.php" target="_blank" rel="noopener">连接与连接管理</a>:</li>
+</ul>
+<blockquote>
+<p>很多 web 应用程序通过使用到数据库服务的持久连接获得好处。持久连接在脚本结束后不会被关闭，且被缓存，当另一个使用相同凭证的脚本连接请求时被重用。持久连接缓存可以避免每次脚本需要与数据库回话时建立一个新连接的开销，从而让 web 应用程序更快。</p>
+</blockquote>
+<ul>
+<li><a href="http://php.net/manual/zh/mysqli.quickstart.connections.php#mysqli.quickstart.connections" target="_blank" rel="noopener">Connections</a>:</li>
+</ul>
+<blockquote>
+<p>Connection pooling</p>
+</blockquote>
+<blockquote>
+<p>The mysqli extension supports persistent database connections, which are a special kind of pooled connections. By default, every database connection opened by a script is either explicitly closed by the user during runtime or released automatically at the end of the script. A persistent connection is not. Instead it is put into a pool for later reuse, if a connection to the same server using the same username, password, socket, port and default database is opened. Reuse saves connection overhead.</p>
+</blockquote>
+<blockquote>
+<p>Every PHP process is using its own mysqli connection pool. Depending on the web server deployment model, a PHP process may serve one or multiple requests. Therefore, a pooled connection may be used by one or more scripts subsequently.</p>
+<p>Persistent connection</p>
+<p>If a unused persistent connection for a given combination of host, username, password, socket, port and default database can not be found in the connection pool, then mysqli opens a new connection. The use of persistent connections can be enabled and disabled using the PHP directive <code>mysqli.allow_persistent</code>. The total number of connections opened by a script can be limited with <code>mysqli.max_links</code>. The maximum number of persistent connections per PHP process can be restricted with <code>mysqli.max_persistent</code>. Please note, that the web server may spawn many PHP processes.</p>
+</blockquote>
+<p>依据以上引用，可以被明确理解的是「 PHP 的持久化连接不会在脚本执行结束时被关闭，反而会被缓存起来，放入一个连接池中，等待下一次与该持久化连接参数相同的连接来复用该持久化连接。」</p>
+<h3 id="2-数据库持久化连接的存在形式"><a href="#2-数据库持久化连接的存在形式" class="headerlink" title="2. 数据库持久化连接的存在形式"></a>2. 数据库持久化连接的存在形式</h3><p>以上引用的最后一个引用中的内容：</p>
+<blockquote>
+<p>Every PHP process is using its own mysqli connection pool.</p>
+</blockquote>
+<p><strong>是说每个 PHP 进程都拥有属于自己的连接池吗？比如 A 进程创建的 p1,p2,p3 持久化连接被存储在 A 进程的连接池当中，即使 B 进程需要同样的 p1 连接，但是只能自己创建，并存入属于 B 的连接池？只能当各进程在某次的执行中碰到了存在于自己的连接池中的持久化连接，才可以复用？</strong>因为觉得这种方式似乎有些不合理，以及与我之前主观认为存在比较大的差距，所以存在疑惑。</p>
+<p>此外，在 <a href="http://php.net/manual/zh/features.persistent-connections.php" target="_blank" rel="noopener">数据库持久连接</a> 中存在以下内容：</p>
+<blockquote>
+<p>第二，也是最常用的方法，是把 PHP 用作多进程 web 服务器的一个模块，这种方法目前只适用于 Apache。对于一个多进程的服务器，其典型特征是有一个父进程和一组子进程协调运行，其中实际生成 web 页面的是子进程。每当客户端向父进程提出请求时，该请求会被传递给还没有被其它的客户端请求占用的子进程。这也就是说当相同的客户端第二次向服务端提出请求时，它将有可能被一个不同的子进程来处理。在开启了一个持久连接后，所有请求 SQL 服务的后继页面都能够重用这个已经建立的 SQL Server 连接。</p>
+</blockquote>
+<blockquote>
+<p>如果持久连接并没有任何附加的功能，那么使用它有什么好处？</p>
+</blockquote>
+<blockquote>
+<p>答案非常简单 —— 效率。当 Web Server 创建到SQL服务器的连接耗费 (Overhead) 较高（如耗时较久，消耗临时内存较多）时，持久连接将更加高效。Overhead 高低取决于很多因素。例如，数据库的种类，数据库服务和 web 服务是否在同一台服务器上，SQL 服务器负载状况等。当 Overhead 较高，每次创建数据库连接成本较高时，持久连接将显著的提高效率。它使得每个子进程在其生命周期中只做一次连接操作，而非每次在处理一个页面时都要向 SQL 服务器提出连接请求。这也就是说，每个子进程将对服务器建立各自独立的持久连接。例如，如果有 20 个不同的子进程运行某脚本建立了持久的 SQL 服务器持久连接，那么实际上向该 SQL 服务器建立了 20 个不同的持久连接，每个进程占有一个。</p>
+</blockquote>
+<p>对于「每个子进程将对服务器建立各自独立的持久连接。例如，如果有 20 个不同的子进程运行某脚本建立了持久的 SQL 服务器持久连接，那么实际上向该 SQL 服务器建立了 20 个不同的持久连接，每个进程占有一个。」<strong>这部分内容即是我上文粗体部分的问题</strong>。</p>
+<p>根据文章</p>
+<ul>
+<li><a href="http://www.vicenteforever.com/2013/09/php-mysql-connect/" target="_blank" rel="noopener">PHP 对 mysql 长连接的分析</a></li>
+<li><a href="http://www.nowamagic.net/librarys/veda/detail/95" target="_blank" rel="noopener">PHP 数据库长连接 mysql_pconnect 的细节</a></li>
+</ul>
+<p><code>mysql_pconnect()</code> 确实将 apache 进程与持久化连接绑定。</p>
+<p><code>http keepalivetimeout</code> 保证了在 <code>keepalivetimeout</code> 的时间内都由同一个子进程在处理一系列相关的请求，那么可以理解该子进程与持久化连接绑定，有利于复用连接资源。但是常规的 <code>keepalivetimeout</code> 都不会太长。也就是说一般情况下，对于我之前「多个进程创建属于自己的持久化连接资源，但是这些资源是相同的」的困惑并不能解决。</p>
+<p>不过因为文章 <a href="http://www.nowamagic.net/librarys/veda/detail/95" target="_blank" rel="noopener">PHP 数据库长连接 mysql_pconnect 的细节</a> 时间有点久远，所以查看了一下我之前下载的 PHP 源码 php-7.0.8，其中 mysqli 的持久化连接的标识为：</p>
+<blockquote>
+<p>hash_key = strpprintf(0, “mysqli_%s_%s%ld%s%s%s”, SAFE_STR(hostname), SAFE_STR(socket),port, SAFE_STR(username), SAFE_STR(dbname),SAFE_STR(passwd));</p>
+</blockquote>
+<p>其中并没有绑定 apache 进程。</p>
+<p>再经过比较 php-5.6.30 和 php-5.5.38：</p>
+<ol>
+<li><p><code>php-5.6.30 - ext - mysqli - mysqli_nonapi.c</code>：</p>
+<p>hash_len = spprintf(&amp;hash_key, 0, “mysqli_%s_%s%ld%s%s%s”, SAFE_STR(hostname), SAFE_STR(socket),port, SAFE_STR(username), SAFE_STR(dbname),SAFE_STR(passwd));</p>
+<pre><code>mysql-&gt;hash_key = hash_key;
+</code></pre><p><code>php-5.6.30 - ext - mysql - php_mysql.c</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">user=php_get_current_user(TSRMLS_C);</span><br><span class="line">hashed_details_length = spprintf(&amp;hashed_details, 0, &quot;mysql__%s_&quot;, user);</span><br><span class="line">        ...</span><br><span class="line">hashed_details_length = spprintf(&amp;hashed_details, 0, &quot;mysql_%s_%s_%s_%ld&quot;, SAFE_STRING(host_and_port), SAFE_STRING(user), SAFE_STRING(passwd), client_flags);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>php-5.5.38 - ext - mysqli - mysqli_nonapi.c</code>：</p>
+<p>hash_len = spprintf(&amp;hash_key, 0, “mysqli_%s_%s%ld%s%s%s”, SAFE_STR(hostname), SAFE_STR(socket),port, SAFE_STR(username), SAFE_STR(dbname),SAFE_STR(passwd));</p>
+<pre><code>mysql-&gt;hash_key = hash_key;
+</code></pre><p><code>php-5.5.38 - ext - mysql - php_mysql.c</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">user=php_get_current_user(TSRMLS_C);</span><br><span class="line">hashed_details_length = spprintf(&amp;hashed_details, 0, &quot;mysql__%s_&quot;, user);</span><br><span class="line">        ...</span><br><span class="line">hashed_details_length = spprintf(&amp;hashed_details, 0, &quot;mysql_%s_%s_%s_%ld&quot;,SAFE_STRING(host_and_port), SAFE_STRING(user), SAFE_STRING(passwd), client_flags);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>可以知道 mysql 扩展的持久化连接绑定了进程，而 mysqli 没有。而在 PHP7 之后 mysql 扩展已经被移除。</p>
+<p>查看了 mysqli 的连接部分源码，可以大致理解。要创建的长连接会在连接池中查找，判断是否已经存在，已经存在则复用，否则创建，并加入连接池中。（如果理解有错，请指出。）相关代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">if (strlen(SAFE_STR(hostname)) &gt; 2 &amp;&amp; !strncasecmp(hostname, &quot;p:&quot;, 2)) &#123;</span><br><span class="line">	hostname += 2;</span><br><span class="line">	if (!MyG(allow_persistent)) &#123;</span><br><span class="line">		php_error_docref(NULL, E_WARNING, &quot;Persistent connections are disabled. Downgrading to normal&quot;);</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		mysql-&gt;persistent = persistent = TRUE;</span><br><span class="line"></span><br><span class="line">		//持久化连接的标识符</span><br><span class="line">		hash_key = strpprintf(0, &quot;mysqli_%s_%s%ld%s%s%s&quot;, SAFE_STR(hostname), SAFE_STR(socket),</span><br><span class="line">							port, SAFE_STR(username), SAFE_STR(dbname),</span><br><span class="line">							SAFE_STR(passwd));</span><br><span class="line"></span><br><span class="line">		mysql-&gt;hash_key = hash_key;</span><br><span class="line"></span><br><span class="line">		/* check if we can reuse exisiting connection ... */</span><br><span class="line">		if ((le = zend_hash_find_ptr(&amp;EG(persistent_list), hash_key)) != NULL) &#123;</span><br><span class="line">			if (le-&gt;type == php_le_pmysqli()) &#123;</span><br><span class="line">				plist = (mysqli_plist_entry *) le-&gt;ptr;</span><br><span class="line"></span><br><span class="line">				do &#123;</span><br><span class="line">					if (zend_ptr_stack_num_elements(&amp;plist-&gt;free_links)) &#123;</span><br><span class="line">						mysql-&gt;mysql = zend_ptr_stack_pop(&amp;plist-&gt;free_links);</span><br><span class="line"></span><br><span class="line">						MyG(num_inactive_persistent)--;</span><br><span class="line">						/* reset variables */</span><br><span class="line"></span><br><span class="line">#ifndef MYSQLI_NO_CHANGE_USER_ON_PCONNECT</span><br><span class="line">						if (!mysqli_change_user_silent(mysql-&gt;mysql, username, passwd, dbname, passwd_len)) &#123;</span><br><span class="line">#else</span><br><span class="line">						if (!mysql_ping(mysql-&gt;mysql)) &#123;</span><br><span class="line">#endif</span><br><span class="line">#ifdef MYSQLI_USE_MYSQLND</span><br><span class="line">							mysqlnd_restart_psession(mysql-&gt;mysql);</span><br><span class="line">#endif</span><br><span class="line">							MyG(num_active_persistent)++;</span><br><span class="line">							goto end;</span><br><span class="line">						&#125; else &#123;</span><br><span class="line">							mysqli_close(mysql-&gt;mysql, MYSQLI_CLOSE_IMPLICIT);</span><br><span class="line">							mysql-&gt;mysql = NULL;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125; while (0);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			zend_resource le;</span><br><span class="line">			le.type = php_le_pmysqli();</span><br><span class="line">			le.ptr = plist = calloc(1, sizeof(mysqli_plist_entry));</span><br><span class="line"></span><br><span class="line">			zend_ptr_stack_init_ex(&amp;plist-&gt;free_links, 1);</span><br><span class="line">			zend_hash_str_update_mem(&amp;EG(persistent_list), ZSTR_VAL(hash_key), ZSTR_LEN(hash_key), &amp;le, sizeof(le));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以及我仿照 <a href="http://www.nowamagic.net/librarys/veda/detail/95" target="_blank" rel="noopener">PHP 数据库长连接 mysql_pconnect 的细节</a> 本地测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$conn = mysqli_connect(&quot;p:localhost&quot;, &quot;root&quot;, &quot;273510&quot;) or die(&quot;Can not connect to MySQL&quot;);</span><br><span class="line"></span><br><span class="line">echo &quot;MySQL线程号:&quot; . mysqli_thread_id($conn) . &quot;&lt;br /&gt;&quot;;</span><br><span class="line"></span><br><span class="line">echo &quot;Apache进程号&quot; . getmypid();</span><br></pre></td></tr></table></figure>
+<p>使用以上代码来判断，如果两者同时变化，说明存在关系。如果 apache 进程号变化，而 mysql 线程号不变，应该可以说明持久化连接被复用。</p>
+<p>我本地使用的是 phpstudy，apache + php 7.0。</p>
+<p>首先我测试时发现 <code>keepalivetimeout</code> 的 5 秒设置没有作用。然后搜配置文件的时候，发现 apache 加载 mod_fcgid 模块，及它的配置 httpd-fcgid.conf。配置如下：</p>
+<blockquote>
+<p>FcgidIOTimeout 384</p>
+<p>FcgidConnectTimeout 360</p>
+<p>FcgidOutputBufferSize 128</p>
+<p>FcgidMaxRequestsPerProcess 1000</p>
+<p>FcgidMinProcessesPerClass 0</p>
+<p>FcgidMaxProcesses 16</p>
+<p>FcgidMaxRequestLen 268435456</p>
+<p>ProcessLifeTime 360</p>
+<p>FcgidInitialEnv PHP_FCGI_MAX_REQUESTS 1000</p>
+</blockquote>
+<p>如果以上配置中的时间相关的配置单位是秒的话，那么我在测试时，确实是 6 分钟<strong>同时改变 apache 进程号以及 mysql 线程号</strong>。然后，我改了时间参数，毕竟 360 太长了，测试起来有点麻烦。但是我不知道为什么，改为 15 和 5，对应的时间并不是 15 秒和 5 秒。查阅官方文档，虽然其中描述了参数的作用，但是具体使用时，我还不知道整个的流程是怎么做的，因为刚刚讲述的这些内容，是我昨天到现在思考数据库持久化连接时，搜出来的。我还不清楚背后的更深的原理。所以暂时还没有思路去更深入解决出现的问题。</p>
+<p>不过就目前来说，我的疑惑主要在于关于 PHP 的持久化连接「复用已经存在的持久化连接」更深入的具体情况。毕竟如前所述，对我个人来说，是存在各种矛盾的。</p>
+<h3 id="3-疑问小结"><a href="#3-疑问小结" class="headerlink" title="3. 疑问小结"></a>3. 疑问小结</h3><p>暂时简单总结为：</p>
+<p>情况1. </p>
+<p>由源码可知，PHP 的持久化连接存在一个连接池，将当前要创建的持久化连接与连接池中已经存在的持久化连接比较，如果存在，则复用，不存在则创建，并放入连接池。但是如果是这样，那么上述测试应当改变apache 进程号，而 mysql 线程号不变。然而测试结果是同时改变。以及与手册中「连接」与「进程」有一定关系的描述又不相符。以及与手册中的描述不符。</p>
+<p>情况2. </p>
+<p>PHP 的持久化连接与当时创建该连接的子进程绑定。每个进程拥有属于自己的进程池，即使 B 进程要创建的持久化连接已经在 A 进程的进程池中已经存在，但依旧需要 B 进程再次创建连接。但是和源码似乎矛盾。</p>
+<p>情况3. </p>
+<p>其他我还不知道的形式。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/03/PHP-SESSION记录/" rel="next" title="PHP-SESSION记录">
+                <i class="fa fa-chevron-left"></i> PHP-SESSION记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/12/PHP-编译模版记录/" rel="prev" title="PHP 编译模版记录">
+                PHP 编译模版记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-数据库持久化连接的意义"><span class="nav-number">1.</span> <span class="nav-text">1. 数据库持久化连接的意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-数据库持久化连接的存在形式"><span class="nav-number">2.</span> <span class="nav-text">2. 数据库持久化连接的存在形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-疑问小结"><span class="nav-number">3.</span> <span class="nav-text">3. 疑问小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

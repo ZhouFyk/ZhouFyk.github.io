@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="nginx,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="服务器名称 - 域名Server names 原文链接  翻译中的服务器名称即是域名。">
+<meta name="keywords" content="nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Server names 翻译">
+<meta property="og:url" content="http://yoursite.com/2017/08/08/Server-names-翻译/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="服务器名称 - 域名Server names 原文链接  翻译中的服务器名称即是域名。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:34:50.182Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Server names 翻译">
+<meta name="twitter:description" content="服务器名称 - 域名Server names 原文链接  翻译中的服务器名称即是域名。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/08/Server-names-翻译/">
+
+
+
+
+
+  <title>Server names 翻译 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/08/Server-names-翻译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Server names 翻译</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-08T18:22:22+08:00">
+                2017-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="服务器名称-域名"><a href="#服务器名称-域名" class="headerlink" title="服务器名称 - 域名"></a>服务器名称 - 域名</h1><p><a href="https://nginx.org/en/docs/http/server_names.html" target="_blank" rel="noopener">Server names 原文链接</a></p>
+<ul>
+<li>翻译中的服务器名称即是域名。</li>
+</ul>
+<a id="more"></a>
+<p>使用指令 <code>server_name</code> 定义的服务器名称决定哪个 <code>server</code> 块用来处理分发的请求。可见 「<a href="https://nginx.org/en/docs/http/request_processing.html" target="_blank" rel="noopener">How nginx processes a request</a>」。<code>server_name</code> 的定义方式有三种，明确的名称，通配符名称，或者正则表达式：</p>
+<blockquote>
+<p>server {<br>         listen       80;<br>         server_name  example.org <a href="http://www.example.org" target="_blank" rel="noopener">www.example.org</a>;<br>         …<br>}</p>
+<p>server {<br>         listen       80;<br>         server_name  *.example.org;<br>         …<br>}</p>
+<p>server {<br>     listen       80;<br>     server_name  mail.*;<br>     …<br>}</p>
+<p>server {<br>     listen       80;<br>     server_name  ~^(?<user>.+).example.net$;<br>     …<br>}</user></p>
+</blockquote>
+<p>当使用 <code>server_name</code> 匹配时，如果匹配到多个结果，比如同时匹配到通配符名称和正则表达式名称，那么会选择第一个匹配到的。下面是优先级：</p>
+<ol>
+<li>明确的名称。</li>
+<li>以星号 <code>*</code> 开头的最长的通配名称，如 <code>*.example.org</code></li>
+<li>以星号 <code>*</code> 结尾的最长的通配名称，如 <code>mail.*</code></li>
+<li>第一个匹配到的正则表达式（按配置文件的出现顺序）</li>
+</ol>
+<h2 id="同配名称"><a href="#同配名称" class="headerlink" title="同配名称"></a>同配名称</h2><p>一个通配名称只会在名称的开始或者结尾出现 <code>*</code>,并且只在边界。如名称 <code>www.*.example.org</code> 和 <code>w*.example.org</code> 都是非法的。但是这些名字可以通过正则表达式指定，如 <code>~^www\..+\.example\.org&amp;</code> 和 <code>~^w.*\.example\.org$</code>。一个星号 <code>*</code> 可以匹配数个名称区域。如名称 <code>*.example.org</code> 不只匹配 <code>www.example.com</code> 也匹配 <code>www.sub.example.org</code>。</p>
+<p>一种特殊的通配名称 <code>.example.org</code> 可以同时匹配精确名称 <code>example.org</code> 和通配名称 <code>*.example.org</code>。</p>
+<h2 id="正则表达式名称"><a href="#正则表达式名称" class="headerlink" title="正则表达式名称"></a>正则表达式名称</h2><p>nginx 中使用的正则表达式与 Perl 中使用的是兼容的。使用正则表达式时，<code>server_name</code> 必需以波浪号 <code>~</code> 开始：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server_name  ~^www\d+\.example\.net$;</span><br></pre></td></tr></table></figure>
+<p>不然的话，会被当作精确名称处理，或者如果该表达式中包含了星号 <code>*</code>，就会当作通配名称处理。同时不要忘记设置 <code>^</code> 和 <code>$</code> 锚点。在语法上他们并不强制要求，但是从逻辑上是必需的。还要注意在域名中的 <code>.</code> 要使用 <code>\</code> 来转义。如果正则表达式包含了符号 <code>{</code> 和 <code>}</code>，那么该表达式需要被 <code>&quot;</code> 引用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server_name  &quot;~^(?&lt;name&gt;\w\d&#123;1,3&#125;+)\.example\.net$&quot;;</span><br></pre></td></tr></table></figure>
+<p>否则 nginx 会启动失败并报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">directive &quot;server_name&quot; is not terminated by &quot;;&quot; in ...</span><br></pre></td></tr></table></figure>
+<p>在正则表达式中被捕获的内容可以在之后使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br></pre></td></tr></table></figure>
+<pre><code>server_name   ~^(www\.)?(?&lt;domain&gt;.+)$;
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">	location / &#123;</span><br><span class="line">    	root   /sites/$domain;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>PCRE 库支持使用下列语法进行命名捕获：</p>
+<p><code>?&lt;name&gt;</code>    Perl 5.10 语法兼容, PCRE-7.0 起支持</p>
+<p><code>?&#39;name&#39;</code>    Perl 5.10 语法兼容, PCRE-7.0 起支持</p>
+<p><code>?P&lt;name&gt;</code>    Python 语法兼容, PCRE-4.0 起支持</p>
+<p>如果 nginx 启动失败并报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pcre_compile() failed: unrecognized character after (?&lt; in ...</span><br></pre></td></tr></table></figure>
+<p>这说明当前的 PCRE 库版本比较旧，应该尝试使用 <code>?P&lt;name&gt;</code> 来代替。捕获的内容同样可以使用数字形式使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br></pre></td></tr></table></figure>
+<pre><code>server_name   ~^(www\.)?(.+)$;
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">	location / &#123;</span><br><span class="line">    	root   /sites/$2;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这种写法应该仅限于在以上这种简单的例子中使用，因为数字引用很容易被覆盖重写。</p>
+<h2 id="混杂的名称"><a href="#混杂的名称" class="headerlink" title="混杂的名称"></a>混杂的名称</h2><p>有一些服务器名称需要特殊处理。</p>
+<p>如果要求不是默认服务器的 <code>server</code> 块处理没有 <code>Host</code> 头信息的请求，需要指定一个空名称：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen       80;</span><br><span class="line">	server_name  example.org  www.example.org  &quot;&quot;;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果一个 <code>server</code> 块没有指定 <code>server_name</code>，nginx 会使用空名称作为该服务器名称。</p>
+<p>如果 <code>server_name</code> 被定义为 <code>$hostname</code>，那么机器的 <code>hostname</code> 会被使用。</p>
+<p>如果有一个请求没有使用服务器名称而是一个 IP，那么该请求的 <code>Host</code> 头信息会包含 IP 地址，并且该请求中的 IP 会被当作服务器名称来处理：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen       80;</span><br><span class="line">	server_name  example.org</span><br><span class="line">                 www.example.org</span><br><span class="line">                 &quot;&quot;</span><br><span class="line">                 192.168.1.1</span><br><span class="line">                 ;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在所有的服务器配置示例中，都可以看到下划线 <code>_</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen       80  default_server;</span><br><span class="line">	server_name  _;</span><br><span class="line">	return       444;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个名字没有什么特殊的，这只是无数永远也不会被匹配到的非法域名中的一个。其他非法名称如 <code>—</code> 和 <code>！@#</code> 也是同样的用法。</p>
+<p>高于 0.6.25 版本的 nginx 支持特殊名称 <code>*</code>，这个符号被错误的解释为匹配一切名称。它并不匹配或者通配所有服务器名称。相反的，它支持的功能是现在 <code>server_name_in_redirect</code> 指令的作用。现在 <code>*</code> 已经被弃用，应该使用 <code>server_name_in_redirect</code> 指令。要注意，并没有什么操作可以通过 <code>server_name</code> 来匹配所有服务器名称或者默认服务器。这里有 <code>listen</code> 指令的属性而不是 <code>server_name</code> 指令。可见 「<a href="https://nginx.org/en/docs/http/request_processing.html" target="_blank" rel="noopener">How nginx processes a request</a>」。不过可以通过监听端口 <code>*：80</code> 和 <code>*：8080</code>，并且指定一个 <code>*：8080</code> 为默认服务器，另一个默认服务器为 <code>*：80</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen       80;</span><br><span class="line">    listen       8080  default_server;</span><br><span class="line">    server_name  example.net;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       80  default_server;</span><br><span class="line">    listen       8080;</span><br><span class="line">    server_name  example.org;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>精确的名称和以 <code>*</code> 开头 / 结尾的通配名称会被存储在三个绑定在监听端口上的散列表内。散列表的大小在配置阶段进行了优化，所以可以使用最高的 CPU 缓存命中来找到名称。 具体设置散列表的细节可见文章 「<a href="https://nginx.org/en/docs/hash.html" target="_blank" rel="noopener">Setting up hashes</a>」。 </p>
+<p>保存着精确的名称的散列表首先被查找。如果没有找到，那么保存着以 <code>*</code> 开头的通配名称的散列表会被查找。然后是以 <code>*</code> 结尾的散列表。</p>
+<p>查找通配名称散列表比查找精确名称散列表的速度要慢的原因是在查找时是按域名区域查找的。注意，特殊通配名称 <code>.example.org</code> 是存储在通配名称散列表内的而不是精确名称散列表。</p>
+<p>正则表达式被顺序测试，因此是最慢的方法，并且是不可扩展的。</p>
+<p>由于这些原因，应该尽可能使用精确的名称。比如，如果请求最频繁的名称为 <code>example.org</code> 和 <code>www.example.org</code>，那么显式定义它们是最有效率的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen       80;</span><br><span class="line">	server_name  example.org  www.example.org  *.example.org;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后使用简单的格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br></pre></td></tr></table></figure>
+<pre><code>       listen       80;
+    server_name  .example.org;
+    ...
+}
+</code></pre><p>如果定义了大量的名称，或者不常见的长名称，那么有必要在 http 层次调整 <code>server_names_hash_max_size</code> 和 <code>server_names_hash_bucket_size</code> 指令。<code>server_names_hash_bucket_size</code> 指令的默认值为 32，或者是64，或者一个根据 CPU 缓存线大小来决定的数值。如果该默认值为 <code>32</code> 并且服务器名称为 <code>too.long.server.name.example.org</code>，那么 nginx 就会启动失败并报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">could not build the server_names_hash,</span><br><span class="line">you should increase server_names_hash_bucket_size: 32</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，这个指令的值应该增加到下一个数量级，即 2 的 6 次方 64：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">	server_names_hash_bucket_size  64;</span><br><span class="line">	...</span><br></pre></td></tr></table></figure>
+<p>如果定义了大量的名称，那么会出现另一个错误：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">could not build the server_names_hash,</span><br><span class="line">you should increase either server_names_hash_max_size: 512</span><br><span class="line">or server_names_hash_bucket_size: 32</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，首先尝试将 <code>server_names_hash_max_size</code> 的值设置为接近名称数量的值。当这样做不能解决问题的时候，或者 nginx 的启动时间长的不能接受时，尝试增加 <code>server_names_hash_bucket_size</code>。</p>
+<p>如果该服务器是监听的一个端口的位移的一个服务器，那么 nginx 就不会再检测其他服务器名称了（并且不会为端口建立散列表）。但是有一个意外。如果服务器名称是一个捕获的正则表达式，那么 nginx 就会执行这个表达式来获取捕获的内容。</p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><ul>
+<li>版本大于 0.9.4，支持特殊服务器名称 <code>$hostname</code>。</li>
+<li>版本大于 0.8.48，默认服务器名称为空字符串。</li>
+<li>版本大于 0.8.25，支持正则表达式形式的服务器名称的命名捕获。</li>
+<li>版本大于 0.7.40， 支持正则表达式形式的服务器名称的捕获。</li>
+<li>版本大于 0.7.12，支持服务器名称为空字符串。</li>
+<li>版本大于 0.6.25，支持通配名称和正则表达式名称作为第一服务器名称。</li>
+<li>版本大于 0.6.7，支持正则表达式形式服务器名称。</li>
+<li>版本大于 0.6.0，支持尾部为 <code>*</code> 的通配名称。</li>
+<li>版本大于 0.3.18，支持特殊格式 <code>.example.org</code>。</li>
+<li>版本大于 0.1.13，支持开始为 <code>*</code> 的通配名称。</li>
+</ul>
+<hr>
+<p>作者：Igor Sysoev</p>
+<p>编辑：Brian Mercer</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/08/How-nginx-processes-a-request-翻译/" rel="next" title="How nginx processes a request 翻译">
+                <i class="fa fa-chevron-left"></i> How nginx processes a request 翻译
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/08/Using-nginx-as-HTTP-load-balancer-翻译/" rel="prev" title="Using nginx as HTTP load balancer 翻译">
+                Using nginx as HTTP load balancer 翻译 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#服务器名称-域名"><span class="nav-number">1.</span> <span class="nav-text">服务器名称 - 域名</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#同配名称"><span class="nav-number">1.1.</span> <span class="nav-text">同配名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式名称"><span class="nav-number">1.2.</span> <span class="nav-text">正则表达式名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#混杂的名称"><span class="nav-number">1.3.</span> <span class="nav-text">混杂的名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化"><span class="nav-number">1.4.</span> <span class="nav-text">优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#兼容性"><span class="nav-number">1.5.</span> <span class="nav-text">兼容性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

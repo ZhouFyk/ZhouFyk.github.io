@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php framework ci,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="ci - core - codeigniter.php  此脚本是框架系统的初始化文件。在执行请求前，对应用加载好所有基础类，最后执行请求。 文件开头对常量 BASEPATH 的判断。该常量在整个框架的唯一入口 index.php 中被定义。所以 ci 在其余每个文件中第一行都对该常量的判断，如果该常量未被定义，则说明是非法进入，直接结束脚本。">
+<meta name="keywords" content="php framework ci">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ci - core - codeigniter.php">
+<meta property="og:url" content="http://yoursite.com/2017/07/07/ci-core-codeigniter-php/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="ci - core - codeigniter.php  此脚本是框架系统的初始化文件。在执行请求前，对应用加载好所有基础类，最后执行请求。 文件开头对常量 BASEPATH 的判断。该常量在整个框架的唯一入口 index.php 中被定义。所以 ci 在其余每个文件中第一行都对该常量的判断，如果该常量未被定义，则说明是非法进入，直接结束脚本。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.fuyukang.me/usr/uploads/2017/07/1601774792.png">
+<meta property="og:updated_time" content="2019-02-27T10:18:58.124Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ci - core - codeigniter.php">
+<meta name="twitter:description" content="ci - core - codeigniter.php  此脚本是框架系统的初始化文件。在执行请求前，对应用加载好所有基础类，最后执行请求。 文件开头对常量 BASEPATH 的判断。该常量在整个框架的唯一入口 index.php 中被定义。所以 ci 在其余每个文件中第一行都对该常量的判断，如果该常量未被定义，则说明是非法进入，直接结束脚本。">
+<meta name="twitter:image" content="http://www.fuyukang.me/usr/uploads/2017/07/1601774792.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/07/ci-core-codeigniter-php/">
+
+
+
+
+
+  <title>ci - core - codeigniter.php | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/07/ci-core-codeigniter-php/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ci - core - codeigniter.php</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-07T20:28:22+08:00">
+                2017-07-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://github.com/bcit-ci/CodeIgniter/blob/develop/system/core/CodeIgniter.php#L67" target="_blank" rel="noopener"> ci - core - codeigniter.php </a></p>
+<p>此脚本是框架系统的初始化文件。在执行请求前，对应用加载好所有基础类，最后执行请求。</p>
+<p>文件开头对常量 <code>BASEPATH</code> 的判断。该常量在整个框架的唯一入口 <code>index.php</code> 中被定义。所以 ci 在其余每个文件中第一行都对该常量的判断，如果该常量未被定义，则说明是非法进入，直接结束脚本。</p>
+<a id="more"></a>
+<ol>
+<li><p>框架版本号。定义一个常量的当前 CI 版本号。</p>
+</li>
+<li><p>加载常量。先加载环境常量，然后加载全局常量。</p>
+</li>
+<li><p>加载全局函数。</p>
+</li>
+<li><p>设置错误异常处理函数用来记录 PHP 错误信息。</p>
+</li>
+<li><p>设置子类的前缀。CI 允许用户扩展它的类库，这里设置的前缀就是 CI 对扩展类名的一个命名规范。</p>
+</li>
+<li><p>根据配置信息判断是否使用 composer autoload。</p>
+</li>
+<li><p>计时。实例化 <code>benchmark</code> 类，设定时间结点，应用执行开始，以及基础类加载开始。</p>
+</li>
+<li><p>自定义流程。实例化 <code>Hooks</code> 类。尝试调用钩子，在系统启动前调用用户自定义的操作。<a href="http://codeigniter.org.cn/user_guide/general/hooks.html" target="_blank" rel="noopener">钩子 - 扩展框架核心</a></p>
+</li>
+<li><p>加载配置。实例化 <code>config</code> 类，加载更新配置信息。</p>
+</li>
+<li><p>设置字符集。检测 <code>mbstring</code> 与 <code>iconv</code> 等扩展是否已经加载，设置对应的标识符和进行相关的操作。</p>
+</li>
+<li><p>加载兼容性相关的扩展。解决由于版本不同导致的不兼容问题，自定义一些相关函数。</p>
+</li>
+<li><p>实例化 <code>Utf8</code> 类。</p>
+</li>
+<li><p>实例化 <code>URI</code> 类。</p>
+</li>
+<li><p>实例化 <code>Router</code> 类。</p>
+</li>
+<li><p>实例化 <code>Output</code> 类。</p>
+</li>
+<li><p>缓存处理。如果已经缓存过相应的内容，则直接返回缓存。</p>
+</li>
+<li><p>实例化 <code>Security</code> 类。</p>
+</li>
+<li><p>实例化 <code>Input</code> 类。</p>
+</li>
+<li><p>实例化 <code>Lang</code> 类。</p>
+</li>
+<li><p>加载控制器。包含框架核心控制器类。定义一个方法用来获取核心控制器的单例。如果用户替换了核心控制器，将自定义的控制器也包含。</p>
+</li>
+<li><p>计时。时间结点，基础类加载完毕。</p>
+</li>
+<li><p>404 检测。由注释可知，到这一步，请求已经被 <code>Router</code> 类检测过，只剩下三个问题：</p>
+<ol>
+<li>类名不存在。</li>
+<li>执行字符串没能通过 <code>file_exist()</code> 的检测。</li>
+<li>请求不存在的页面。</li>
+</ol>
+<p>以上问题都会作为 404 错误处理。除此之外，不论方法是来自控制器还是加载类，都不可以通过 uri 来调用，以及被控制器中以下划线开头的方法调用。</p>
+<p>上述翻译自注释，不过翻译的不够好。无法理解可以直接看原文。</p>
+<p>设置一个标识符 <code>$e404 = FALSE</code>。通过 Router 类对象获取请求的控制器类名和方法名。检测类名，如果类名不存在，或者该类文件不存在，<code>$e404 = TRUE</code>。类文件加载之后，如果该类不存在，或者方法名以下划线 <code>_</code> 开头，或者该方法为属于核心控制器 <code>CI_Controller</code>，则 <code>$e404 = TRUE</code>。因为在 CI 框架中，下划线开头的方法不属于公有，所以不能被外部调用，以及如果该方法存在与 <code>CI_Controller</code> 中，则说明是非法调用，所以这些情况作为 404 处理。通过以上的检测，如果类中存在方法 <code>_remap()</code>，将参数和方法名重新调整，将方法名改为 <code>_remap()</code>，新参数数组中包含原先的方法名和参数。检测类中有没有该方法，不存在的话，同样 <code>$e404 = TRUE</code>。然后还要检测这个类中的方法能否被调用，不能被调用的话，使用 <code>new ReflectionMethod($class, $method)</code> 获取相关信息，检测是否是公有的，是否是构造函数，如果是，设置 <code>$e404 = TRUE</code>。</p>
+<p>由于代码中这一部分的判断语句较多，纯描述可能不太让人理解的清楚，可以参考代码食用。</p>
+<p>然后，经过以上一系列的处理，<code>$e404</code> 的值也确定了，那么如果 <code>$e404</code> 为 true，接下来进行错误处理了。如果设置了 404 重写，通过 <a href="https://secure.php.net/manual/zh/function.sscanf.php" target="_blank" rel="noopener"><code>sscanf()</code></a> 从配置 <code>routes[&#39;404_override&#39;]</code> 中获取设置的 <code>$error_class</code>、<code>$error_method</code>。是否正确获取到这两个值，通过该函数的返回值是否为 2 来判断。当不为 2，也就是没有正确获取到需要的值，就将 <code>$error_method</code> 设为 <code>index</code>。到这里就是将 <code>$error_method</code> 设置好了。</p>
+<p>接下来要处理 <code>$error_class</code>。处理一个类的流程已经很熟悉了，首先判断类是否存在，不存在则检测类文件是否存在，存在则包含进来，然后再次检测类是否存在。这里将类是否存在的结果保存在 <code>$e404</code> 中：<code>$e404 = ! class_exists($error_class, FALSE)</code>。以上的每个判断差不多都有另一个分支，不过相关的处理都差不多。</p>
+<p>类的处理过程中，有对 <code>$e404</code> 的操作。所以要对 <code>$e404</code> 再次检测，如果为 false，则整理参数，将错误类和调用的方法保存在一个数组中。否则为 true，即之前的处理都没有改变过它的值，就直接使用 <code>show_404($RTR-&gt;directory.$class.&#39;/&#39;.$method)</code>。</p>
+<p>如果方法不需要重新映射，即 <code>$method !== &#39;_remap&#39;</code>，也就是没有使用另外的方法来处理错误，就从之前保存的数组中把参数取出另存在一个变量中。</p>
+</li>
+<li><p>调用钩子。钩子节点为 「控制器前」。</p>
+</li>
+<li><p>实例化类。设下一个时间结点为 「控制器执行开始」。实例化请求的控制器类。</p>
+</li>
+<li><p>调用钩子。钩子节点为 「<code>post_controller_constructor</code>」。 </p>
+</li>
+<li><p>调用请求方法。源代码：<code>call_user_func_array(array(&amp;$CI, $method), $params)</code>，使用 <a href="https://secure.php.net/manual/zh/function.call-user-func-array.php" target="_blank" rel="noopener"><code>call_user_func_array()</code></a> 方法调用请求的类的对象。方法原型参数是不使用引用的，这里加引用的话，嗯，这个问题在 <a href="https://laracasts.com/discuss/channels/general-discussion/php-general-question" target="_blank" rel="noopener">PHP general question</a> 提到过，不过没有准确的答案。我个人的想法是：最直观的，我们对一个函数的参数加上 <code>&amp;</code> 就是想要使用引用，这样在该函数内对该变量所做的改变都会被记录下来。在这里应当也是如此。</p>
+<p>在这一步之后还有 3 个步骤，有 2-3 次钩子调用。如果这些钩子调用依旧是在当前流程内，自然应当对请求的类的方法的调用操作进行记录。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">然后是设置时间节点，「控制器请求时间结束」。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>调用 2-3 次钩子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$EXT-&gt;call_hook(&apos;post_controller&apos;);</span><br><span class="line"></span><br><span class="line">if ($EXT-&gt;call_hook(&apos;display_override&apos;) === FALSE)</span><br><span class="line">&#123;</span><br><span class="line">	$OUT-&gt;_display();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$EXT-&gt;call_hook(&apos;post_system&apos;);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文件其实是对 CI 流程图的详细表述。在这个文件中，不去考虑具体的类的实现细节，我们可以了解到在 CI 中一个应用的整个流程大致是怎么样的。</p>
+<p><img src="http://www.fuyukang.me/usr/uploads/2017/07/1601774792.png" alt></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-framework-ci/" rel="tag"># php framework ci</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/02/ci-core-config/" rel="next" title="ci-core-config">
+                <i class="fa fa-chevron-left"></i> ci-core-config
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/09/ci-core-controller/" rel="prev" title="ci - core - controller">
+                ci - core - controller <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

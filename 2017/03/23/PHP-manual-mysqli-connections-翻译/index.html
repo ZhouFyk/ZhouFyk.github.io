@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php mysql,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="PHP manual-mysqli-connections  MySQL服务器支持使用不同的传输层进行连接。 连接可以使用TCP / IP，Unix域套接字或Windows命名管道。 主机名localhost具有特殊的含义。它与Unix域套接字绑定，所以不能使用主机名localhost打开TCP / IP连接，要想打开TCP/IP的链接，只能使用127.0.0.1.">
+<meta name="keywords" content="php mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP manual-mysqli-connections-翻译">
+<meta property="og:url" content="http://yoursite.com/2017/03/23/PHP-manual-mysqli-connections-翻译/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="PHP manual-mysqli-connections  MySQL服务器支持使用不同的传输层进行连接。 连接可以使用TCP / IP，Unix域套接字或Windows命名管道。 主机名localhost具有特殊的含义。它与Unix域套接字绑定，所以不能使用主机名localhost打开TCP / IP连接，要想打开TCP/IP的链接，只能使用127.0.0.1.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:29:27.292Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP manual-mysqli-connections-翻译">
+<meta name="twitter:description" content="PHP manual-mysqli-connections  MySQL服务器支持使用不同的传输层进行连接。 连接可以使用TCP / IP，Unix域套接字或Windows命名管道。 主机名localhost具有特殊的含义。它与Unix域套接字绑定，所以不能使用主机名localhost打开TCP / IP连接，要想打开TCP/IP的链接，只能使用127.0.0.1.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/23/PHP-manual-mysqli-connections-翻译/">
+
+
+
+
+
+  <title>PHP manual-mysqli-connections-翻译 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/23/PHP-manual-mysqli-connections-翻译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PHP manual-mysqli-connections-翻译</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-23T14:40:07+08:00">
+                2017-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><a href="http://php.net/manual/zh/mysqli.quickstart.connections.php" target="_blank" rel="noopener">PHP manual-mysqli-connections</a></li>
+</ul>
+<p><code>MySQL</code>服务器支持使用不同的传输层进行连接。 连接可以使用<code>TCP / IP</code>，<code>Unix</code>域套接字或<code>Windows</code>命名管道。</p>
+<p>主机名<code>localhost</code>具有特殊的含义。它与<code>Unix</code>域套接字绑定，所以不能使用主机名<code>localhost</code>打开<code>TCP / IP</code>连接，要想打开<code>TCP/IP</code>的链接，只能使用<code>127.0.0.1</code>.</p>
+<a id="more"></a>
+<p>Example #1 <code>localhost</code>的特殊含义示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$mysqli = new mysqli(&quot;localhost&quot;, &quot;user&quot;, &quot;password&quot;, &quot;database&quot;);</span><br><span class="line">if ($mysqli-&gt;connect_errno) &#123;</span><br><span class="line">    echo &quot;Failed to connect to MySQL: (&quot; . $mysqli-&gt;connect_errno . &quot;) &quot; . $mysqli-&gt;connect_error;</span><br><span class="line">&#125;</span><br><span class="line">echo $mysqli-&gt;host_info . &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">$mysqli = new mysqli(&quot;127.0.0.1&quot;, &quot;user&quot;, &quot;password&quot;, &quot;database&quot;, 3306);</span><br><span class="line">if ($mysqli-&gt;connect_errno) &#123;</span><br><span class="line">    echo &quot;Failed to connect to MySQL: (&quot; . $mysqli-&gt;connect_errno . &quot;) &quot; . $mysqli-&gt;connect_error;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">echo $mysqli-&gt;host_info . &quot;\n&quot;;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>以上例程会输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Localhost via UNIX socket</span><br><span class="line">127.0.0.1 via TCP/IP</span><br></pre></td></tr></table></figure>
+<p><em>默认的连接参数</em></p>
+<p>根据所使用的连接方法，可以省略各种参数。 如果未提供参数，扩展会尝试使用在<code>PHP</code>配置文件中设置的默认值.</p>
+<p>Example #2 设置默认值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysqli.default_host=192.168.2.27</span><br><span class="line">mysqli.default_user=root</span><br><span class="line">mysqli.default_pw=&quot;&quot;</span><br><span class="line">mysqli.default_port=3306</span><br><span class="line">mysqli.default_socket=/tmp/mysql.sock</span><br></pre></td></tr></table></figure>
+<p>然后将生成的参数值传递给扩展使用的客户端库。 如果客户端库检测到空或未设置参数，则它可能默认使用库内置值。</p>
+<p><em>内置连接库默认值</em></p>
+<p>如果主机值未设置或为空，则客户端库将默认为<code>localhost</code>上的<code>Unix</code>套接字连接。 如果套接字未设置或为空，并且请求了<code>Unix</code>套接字连接，则尝试连接到<code>/tmp/mysql.sock</code>上的默认套接字。</p>
+<p>在<code>Windows</code>系统上，主机名被客户端库解释为尝试打开基于<code>Windows</code>命名管道的连接。 在这种情况下，套接字参数被解释为管道名称。 如果参数没有给定或空，则套接字（管道名称）默认为<code>\\.\pipe\MySQL</code>。</p>
+<p>如果基于<code>Windows</code>命名管道的连接或者基于<code>Unix</code>域套接字的连接都没有建立，并且端口参数值也未设置，则库将默认使用端口3306。</p>
+<p><code>mysqlnd</code>库和<code>MySQL Client Library（libmysqlclient）</code>实现了相同的逻辑来确定默认值。</p>
+<p><em>连接选项</em></p>
+<p>连接选项可用于在连接时执行的<code>set init</code>命令，或用于请求使用某个字符集。 必须在建立网络连接之前，设置连接选项。</p>
+<p>要设置连接选项，连接操作必须分三步执行：使用<code>mysqli_init（）</code>创建一个连接句柄，使用<code>mysqli_options（）</code>设置所请求的选项，并建立与<code>mysqli_real_connect（）</code>的网络连接。</p>
+<p><em>连接池</em></p>
+<p><code>mysqli</code>扩展支持持久数据库连接，这是一种特殊的池化连接。 默认情况下，脚本打开的每个数据库连接都由用户在运行时显式关闭或在脚本结束时自动释放。 持久连接不是。 相反，连接会被放入一个池中，如果之后有使用相同的用户名，密码，套接字，端口和默认数据库连接到同一台服务器的情况，该连接就会被使用。 此种方法减少了连接的开销。</p>
+<p>每个<code>PHP</code>进程都使用自己的<code>mysqli</code>连接池。 根据<code>Web</code>服务器部署模型，<code>PHP</code>进程可能会提供一个或多个请求。 因此，连接池中的连接可能会在之后被一个或多个脚本使用。</p>
+<p><em>持久化连接</em></p>
+<p>如果连接池中没有符合当前需要的连接，则<code>mysqli</code>将打开一个新的连接。 可以使用<code>PHP</code>指令<code>mysqli.allow_persistent</code>来启用和禁用持久连接功能。 脚本打开的连接总数可以通过<code>mysqli.max_links</code>进行限制。 每个<code>PHP</code>进程的持久连接的最大数量可以通过<code>mysqli.max_persistent</code>进行限制。 请注意，<code>Web</code>服务器可能会产生许多<code>PHP</code>进程。</p>
+<p>持久连接的一个常见的抱怨是，它们的状态在重新使用之前不被重置。 例如，打开和未完成的事务不会自动回滚。 而且，将连接进入池并重新使用之间发生的授权更改也没有反映出来。 这可能被视为不必要的副作用。 相反，持久的名字可能被理解为是国家坚持的承诺（这一句不知道怎么翻了。没看懂）。</p>
+<p><code>mysqli</code>扩展同时支持对持久连接的解释：状态持续，或在重新使用前重置状态。 默认值是重置。 在持续连接被重用之前，<code>mysqli</code>扩展隐式调用<code>mysqli_change_user（）</code>来重置状态。 持久连接对用户来说似乎刚刚打开。 之前的使用并不会影响当前。</p>
+<p><code>mysqli_change_user（）</code>函数是一个昂贵的操作。 为获得最佳性能，用户可能希望对<code>MYSQLI_NO_CHANGE_USER_ON_PCONNECT</code>进行设置之后重新编译扩展。</p>
+<p>用户可以选择提升安全性或者性能。 两者都是有效的优化目标。 为了易于使用，牺牲性能，而将安全性设为默认。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-mysql/" rel="tag"># php mysql</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/22/我说的不一定对-梁欢-阅读记录-5/" rel="next" title="我说的不一定对-梁欢-阅读记录-5">
+                <i class="fa fa-chevron-left"></i> 我说的不一定对-梁欢-阅读记录-5
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/24/PHP-manual-mysqli-Prepared-Statements-翻译/" rel="prev" title="PHP manual-mysqli-Prepared Statements-翻译">
+                PHP manual-mysqli-Prepared Statements-翻译 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

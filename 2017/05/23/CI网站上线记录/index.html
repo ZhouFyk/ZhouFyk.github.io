@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php framework ci nginx,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1. nginx配置文件检测方式nginx启动等操作失败，是因为配置文件的代码有问题。可通过usr/sbin/nginx -t -c /etc/nginx/nginx.conf来检测配置文件是否正确。配置文件中的if语句，if后面要有一个空格。否则检测会出现unknow directive。if条件中的逻辑运算符号前后需要空格，否则出现invalid condition错误。 2. 502 和 p">
+<meta name="keywords" content="php framework ci nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CI网站上线记录">
+<meta property="og:url" content="http://yoursite.com/2017/05/23/CI网站上线记录/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="1. nginx配置文件检测方式nginx启动等操作失败，是因为配置文件的代码有问题。可通过usr/sbin/nginx -t -c /etc/nginx/nginx.conf来检测配置文件是否正确。配置文件中的if语句，if后面要有一个空格。否则检测会出现unknow directive。if条件中的逻辑运算符号前后需要空格，否则出现invalid condition错误。 2. 502 和 p">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:25:02.264Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CI网站上线记录">
+<meta name="twitter:description" content="1. nginx配置文件检测方式nginx启动等操作失败，是因为配置文件的代码有问题。可通过usr/sbin/nginx -t -c /etc/nginx/nginx.conf来检测配置文件是否正确。配置文件中的if语句，if后面要有一个空格。否则检测会出现unknow directive。if条件中的逻辑运算符号前后需要空格，否则出现invalid condition错误。 2. 502 和 p">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/23/CI网站上线记录/">
+
+
+
+
+
+  <title>CI网站上线记录 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/23/CI网站上线记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CI网站上线记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-23T19:36:57+08:00">
+                2017-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-nginx配置文件检测方式"><a href="#1-nginx配置文件检测方式" class="headerlink" title="1. nginx配置文件检测方式"></a>1. <code>nginx</code>配置文件检测方式</h3><p><code>nginx</code>启动等操作失败，是因为配置文件的代码有问题。可通过<code>usr/sbin/nginx -t -c /etc/nginx/nginx.conf</code>来检测配置文件是否正确。配置文件中的<code>if</code>语句，<code>if</code>后面要有一个空格。否则检测会出现<code>unknow directive</code>。<code>if</code>条件中的逻辑运算符号前后需要空格，否则出现<code>invalid condition</code>错误。</p>
+<h3 id="2-502-和-php-fpm"><a href="#2-502-和-php-fpm" class="headerlink" title="2. 502 和 php-fpm"></a>2. <code>502</code> 和 <code>php-fpm</code></h3><p>一直出现<code>502</code>错误。是因为 <code>php-fpm</code> 没开。</p>
+<a id="more"></a>
+<h3 id="3-php-mysql-和-MySQL-版本不匹配问题"><a href="#3-php-mysql-和-MySQL-版本不匹配问题" class="headerlink" title="3. php-mysql 和 MySQL 版本不匹配问题"></a>3. <code>php-mysql</code> 和 <code>MySQL</code> 版本不匹配问题</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqli::real_connect(): Headers and client library minor version mismatch. Headers:50550 Library:50635</span><br></pre></td></tr></table></figure>
+<p>原因：<code>PHP</code>编译时的<code>MySQL</code>数据库版本，和当前的<code>MySQL</code>数据库版本不匹配，要么<code>PHP</code>编译的<code>MySQL</code>升级，要么<code>MySQL</code>降级。</p>
+<p>使用<code>yun update</code>并不能让 <code>php-mysql</code> 升级，问题没有解决。</p>
+<p>大表哥建议重新编译(至于为什么，可能是他的习惯?)。按照网上搜索到的教程<a href="http://blog.aboutc.net/linux/65/compile-and-install-php-on-linux" target="_blank" rel="noopener">Linux 下编译安装 PHP 5.6</a>。最后没有成功。问题在于，编译安装会需要指定目录，所以要对目录很熟悉，我之前是用<code>yum</code>安装的，全是自动的，我都不知道哪些文件在哪里，所以按照编译安装教程的步骤，我在后面关于文件配置的地方就完全进行不下去。（所以 <code>yum</code> 对于后期要维护的话，好像对我这样的不是很方便。）</p>
+<p>我觉得那就还是 <code>yum</code> 安装吧(发现问题，好像如果身边有自己觉得某方面比自己厉害的人在，习惯性的开口就问了，然后要是没人的话，就会自己捣鼓。(/ □ ))。网上教程<a href="https://my.oschina.net/volash86/blog/494175" target="_blank" rel="noopener">Centos7 把php5.4升级到php5.6</a>。升级成功。</p>
+<p>囧。搞了半天结果忘记为了什么原因了。记得一开始好像是我改了<code>php</code>配置里面加载模块的部分，我把<code>MySQL</code>什么的见过的觉得可以加的都加了，结果出现找不到模块。然后找半天找不到 <code>php</code> 的模块到底放在了哪个目录。最后全部删了重新装了。<a href="http://www.ha97.com/5882.html" target="_blank" rel="noopener">CentOS 7.x使用yum快速安装或升级PHP 5.6</a>。此教程顺利完成。</p>
+<h3 id="4-CI-与-nginx-配置文件中的重写规则"><a href="#4-CI-与-nginx-配置文件中的重写规则" class="headerlink" title="4. CI 与 nginx 配置文件中的重写规则"></a>4. <code>CI</code> 与 <code>nginx</code> 配置文件中的重写规则</h3><p>页面跳转不成功,而且错误提示页面总是跳到我博客的 <code>404</code> 页面，需要对<code>nginx</code>的配置文件中进行重写的配置，和错误页面的配置。按照<a href="http://www.jianshu.com/p/3852c8975bd8" target="_blank" rel="noopener">Nginx下安装CodeIginter及配置</a>配置文件，出现错误，<code>if</code> 条件语法有误。解决方法：配置文件中的 <code>if</code> 语句，<code>if</code> 后面要有一个空格。否则检测会出现 <code>unknow directive</code>。<code>if</code> 条件中的逻辑运算符号前后需要空格，否则出现 <code>invalid condition</code> 错误。完成配置，还是不行。</p>
+<p><a href="https://www.chenyudong.com/archives/codeigniter-in-nginx-and-url-rewrite.html" target="_blank" rel="noopener">codeigniter在nginx安装配置及URL重写</a>，这个教程的话，使用之后我这里还是不行，猜测是不是<code>index.php</code>的问题，我尝试在<code>url</code>中加入<code>index.php</code>之后成功跳转页面。所以我在 <code>CI</code> 的配置文件中(<code>root/application/config/config.php</code>)，将 <code>$config[&#39;index_page&#39;] = &#39;&#39;</code> 改为 <code>$config[&#39;index_page&#39;] = &#39;index.php&#39;</code>。这样按钮中的 <code>url</code> 变成了 <code>http://127.0.0.1/index.php/...</code>。结果跳转还是有问题。对比之后，发现之前直接在地址栏输入的链接和按钮中的链接是域名不同。然后还是 <code>config.php</code> 发现 <code>$config[&#39;base_url&#39;]</code> 的说明中，该项是必填的。因为在本地开发中地址栏显示的一直都是 <code>[::1]/path/to/...</code>，没有问题，所以根本不知道这个变量，然后将该变量设置为域名之后就没有问题了。<br><strong>成功之后，对比一下，本段开头提到的那篇文章是没错的，应该是我自己在框架的配置文件中做了错误的配置。感谢作者，作者博客地址<a href="https://www.chenyudong.com/" target="_blank" rel="noopener">东东东 陈煜东的博客</a></strong></p>
+<h3 id="5-CI中url包含中文被判定为非法字符的解决方法"><a href="#5-CI中url包含中文被判定为非法字符的解决方法" class="headerlink" title="5. CI中url包含中文被判定为非法字符的解决方法"></a>5. <code>CI</code>中<code>url</code>包含中文被判定为非法字符的解决方法</h3><p>注册用户，发表课程都没有问题。暂时没有合适的小视频，所以没有发布章节。不过在首页进入课程章节页的时候，出现 <code>The URI you submitted has disallowed characters.</code> <code>google</code> 之后，<code>ci</code>框架设定了 <code>url</code> 中允许的字符，中文没有被包含在内，所以是非法字符。（不过为什么本地开发的时候没出现这个问题哦。）经由网上<a href="http://justcoding.iteye.com/blog/547726" target="_blank" rel="noopener">CodeIgniter中URL含有中文字符串的解决方案</a>的解释，关于 <code>url</code> 中的编解码问题，浏览器会自动进行，所以即使我在代码中写了 <code>urlencode()/urldecode（）</code>其实没有什么作用。解决办法是在字符限定里面加上中文字符编码格式就好了。然后很多文章都是转来转去的同一篇，在我这里行不通。刚刚提到的那篇的解决办法就不行，<a href="http://codeigniter.org.cn/forums/thread-20990-1-1.html" target="_blank" rel="noopener">[HELP] ci3.0 url中文如何解决</a>中文网官方论坛的回帖里。<a href="http://codeigniter.org.cn/forums/space-uid-41783.html" target="_blank" rel="noopener">@sywee</a>同学的回答，解决了这个问题：</p>
+<blockquote>
+<p><code>$config[&#39;permitted_uri_chars&#39;] = &#39;a-z 0-9~%.:_\-\x{4e00}-\x{9fa5}&#39;;</code></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">刚刚提到的很多转来转去的文章里面的解决办法是：</span><br><span class="line">&gt;`$config[&apos;permitted_uri_chars&apos;] =&apos;a-z 0-9~%.:_-u4e00-u9fa5&apos;; `</span><br><span class="line"></span><br><span class="line">所以可能是时间久了，版本更新之后，解决办法失效了。</span><br></pre></td></tr></table></figure>
+<h3 id="6-简单测试遇见的问题"><a href="#6-简单测试遇见的问题" class="headerlink" title="6. 简单测试遇见的问题"></a>6. 简单测试遇见的问题</h3><p>测试功能。发现不少遗漏的 <code>bug</code>。除了代码的 <code>bug</code>，数据库也有问题，建表时，竟然漏了字段，和打错字段名。绝望。(┬＿┬)。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-framework-ci-nginx/" rel="tag"># php framework ci nginx</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/23/简单课程网站记录/" rel="next" title="简单课程网站记录">
+                <i class="fa fa-chevron-left"></i> 简单课程网站记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/03/PHP-SESSION记录/" rel="prev" title="PHP-SESSION记录">
+                PHP-SESSION记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-nginx配置文件检测方式"><span class="nav-number">1.</span> <span class="nav-text">1. nginx配置文件检测方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-502-和-php-fpm"><span class="nav-number">2.</span> <span class="nav-text">2. 502 和 php-fpm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-php-mysql-和-MySQL-版本不匹配问题"><span class="nav-number">3.</span> <span class="nav-text">3. php-mysql 和 MySQL 版本不匹配问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-CI-与-nginx-配置文件中的重写规则"><span class="nav-number">4.</span> <span class="nav-text">4. CI 与 nginx 配置文件中的重写规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-CI中url包含中文被判定为非法字符的解决方法"><span class="nav-number">5.</span> <span class="nav-text">5. CI中url包含中文被判定为非法字符的解决方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-简单测试遇见的问题"><span class="nav-number">6.</span> <span class="nav-text">6. 简单测试遇见的问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

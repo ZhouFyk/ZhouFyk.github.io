@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php framework ci,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="github - CodeIgniter/system/core/Common.php PHP 版本确定is_php($version)：检测当前 PHP 的版本是否高于指定版本。  version_compare(PHP_VERSION, $version, &amp;#39;&amp;gt;=&amp;#39;);">
+<meta name="keywords" content="php framework ci">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CI - Core - Common 记录">
+<meta property="og:url" content="http://yoursite.com/2017/07/01/CI-Core-Common-记录/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="github - CodeIgniter/system/core/Common.php PHP 版本确定is_php($version)：检测当前 PHP 的版本是否高于指定版本。  version_compare(PHP_VERSION, $version, &amp;#39;&amp;gt;=&amp;#39;);">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-27T10:19:44.002Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CI - Core - Common 记录">
+<meta name="twitter:description" content="github - CodeIgniter/system/core/Common.php PHP 版本确定is_php($version)：检测当前 PHP 的版本是否高于指定版本。  version_compare(PHP_VERSION, $version, &amp;#39;&amp;gt;=&amp;#39;);">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/01/CI-Core-Common-记录/">
+
+
+
+
+
+  <title>CI - Core - Common 记录 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/01/CI-Core-Common-记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CI - Core - Common 记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-01T18:34:02+08:00">
+                2017-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://github.com/bcit-ci/CodeIgniter/blob/develop/system/core/Common.php#L603" target="_blank" rel="noopener">github - CodeIgniter/system/core/Common.php</a></p>
+<h2 id="PHP-版本确定"><a href="#PHP-版本确定" class="headerlink" title="PHP 版本确定"></a>PHP 版本确定</h2><p><code>is_php($version)</code>：<br>检测当前 PHP 的版本是否高于指定版本。</p>
+<ul>
+<li><code>version_compare(PHP_VERSION, $version, &#39;&gt;=&#39;);</code></li>
+</ul>
+<a id="more"></a>
+<h2 id="检测文件-目录是否可写"><a href="#检测文件-目录是否可写" class="headerlink" title="检测文件/目录是否可写"></a>检测文件/目录是否可写</h2><p><code>is_really_writable($file)</code>：</p>
+<p>确定系统，通过目录分隔符判断 <code>if (DIRECTORY_SEPARATOR === &#39;/&#39;)</code>，如果是 UNix 类的系统，直接使用 <code>is_writable($file)</code>。</p>
+<p>如果参数为目录，尝试在该目录内创建新文件，创建失败即不可写，创建成功则删除创建的文件，返回 true。</p>
+<p>如果不是目录，通过操作符 <code>OR</code> 将「判断是否是文件」以及「在该文件尝试写入」的操作连接起来：<code>! is_file($file) OR ($fp = @fopen($file, &#39;ab&#39;)) === FALSE</code>，返回判断结果。</p>
+<p>在该过程中对文件或目录进行操作，要及时关闭操作句柄。</p>
+<h2 id="加载指定类"><a href="#加载指定类" class="headerlink" title="加载指定类"></a>加载指定类</h2><p><code>&amp;load_class($class, $directory = &#39;libraries&#39;, $param = NULL)</code>：</p>
+<p>设置一个静态变量数组，将实例化了的类对象存入其中，如果有再次调用此函数，则直接返回已经存在的对象。所以本函数名前加了 <code>&amp;</code>，按引用返回变量 - <a href="https://secure.php.net/manual/zh/language.references.return.php" target="_blank" rel="noopener">引用返回</a>：</p>
+<blockquote>
+<p>class foo {<br>   public $value = 42;</p>
+<p>   public function &amp;getValue() {<br>       return $this-&gt;value;<br>   }<br>}</p>
+<p>$obj = new foo;<br>$myValue = &amp;$obj-&gt;getValue(); // $myValue is a reference to $obj-&gt;value, which is 42.<br>$obj-&gt;value = 2;<br>echo $myValue;                // prints the new value of $obj-&gt;value, i.e. 2.</p>
+<p>和参数传递不同，这里必须在两个地方都用 &amp; 符号——指出返回的是一个引用，而不是通常的一个拷贝，同样也指出 <code>$myValue</code> 是作为引用的绑定，而不是通常的赋值。。</p>
+</blockquote>
+<p>与引用传参不同，函数或者方法中引用传递参数，只需要在定义函数或者方法时，在变量前添加 <code>&amp;</code> 符号，实际使用时无需再使用 - <a href="https://secure.php.net/manual/zh/language.references.pass.php" target="_blank" rel="noopener">引用传递</a>：</p>
+<blockquote>
+<p>注意在函数调用时没有引用符号——只有函数定义中有。</p>
+</blockquote>
+<ul>
+<li><a href="https://secure.php.net/manual/zh/functions.returning-values.php" target="_blank" rel="noopener">函数-返回值</a></li>
+<li><a href="https://secure.php.net/manual/zh/language.references.php" target="_blank" rel="noopener">引用的解释</a>。</li>
+</ul>
+<p>这个函数的终极目的就是返回一个实例化的类对象。前面已经说了如果已经有了对象就直接返回。那么没有对象，肯定是要 <code>new</code> 一个的。将这个对象保存在静态数组中，然后返回，这样这次的对象获取了，下次还要用到就可以直接返回。</p>
+<p>那么 <code>new</code> 一个对象的前提是一定要有这个类的存在，该类已经定义了。那么我们要确认一个类是否已经定义，我们要先检测这个类的文件存在不存在，存在的话，再把这个类文件通过 <code>require_once</code> 包含进来，不存在自然报错。</p>
+<p>那么在检测包含类文件的这个过程中，就是 CI 框架中的类，项目中创建新类以及扩展类的加载逻辑。它得先检测这个类文件存在不存在，存在的话呢，要检测 <code>CI_classname</code> 这个类是否已经定义了。这个类呢，是替换原核心类的 - <a href="http://codeigniter.org.cn/user_guide/general/core_classes.html#id3" target="_blank" rel="noopener">替换核心类</a>，就是用户觉得啊，这个原本的核心类用起来不怎么好使，就自己再写一个，那要用的自然是用户自己写的这个类，所以在这段逻辑里，类文件存在之后，新核心类已经定义了，就没啥事了，如果没有用户创建的新核心类，就把框架的核心类包含进来。这个过程呢，要从框架的类库里和应用目录的类库里依次过一遍，找着了就跳出循环到下一阶段，找不着呢，也到了下一阶段了。</p>
+<p>这个下一阶段呢，就是找扩展的核心类 - <a href="http://codeigniter.org.cn/user_guide/general/core_classes.html#id4" target="_blank" rel="noopener">扩展核心类</a>，这个扩展的核心类，就是用户觉得原来的类咋不是那么好使，缺点啥，就自己从原来的基础上扩展了一下。自然，用户要使用的肯定是自己扩展过的类。同样，检测扩展类的文件是否存在，存在的话，看看这个类是否已经包含了，没有就包含一下。</p>
+<p>到这里，如果以上流程走下来，都没有成功，就是没有这个类，那就报个错：嘿，这里有问题。</p>
+<p>最后实例化对象就大功告成了。</p>
+<p>这个函数的注释是这样的：</p>
+<blockquote>
+<p>This function acts as a singleton. If the requested class does not exist it is instantiated and set to a static variable. If it has previously been instantiated the variable is returned.</p>
+</blockquote>
+<p>所以这个函数的主要思想是扮演一个单例的角色，减少资源，一个对象走遍整个应用流程。</p>
+<h2 id="记录已经实例化的类"><a href="#记录已经实例化的类" class="headerlink" title="记录已经实例化的类"></a>记录已经实例化的类</h2><p><code>&amp;is_loaded($class = &#39;&#39;)</code>：</p>
+<p>这个函数就是记录已经实例化了的类。没别的作用了。而且只被上面 <code>load_class()</code> 调用。</p>
+<h2 id="加载配置"><a href="#加载配置" class="headerlink" title="加载配置"></a>加载配置</h2><p><code>&amp;get_config(Array $replace = array())</code>：</p>
+<p>同样是静态数组，用来存储加载了的配置参数。看到静态变量，我们大概就能知道它的用法了。这个数组里面有配置呢，就对这些配置操作，没有呢，就要加载进来保存在这。</p>
+<p>当然，一个应用刚开始肯定都是空的嘛，那这个函数被调用的时候就是要从配置文件中加载配置。首先，看看基础配置的文件存在不存在，存在就包含进来。再查看是否存在特定环境下的配置文件，有的话也加载进来。</p>
+<p>然后又是错误处理，如果这些文件都不存在，就报个错，处理一下。过了这个错误，那就是配置文件是存在的。然后呢，不能直接使用，还要检测。检测啥，检测配置文件里有没有我们需要的配置数组，万一是个空的，那就没办法用了。所以这里又是个错误处理，看看配置数组存在不存在，是不是个数组类型。过了这个错误，配置就可以用了。</p>
+<p>不过呢，这样配置不就是死的了吗，只能写在配置文件里，那就不太好修改了。所以这里有个对配置文件的处理，这个函数的参数就是要操作的新参数，原配置数组里有的，就给改了，没有的，就赋值进去，这样就达到在应用运行过程中能够修改配置的目的了。这样做完了之后，返回配置数组。</p>
+<h2 id="获取指定配置参数"><a href="#获取指定配置参数" class="headerlink" title="获取指定配置参数"></a>获取指定配置参数</h2><p><code>config_item($item)</code>：</p>
+<p>实现方式和 <code>&amp;get_config()</code> 差不多，对于一个获取指定数据的函数来说，可以很直观的想出它的实现逻辑：获取所有的参数，如果存在这个参数就返回，否则返回 Null。</p>
+<p>这里所有的配置信息通过 <code>&amp;get_config()</code> 来获取。这个函数中，有一个唯一的注释：</p>
+<blockquote>
+<p>references cannot be directly assigned to static variables, so we use an array.</p>
+</blockquote>
+<p>因为这个函数中也设置了一个静态变量，为什么设置这个，原理同之前讲过的静态变量一致。获取配置信息在这个函数中的代码实现是这样的：<code>$_config[0] =&amp; get_config();</code>，直觉上这里会觉得加上一个索引值很奇怪。所以这里的注释是对这个的解释。更具体的，经由 google：</p>
+<ul>
+<li><a href="https://laracasts.com/discuss/channels/general-discussion/php-general-question" target="_blank" rel="noopener">PHP general question</a></li>
+</ul>
+<p>大概就是如果直接赋值，这个值并不会被保存如静态变量中，下一次再次使用会发现这个静态变量里面是空的。不过当做数组来使用，就没问题了。</p>
+<p>这个问题里面的答案，有从手册引用的部分，这部分引用的内容较好的解释了这个问题。然而我现在查手册，发现并不完全一致，关键部分有差异。</p>
+<p>总之这是个知识点，要记住。</p>
+<h2 id="获取-mimes-类型"><a href="#获取-mimes-类型" class="headerlink" title="获取 mimes 类型"></a>获取 mimes 类型</h2><p><code>&amp;get_mimes()</code>：</p>
+<p>基本同以上的函数，存在则返回，不存在则包含，包含过程中，检测文件，包含文件，不存在文件设为空一条龙。</p>
+<p>这里与其他部分不同的变化为，如果除了基本的 mimes 配置文件，还存在环境相关的配置文件，就通过 <a href="https://secure.php.net/manual/zh/function.array-merge.php" target="_blank" rel="noopener"><code>array_merge()</code></a> 合并两个数组。</p>
+<h2 id="是否使用-https"><a href="#是否使用-https" class="headerlink" title="是否使用 https"></a>是否使用 https</h2><p><code>is_https()</code>：</p>
+<p>通过预定义变量 <a href="https://secure.php.net/manual/zh/reserved.variables.server.php" target="_blank" rel="noopener"><code>$SERVER</code></a> 的三个值来判断：</p>
+<ul>
+<li><p><code>$_SERVER[&#39;HTTPS&#39;]</code></p>
+<blockquote>
+<p>如果脚本是通过 HTTPS 协议被访问，则被设为一个非空的值。</p>
+<p>Note: 注意当使用 IIS 上的 ISAPI 方式时，如果不是通过 HTTPS 协议被访问，这个值将为 off。</p>
+</blockquote>
+</li>
+<li><p><code>$_SERVER[&#39;HTTP_X_FORWARDED_PROTO&#39;]</code></p>
+</li>
+<li><p><code>$_SERVER[&#39;HTTP_FRONT_END_HTTPS&#39;]</code></p>
+</li>
+</ul>
+<p>但是这个三个值优先级依次从高到低。如果前一个变量存在，设置正确就会直接返回 true，只有在前一个变量不正确时才会判断下一个变量。</p>
+<p>然后我查手册，发现并没有后两个配置的存在。囧。google 之后，相关的问题也都是检测 https 的，其中有出现这两个参数，不过似乎和服务器相关：</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/452375/detecting-https-requests-in-php" target="_blank" rel="noopener">Detecting HTTPS requests in PHP</a></li>
+<li><a href="https://serverfault.com/questions/687146/why-i-have-set-http-x-forwarded-proto-and-unset-https-on-apache-2-4" target="_blank" rel="noopener">Why I have set HTTP_X_FORWARDED_PROTO and unset HTTPS on Apache 2.4? [closed]</a></li>
+<li><p>[PHP https check with flexible ssl (cloudflare), how to do?</p>
+<p>](<a href="https://stackoverflow.com/questions/23533029/php-https-check-with-flexible-ssl-cloudflare-how-to-do" target="_blank" rel="noopener">https://stackoverflow.com/questions/23533029/php-https-check-with-flexible-ssl-cloudflare-how-to-do</a>)</p>
+</li>
+<li><a href="https://stackoverflow.com/questions/1175096/how-to-find-out-if-youre-using-https-without-serverhttps" target="_blank" rel="noopener">How to find out if you’re using HTTPS without $_SERVER[‘HTTPS’]</a></li>
+</ul>
+<h2 id="是否是命令行模式"><a href="#是否是命令行模式" class="headerlink" title="是否是命令行模式"></a>是否是命令行模式</h2><p><code>is_cli()</code>：</p>
+<p>一行代码，直接摘录吧：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return (PHP_SAPI === &apos;cli&apos; OR defined(&apos;STDIN&apos;));</span><br></pre></td></tr></table></figure>
+<h2 id="输出错误信息"><a href="#输出错误信息" class="headerlink" title="输出错误信息"></a>输出错误信息</h2><p><code>show_error($message, $status_code = 500, $heading = &#39;An Error Was Encountered&#39;)</code>：</p>
+<p>对传入的状态码进行简单的处理，然后通过 <code>&amp; load_class()</code> 实例化 <code>Exceptions</code> 类，调用该类的 <code>show_error()</code> 输出错误信息。</p>
+<p>对状态码处理是防止无效的状态码，比如状态码没有小于 100 的，所以如果传入的状态码小于 100，就把状态码置为 500。同时设定一个结束状态码：<code>$exit_status = $status_code + 9; // 9 is EXIT__AUTO_MIN</code>，注释可知，这是 CI 框架内部定义的一个常量。</p>
+<h2 id="输出404"><a href="#输出404" class="headerlink" title="输出404"></a>输出404</h2><p><code>show_404($page = &#39;&#39;, $log_error = TRUE)</code>：</p>
+<p>从代码来看的话，这个函数是上面那个函数的特定情况，这个函数只处理 404 的错误。同样是通过 <code>&amp; load_class()</code> 实例化 <code>Exceptions</code> 类，调用该类的 <code>show_404()</code> 输出错误信息。</p>
+<h2 id="记录信息"><a href="#记录信息" class="headerlink" title="记录信息"></a>记录信息</h2><p><code>log_message($level, $message)</code>：</p>
+<p>同之前的函数，一个静态变量，如果该变量为空，就作为数组保存实例化了的 <code>Log</code> 类对象，然后调用该对象的 <code>write_log()</code> 方法记录相关信息。</p>
+<h2 id="设置-HTTP-状态头信息"><a href="#设置-HTTP-状态头信息" class="headerlink" title="设置 HTTP 状态头信息"></a>设置 HTTP 状态头信息</h2><p><code>set_status_header($code = 200, $text = &#39;&#39;)</code>：</p>
+<p>先检测 PHP 的模式，如果是命令行，就不需要 HTTP 信息了。再检测状态码是否存在，是否是数字，不是的话报错。如果状态信息为空，就采用默认设定的文本信息。如果默认信息没有的话，那就得报个错了。</p>
+<p>如果信息都没问题的话，接下来就需要发送出去了。关于这个状态信息，PHP 的模式里有两个模式会用到，格式不一样，所以要判断一下模式，组成合适的格式发送出去。</p>
+<p>cgi 模式直接摘录代码：</p>
+<blockquote>
+<p>if (strpos(PHP_SAPI, ‘cgi’) === 0)<br>{<br>    header(‘Status: ‘.$code.’ ‘.$text, TRUE);<br>    return;<br>}</p>
+</blockquote>
+<p>判断条件里的比较运算符为 <code>===</code>，而不是 <code>==</code>，是因为函数 <a href="https://secure.php.net/manual/zh/function.strpos.php" target="_blank" rel="noopener"><code>strpos()</code></a> 的作用是 「查找字符串首次出现的位置」，它的返回值是：</p>
+<blockquote>
+<p>返回 needle 存在于 haystack 字符串起始的位置(独立于 offset)。同时注意字符串位置是从0开始，而不是从1开始的。</p>
+<p>如果没找到 needle，将返回 FALSE。</p>
+</blockquote>
+<p>所以如果找不到，此时使用比较运算符 <code>==</code> 就会出错，因为 <code>false == 0</code> 是 true。所以使用 <code>===</code> 进行更严格的类型判断，这样就没有问题了。</p>
+<p>然后就是格式的问题，我还是第一次知道 CGI 这个头信息状态行的样子 - <code>Status:200 ok</code>。平时在网页上看到最多的是 <code>http1.0 200 OK</code> 这样的形式。</p>
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><p><code>_error_handler($severity, $message, $filepath, $line)</code>：</p>
+<p>首先第一行代码是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$is_error = (((E_ERROR | E_PARSE | E_COMPILE_ERROR | E_CORE_ERROR | E_USER_ERROR) &amp; $severity) === $severity);</span><br></pre></td></tr></table></figure>
+<p>乍一看挺高端酷炫的，但是好像不是很容易理解，仔细看看，先把常量的值代进去瞧瞧：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$is_error = (((1 | 4 | 64 | 16 | 256) &amp; $severity) === $severity);</span><br></pre></td></tr></table></figure>
+<p><code>|</code> 是 <code>Xor</code> 异或，<code>&amp;</code> 是 <code>And</code> 与。手动算算，这行代码的作用是确定传入的错误值是否属于这 5 个预定义的错误常量。</p>
+<p>个人感觉直接 <code>in_array()</code> 可以吧。乍看不知道源代码这种写法有什么优点。</p>
+<p>然后判断 <code>$is_error</code> 的值，存在那就是有错误，那就设置个状态头为 500。这个错误确定了，得看看让不让输出出来，不让的话，歇了吧。让的话，就看看给输出到什么程度，按等级输出错误消息。这里错误异常的相关处理，依旧是实例化的异常类，然后调用类对象的相应方法进行处理。</p>
+<h2 id="关闭处理"><a href="#关闭处理" class="headerlink" title="关闭处理"></a>关闭处理</h2><p><code>_shutdown_handler()</code>：</p>
+<p>根据相应的错误做相应的错误处理。</p>
+<h2 id="移除无形字符"><a href="#移除无形字符" class="headerlink" title="移除无形字符"></a>移除无形字符</h2><p><code>remove_invisible_characters($str, $url_encoded = TRUE)</code>：</p>
+<p>如果参数 <code>$url_encode = true</code>，就在要移除的字符数组中加上 url 中要移除的字符。通过 <a href="https://secure.php.net/manual/zh/function.preg-replace.php" target="_blank" rel="noopener"><code>preg_replace()</code></a> 来将要移除的字符替换为空。此处实现代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">do</span><br><span class="line">&#123;</span><br><span class="line">	$str = preg_replace($non_displayables, &apos;&apos;, $str, -1, $count);</span><br><span class="line">&#125;</span><br><span class="line">while ($count);</span><br></pre></td></tr></table></figure>
+<p>这个 <code>$count</code> 就是每次替换中完成替换的次数。这样的写法应当是一直替换直到字符串中不存在非法字符位置。如果只替换一次，可能会在替换之后还存在非法字符。比如要移除 <code>%20</code>，而字符串中有这样的字符 <code>%%200</code>，这样替换一次，就还会存在非法字符。</p>
+<h2 id="过滤-html"><a href="#过滤-html" class="headerlink" title="过滤 html"></a>过滤 html</h2><p><code>html_escape($var, $double_encode = TRUE)</code>：</p>
+<p>传入的参数为空，直接返回该参数。传入的参数类型为数组，则通过 <code>foreach</code>，递归调用本函数，最后返回过滤后的值。如果是单个字符串直接使用 <a href="https://secure.php.net/manual/zh/function.htmlspecialchars.php" target="_blank" rel="noopener"><code>htmlspecialchars()</code></a>，来处理，返回处理结果。</p>
+<h2 id="字符串属性转换"><a href="#字符串属性转换" class="headerlink" title="字符串属性转换"></a>字符串属性转换</h2><p><code>_stringify_attributes($attributes, $js = FALSE)</code>：</p>
+<p>对参数 <code>$attributes</code> 进行检测，为空直接返回空。是字符串的话，直接返回该参数。如果是其他类型，则强制转换为数组类型。然后通过 <code>foreach</code>，以及传入的第二个参数的值来拼接属性字符串，最后返回。</p>
+<h2 id="检测函数是否可用"><a href="#检测函数是否可用" class="headerlink" title="检测函数是否可用"></a>检测函数是否可用</h2><p><code>function_usable($function_name)</code>：</p>
+<p>设置一个静态变量数组用来保存函数黑名单。如果传入的方法存在，然后黑名单不存在，就看看配置文件里有没有黑名单，没有的话，黑名单就赋个空数组，有就直接赋值黑名单数组。然后看看黑名单里面有没有这个函数，返回相应的布尔值。当然，如果方法不存在的话，就直接返回 false 了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过以上的说明，可以看到大部分的函数有一些类似。比如都使用了单例的思想，将一些对象或属性保存在静态变量中，除了第一次的实例化之外，之后都可以直接返回相应数据，以提高资源使用率。</p>
+<p>还可以学习到一些对我来说更好的代码实现方式，不管是逻辑还是写法。以及学习到 PHP 的一些以前没有注意到的小知识，像位运算符和静态变量的引用赋值等。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-framework-ci/" rel="tag"># php framework ci</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/21/微信-token-验证失败记录/" rel="next" title="微信 token 验证失败记录">
+                <i class="fa fa-chevron-left"></i> 微信 token 验证失败记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/02/ci-core-config/" rel="prev" title="ci-core-config">
+                ci-core-config <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP-版本确定"><span class="nav-number">1.</span> <span class="nav-text">PHP 版本确定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测文件-目录是否可写"><span class="nav-number">2.</span> <span class="nav-text">检测文件/目录是否可写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载指定类"><span class="nav-number">3.</span> <span class="nav-text">加载指定类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#记录已经实例化的类"><span class="nav-number">4.</span> <span class="nav-text">记录已经实例化的类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载配置"><span class="nav-number">5.</span> <span class="nav-text">加载配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取指定配置参数"><span class="nav-number">6.</span> <span class="nav-text">获取指定配置参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取-mimes-类型"><span class="nav-number">7.</span> <span class="nav-text">获取 mimes 类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#是否使用-https"><span class="nav-number">8.</span> <span class="nav-text">是否使用 https</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#是否是命令行模式"><span class="nav-number">9.</span> <span class="nav-text">是否是命令行模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出错误信息"><span class="nav-number">10.</span> <span class="nav-text">输出错误信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出404"><span class="nav-number">11.</span> <span class="nav-text">输出404</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#记录信息"><span class="nav-number">12.</span> <span class="nav-text">记录信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置-HTTP-状态头信息"><span class="nav-number">13.</span> <span class="nav-text">设置 HTTP 状态头信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#错误处理"><span class="nav-number">14.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关闭处理"><span class="nav-number">15.</span> <span class="nav-text">关闭处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#移除无形字符"><span class="nav-number">16.</span> <span class="nav-text">移除无形字符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#过滤-html"><span class="nav-number">17.</span> <span class="nav-text">过滤 html</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串属性转换"><span class="nav-number">18.</span> <span class="nav-text">字符串属性转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测函数是否可用"><span class="nav-number">19.</span> <span class="nav-text">检测函数是否可用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">20.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="WeChat token,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="之前尝试过了解微信开发，不过因为帐号权限的问题，没有进一步的了解。所以只有一个简单的自动回复： 1234s:xxxr:xxx 是s:hellor:不管你说什么 xxx都是 xxx 是我室友的名字。最近想在微信上弄一个东西，随手发了信息，却发现自动回复：  该公众号暂时无法提供服务，请稍后再试。  我都没有动过，所以也不知道是怎么回事。进后台看了一下配置，发现虽然我对微信相关的部分没有动过，但是我后">
+<meta name="keywords" content="WeChat token">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信 token 验证失败记录">
+<meta property="og:url" content="http://yoursite.com/2017/06/21/微信-token-验证失败记录/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="之前尝试过了解微信开发，不过因为帐号权限的问题，没有进一步的了解。所以只有一个简单的自动回复： 1234s:xxxr:xxx 是s:hellor:不管你说什么 xxx都是 xxx 是我室友的名字。最近想在微信上弄一个东西，随手发了信息，却发现自动回复：  该公众号暂时无法提供服务，请稍后再试。  我都没有动过，所以也不知道是怎么回事。进后台看了一下配置，发现虽然我对微信相关的部分没有动过，但是我后">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.fuyukang.me/usr/uploads/2017/06/272544501.jpg">
+<meta property="og:updated_time" content="2019-02-27T14:26:50.154Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微信 token 验证失败记录">
+<meta name="twitter:description" content="之前尝试过了解微信开发，不过因为帐号权限的问题，没有进一步的了解。所以只有一个简单的自动回复： 1234s:xxxr:xxx 是s:hellor:不管你说什么 xxx都是 xxx 是我室友的名字。最近想在微信上弄一个东西，随手发了信息，却发现自动回复：  该公众号暂时无法提供服务，请稍后再试。  我都没有动过，所以也不知道是怎么回事。进后台看了一下配置，发现虽然我对微信相关的部分没有动过，但是我后">
+<meta name="twitter:image" content="http://www.fuyukang.me/usr/uploads/2017/06/272544501.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/21/微信-token-验证失败记录/">
+
+
+
+
+
+  <title>微信 token 验证失败记录 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/21/微信-token-验证失败记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">微信 token 验证失败记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-21T14:16:43+08:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前尝试过了解微信开发，不过因为帐号权限的问题，没有进一步的了解。所以只有一个简单的自动回复：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">s:xxx</span><br><span class="line">r:xxx 是</span><br><span class="line">s:hello</span><br><span class="line">r:不管你说什么 xxx都是</span><br></pre></td></tr></table></figure>
+<p>xxx 是我室友的名字。<br>最近想在微信上弄一个东西，随手发了信息，却发现自动回复：</p>
+<blockquote>
+<p>该公众号暂时无法提供服务，请稍后再试。</p>
+</blockquote>
+<p>我都没有动过，所以也不知道是怎么回事。进后台看了一下配置，发现虽然我对微信相关的部分没有动过，但是我后来弄了域名，所以之前微信使用的 IP 就不对了，于是更改了一下。然后报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; token 验证失败。</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>对比 <a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1472017492_58YV5" target="_blank" rel="noopener">微信公众平台技术文档</a> 中的流程图：<img src="http://www.fuyukang.me/usr/uploads/2017/06/272544501.jpg" alt="微信验证流程图"></p>
+<p>服务器上的验证代码的逻辑应该是没问题的。查看错误日志，看到了发来的请求中的各个参数，直接拿参数来验证发现确实是没有问题的。代码没问题，以及微信的服务器发来的请求也没问题的话，再看看错误日志中的其他信息，发现如下错误：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FastCGI sent in stderr: &quot;Primary script unkown&quot; while reading repsonse header from upstream ...</span><br></pre></td></tr></table></figure>
+<p>看起来似乎是 fastcgi 相关的问题。google 之后的解释有：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. That message from the fastcgi server usually means that the SCRIPT_FILENAME that it was given was not found or inaccessible as a file on its filesystem.</span><br><span class="line"></span><br><span class="line">2. The error message “primary script unknown” is almost always related to a wrongly set SCRIPT_FILENAME in the nginx fastcgi_param directive (or incorrect permissions, see other answers).</span><br><span class="line"></span><br><span class="line">3. It&apos;s not always that the SCRIPT_FILENAME is wrong.</span><br><span class="line">   It may also be PHP is running as the wrong user/group.</span><br></pre></td></tr></table></figure>
+<p>大概就是要找的文件没找着。想半天，再把错误信息仔细看看，瞎了我的眼。请求的路径有问题啊。(┬＿┬)。怎么多了个目录。再仔细看配置文件是否配置错了，也没找出来错误。还是看错误信息，(┬＿┬)，瞎了我的眼，最后的错误信息是之前的，现在的都没问题了。不过 token 验证还是错误。因为官方文档是用 python 写的，但是之前可能是 php 写的，因为有搜到<a href="https://segmentfault.com/q/1010000003961629" target="_blank" rel="noopener">微信接口配置token验证失败。</a>，其中楼主贴的官方文档代码是 php 的。对比了一下，发现该代码中验证了之后直接 <code>echo $echostr</code>。而我因为之前验证过了，所以没有这部分的代码，然后我刚刚自己弄的时候，是 <code>return $echostr</code>。可能是这个有问题。这样修改了之后，验证成功了。不过现在的官方文档中的 python 代码也是 <code>return echostr</code>，不知道是不是语言语法的问题。</p>
+<p>总结：</p>
+<p>本次的问题相关有 nginx 的配置文件，以及日志查询，和微信方面的文档。最后解决问题的办法，可能是官方定义的验证方式就是要直接输出 echostr 吧。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/WeChat-token/" rel="tag"># WeChat token</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/14/php-variable/" rel="next" title="PHP 的变量思考记录">
+                <i class="fa fa-chevron-left"></i> PHP 的变量思考记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/01/CI-Core-Common-记录/" rel="prev" title="CI - Core - Common 记录">
+                CI - Core - Common 记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -556,63 +556,14 @@
 
       
         
-          
-            <h2 id="已知攻击"><a href="#已知攻击" class="headerlink" title="已知攻击"></a>已知攻击</h2><p>以下列出了你应该知道的已知攻击，并且在编写智能合约的时候进行防御。</p>
-<h3 id="竞争条件-Race-Conditions"><a href="#竞争条件-Race-Conditions" class="headerlink" title="竞争条件(Race Conditions)"></a><a href="https://consensys.github.io/smart-contract-best-practices/known_attacks/#footnote-race-condition-terminology" target="_blank" rel="noopener">竞争条件</a>(Race Conditions)</h3><p>调用外部合约的一个主要危险之一是它会接管控制流，并且修改调用方法不被 期望修改的数据。这种类型的 bug 有很多形式，导致 DAO 崩溃的两个主要错误都是这类错误。</p>
-<h4 id="重入-Reentrancy"><a href="#重入-Reentrancy" class="headerlink" title="重入(Reentrancy)"></a>重入(Reentrancy)</h4><p>这个 bug 的第一个版本需要注意，这个函数可以在函数第一次调用完成之前重复调用。 这可能会导致函数的不同调用以破坏性方式进行交互。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// insecure</span><br><span class="line"></span><br><span class="line">mapping(address =&gt; uint) private userBalances;</span><br><span class="line"></span><br><span class="line">function withdrawBalance() public &#123;</span><br><span class="line">	uint amountToWithdraw = userBalances[msg.sender];</span><br><span class="line">	require(msg.sender.call.value(amountToWithdraw)()); // At this point, the call&apos;s code is executed, and can call withdrawBalance again</span><br><span class="line">	userBalances[msg.sender] = 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>因为用户余额直到最后被提取完才会被设置成 0，所以第二次（和更之后）的调用仍然会成功，从而一次又一次地提取余额。一个非常类似的 bug 是 DAO 攻击中的一个漏洞。</p>
-<p>在给出的例子中，避免这个问题的最好的办法是通过 <a href="https://consensys.github.io/smart-contract-best-practices/recommendations#send-vs-call-value" target="_blank" rel="noopener">使用 <code>send()</code> 代替 <code>call.value()()</code></a>。这会防止执行中的任何外部代码。</p>
-<p>然而，如果你不能移除外部调用，下一个简单地防止此攻击的方法是确保直到你完成了所有的内部工作之前都没有调用外部函数，你需要做：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mapping(address =&gt; uint) private userBalances;</span><br><span class="line"></span><br><span class="line">function withdrawBalance() public &#123;</span><br><span class="line">	uint amountToWithdraw = userBalances[msg.sender];</span><br><span class="line">	userBalances[msg.sender] = 0;</span><br><span class="line">	require(msg.sender.call.value(amountToWithdraw)());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>注意，如果你有另一个调用了 <code>withdrawBalance()</code>的函数，它可能会受到相同的攻击，所以你必须对调用了不可信合约的函数也视为不可信。请参阅下方的潜在解决方案的进一步讨论。</p>
-<h4 id="函数交叉竞争条件-Cross-function-Race-Conditions"><a href="#函数交叉竞争条件-Cross-function-Race-Conditions" class="headerlink" title="函数交叉竞争条件(Cross-function Race Conditions)"></a>函数交叉竞争条件(Cross-function Race Conditions)</h4><p>一个攻击者可能使用通过两个不同的函数共享一个状态来进行类似的攻击。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// insecure</span><br><span class="line"></span><br><span class="line">mapping(address =&gt; uint) private userBalances;</span><br><span class="line"></span><br><span class="line">function transfer(address to, uint amount) &#123;</span><br><span class="line">	if (userBalances[msg.sender] &gt;= amount) &#123;</span><br><span class="line">		userBalance[to] += amount;</span><br><span class="line">		userBalance[msg.sender] -= amount;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function withdrawBalance() public &#123;</span><br><span class="line">	uint amountToWithdraw = userBalances[msg.sender];</span><br><span class="line">	require(msg.sender.call.value(amountToWithdraw)()); // At this point, the caller&apos;s code is executed, and can call transfer()</span><br><span class="line">	userBalances[msg.sender] = 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在这个例子中，当攻击者的代码在 <code>withdrawBalance()</code> 中的外部调用中被执行，攻击者会调用 <code>transfer()</code>。只要他们的余额不是 0，那么他们就可以在已经收到过一次提币的情况下，再次转移 token。这个漏洞也在 DAO 攻击中被使用。</p>
-<p>在相同的警告下，相同的解决方案也会起作用。也要注意，在这个例子中，函数都是同一个合约的一部分。但是，如果多个合约共享状态，那么相同的 bug 也可以出现在交叉的多重合约中。</p>
-<h4 id="竞争条件解决方案中的陷阱"><a href="#竞争条件解决方案中的陷阱" class="headerlink" title="竞争条件解决方案中的陷阱"></a>竞争条件解决方案中的陷阱</h4><p>因为竞争条件可以在多个函数，甚至多个合约中发生，所以任何旨在防止重入的解决方案都是不够的。</p>
-<p>相反，我们推荐在完成全部的内部工作之后再调用外部函数。如果你小心地遵循了这个规则，就可以避免竞争条件。但是，你不止要避免太早调用外部函数，也要避免调用了外部函数的函数。举例来说，下面是不安全的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// insecure</span><br><span class="line">mapping(address =&gt; uint) private userBalances;</span><br><span class="line">mapping(address =&gt; bool) private claimedBonus;</span><br><span class="line">mapping(address =&gt; uint) private rewardsForA;</span><br><span class="line"></span><br><span class="line">function withdraw(address recipient) public &#123;</span><br><span class="line">	uint amountToWithdraw = userBalances[recipient];</span><br><span class="line">	rewardsForA[recipient] = 0;</span><br><span class="line">	require(recipient.call.value(amountToWithdraw)());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function getFirstWithdrawalBonus(address recipient) public &#123;</span><br><span class="line">	require(!claimedBonus[recipient]); // Each recipient should only be able to claim the bonus once</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	rewardsForA[recipient] += 100;</span><br><span class="line">	withdraw(recipient); // At this point, the caller will be able to execute getFirstWithdrawalBonus again.</span><br><span class="line">	claimedBonus[recipient] = true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>即使 <code>getFirstWithdrawalBonus()</code> 没有直接调用外部合约，<code>withdraw()</code> 内的调用已经足够产生一个竞争条件的漏洞。因此你不可以信任 <code>withdraw()</code> 函数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mapping(address =&gt; uint) private userBalances;</span><br><span class="line">mapping(address =&gt; bool) private claimedBonus;</span><br><span class="line">mapping(address =&gt; uint) private rewardsForA;</span><br><span class="line"></span><br><span class="line">function untrustedWithdraw(address recipient) public &#123;</span><br><span class="line">	uint amountToWithdraw = userBalances[recipient];</span><br><span class="line">	rewardsForA[recipient] = 0;</span><br><span class="line">	require(recipient.call.value(amountToWithdraw)());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function untrustedGetFirstWithdrawalBonus(address recipient) public &#123;</span><br><span class="line">	require(!claimedBonus[recipient]); // Each recipient should only be able to claim the bonus once</span><br><span class="line"></span><br><span class="line">	claimedBonus[recipient] = true;</span><br><span class="line">	rewardsForA[recipient] += 100;</span><br><span class="line">	untrustedWithdraw(recipient); // claimedBonus has been set to true, so reentry is impossible</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>除了修复重入的问题，<a href="https://consensys.github.io/smart-contract-best-practices/recommendations/#mark-untrusted-contracts" target="_blank" rel="noopener">不受信任的函数也被标记了</a>。这个模式在每个层级都被重复使用：既然 <code>untrustedGetFirstWithdrawalBonus()</code> 调用了调用了外部合约的 <code>untrustedWithdraw()</code>，那么你就必须将 <code>untrustedGetFirstWithdrawalBonus()</code> 视作不安全的。</p>
-<p>另一个经常建议的解决方案是一个 <a href="https://en.wikipedia.org/wiki/Mutual_exclusion" target="_blank" rel="noopener">互斥</a>。它允许你 “锁定” 某些状态，所以状态只能被锁的拥有者改变。一个简单的例子如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// Note: This is a rudimentary example, and mutexes are particularly useful where there is substantial logic and/or shared state</span><br><span class="line">mapping(address =&gt; uint) private balance;</span><br><span class="line">bool private lockBalances;</span><br><span class="line"></span><br><span class="line">function deposit() payable public returns (bool) &#123;</span><br><span class="line">	require(!lockBalances);</span><br><span class="line">	lockBalances = true;</span><br><span class="line">	balances[msg.sender] += msg.value;</span><br><span class="line">	lockBalances = false;</span><br><span class="line">	return true;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function withdraw(uint amount) payable public returns (bool) &#123;</span><br><span class="line">	require(!lockBalances &amp;&amp; amount &gt; 0 &amp;&amp; balances[msg.sender] &gt;= amount);</span><br><span class="line">	lockBalances = true;</span><br><span class="line"></span><br><span class="line">	if (msg.sender.call(amount)()) &#123;</span><br><span class="line">		balances[msg.sender] -= amount;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	lockBalances = false;</span><br><span class="line">	return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果用户试图在第一个调用结束前再次调用 <code>withdraw()</code>，锁就会防止其作用。这是一个有用的方式，但是当你有多个合约合作的时候，就会有一些困难。下面是不安全的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// insecure</span><br><span class="line"></span><br><span class="line">contract StateHolder &#123;</span><br><span class="line">	uint private n;</span><br><span class="line">	address private lockHolder;</span><br><span class="line"></span><br><span class="line">	function getLock() &#123;</span><br><span class="line">		require(lockHolder == 0);</span><br><span class="line">		lockHolder = msg.sender;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function releaseLock() &#123;</span><br><span class="line">		require(msg.sender == lockHolder);</span><br><span class="line">		lockHolder = 0;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function set(uint newState) &#123;</span><br><span class="line">		require(msg.sender == lockHolder);</span><br><span class="line">		n = newState;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>一个攻击者可以调用 <code>getLock()</code>，之后就永远不用调用 <code>releaseLock()</code>。如果他们这么干了，那么合约将被永远锁定，无法进行任何修改。如果你使用互斥来防止竞争条件，那么你需要小心地确认不会出现只能锁定而不能释放的情况。（使用互斥编程也有其他潜在的危险，如死锁和活锁。如果你想要使用这种方式，你应该查阅咨询大量互斥相关的文献资料。）</p>
-<h6 id="有些人可能会反对使用术语竞争条件，因为以太坊目前没有真正的并行性。-然而，逻辑上不同的进程争夺资源的基本特征仍然存在，同样的陷阱和潜在的解决方案也适用。"><a href="#有些人可能会反对使用术语竞争条件，因为以太坊目前没有真正的并行性。-然而，逻辑上不同的进程争夺资源的基本特征仍然存在，同样的陷阱和潜在的解决方案也适用。" class="headerlink" title="有些人可能会反对使用术语竞争条件，因为以太坊目前没有真正的并行性。 然而，逻辑上不同的进程争夺资源的基本特征仍然存在，同样的陷阱和潜在的解决方案也适用。"></a>有些人可能会反对使用术语竞争条件，因为以太坊目前没有真正的并行性。 然而，逻辑上不同的进程争夺资源的基本特征仍然存在，同样的陷阱和潜在的解决方案也适用。</h6><h3 id="交易顺序依赖（TOD）-前台运行"><a href="#交易顺序依赖（TOD）-前台运行" class="headerlink" title="交易顺序依赖（TOD）/ 前台运行"></a>交易顺序依赖（TOD）/ 前台运行</h3><p>以上的竞争条件示例涉及到攻击者在单笔交易中执行恶意代码。以下是区块链固有的一种不同类型的竞争条件：交易本身（在区块内）的顺序容易受到操纵。</p>
-<p>在被打包进区块之前，交易会进入内存池一段时间，因此可以知道交易在被打包之前有什么行为。对于像去中心化市场这类对象来说，这可能会有些麻烦，在这种市场中，可能看到买入 token 的交易，和其他交易被包含之前的市场顺序实现形式。防止这种情况很困难，因为它会涉及到具体合约本身。举例来说，在市场中，实施批量拍卖会更好（这也可以防止高频交易问题）。另一种方法是使用预先提交方案（“我将在稍后提交细节”）。</p>
-<h3 id="时间戳依赖"><a href="#时间戳依赖" class="headerlink" title="时间戳依赖"></a>时间戳依赖</h3><p>注意区块的时间戳可以被矿工操作，所以在不管是直接还是间接的对时间戳的使用中要多加考虑。</p>
-<p>有关与时间戳相关的设计注意事项，请参阅 <a href="https://consensys.github.io/smart-contract-best-practices/recommendations/#timestamp-dependence" target="_blank" rel="noopener">建议</a> 部分。</p>
-<h3 id="整数溢出和下溢"><a href="#整数溢出和下溢" class="headerlink" title="整数溢出和下溢"></a>整数溢出和下溢</h3><p>考虑一个简单的 token 转移：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mapping(address =&gt; uint256) public balanceOf;</span><br><span class="line"></span><br><span class="line">// insecure</span><br><span class="line">function transfer(address _to, uint256 _value) &#123;</span><br><span class="line">	// check if sender has balance</span><br><span class="line">	require(balanceOf[msg.sender] &gt;= _value);</span><br><span class="line">	// add and subtract new balances</span><br><span class="line">	balanceOf[msg.sender] -= _value;</span><br><span class="line">	balanceOf[_to] += _value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// secure</span><br><span class="line">function transfer(address _to, uint256 _value) &#123;</span><br><span class="line">	// check if sender has balance and for overflows</span><br><span class="line">	require(balanceOf[msg.sender] &gt;= _value &amp;&amp; balanceOf[_to] + _value &gt;= balanceOf[_to]);</span><br><span class="line"></span><br><span class="line">	// add and subtract new balances</span><br><span class="line">	balanceOf[msg.sender] -= _value;</span><br><span class="line">	balanceOf[_to] += _value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果余额到达了 uint 值（2^256）的最大值，它会被置为零。这是检查这个条件。这可能有关也可能无关，取决于实现方式。考虑一下 uint 值是否有这个机会达到这么大的一个数字。考虑 uint 变量是如何改变状态的，并且谁有权限来做这样的改变。如果任意用户都可以更新 uint 值，那么就会有很多的攻击漏洞。如果只有一个管理者拥有权限来修改变量的状态，那你可能是安全的。如果一个用户每次尽能增加 1，那你也可能是安全的，因为并没有可行的方式来达到限制。</p>
-<p>对于下溢来说也是一样的。如果一个 uint 被设置成小于 0，这就会导致一个下溢然后被设置成它的最大值。</p>
-<p>对 uint8, uint16, uint24… 等更小的数据类型要小心：它们会更容易的达到它们的最大值。</p>
-<p>注意这里有大约 <a href="https://github.com/ethereum/solidity/issues/796#issuecomment-253578925" target="_blank" rel="noopener">20 个关于溢出和下溢的例子</a></p>
-<h3 id="（不期望的）回滚导致的-DoS"><a href="#（不期望的）回滚导致的-DoS" class="headerlink" title="（不期望的）回滚导致的 DoS"></a>（不期望的）回滚导致的 DoS</h3><p>考虑一个简单的拍卖合约：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// insecure</span><br><span class="line"></span><br><span class="line">contract Auction &#123;</span><br><span class="line">	address currentLeader;</span><br><span class="line">	uint highestBid;</span><br><span class="line"></span><br><span class="line">	function bid() payable &#123;</span><br><span class="line">		require(msg.value &gt; highestBid);</span><br><span class="line"></span><br><span class="line">		require(currentLeader.send(highestBid)); // Refund the old leader, if it fails then revert</span><br><span class="line"></span><br><span class="line">		currentLeader = msg.sender;</span><br><span class="line">		highestBid = msg.value;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当它试图退款给用户的时候，当退款失败，它会回滚。意思是一个恶意的竞标者可以通过让它们的退款<em>总是</em>失败而变成领导者。在这个方式中，它们可以防止其他任何人调用 <code>bid()</code> 函数，然后保证自己一直都是领导者。一个推荐是如之前所述，设置一个 <a href="https://consensys.github.io/smart-contract-best-practices/recommendations/#favor-pull-over-push-for-external-calls" target="_blank" rel="noopener">拉取支付系统</a> 来替代。</p>
-<p>另一个例子是当一个合约想要通过便利一个数组来支付给用户（如，在众筹合约中的支持者）。通常都想要确保每一笔支付都成功。如果没有的话，就回滚。这个问题是如果一个调用失败了，你就会回滚整个支付系统，那么循环将永远不会完成。因为一个地址强制错误所以没有人获得报酬。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">address[] private refundAddresses;</span><br><span class="line">mapping(address =&gt; uint) public refunds;</span><br><span class="line"></span><br><span class="line">// bad</span><br><span class="line">function refundAll() public &#123;</span><br><span class="line">	for (uint x; x &lt; refundAddresses.length; x++) &#123; // // arbitrary length iteration based on how many addresses participated</span><br><span class="line">		require(refundAddresses[x].send(refunds[refundAddresses[x]])) // doubly bad, now a single failure on send will hold up all funds</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>再一次，推荐的解决方法是 <a href="https://consensys.github.io/smart-contract-best-practices/recommendations/#favor-pull-over-push-for-external-calls" target="_blank" rel="noopener">赞成拉推支付</a>。</p>
-<h3 id="区块燃料限制导致的-DoS"><a href="#区块燃料限制导致的-DoS" class="headerlink" title="区块燃料限制导致的 DoS"></a>区块燃料限制导致的 DoS</h3><p>你可能注意到了之前的例子中的另一个问题：一次性支付给所有人，你会有触及区块燃料限制的风险。每一个以太坊区块都能处理一个确定的最大算力值。如果你想要超过它，那你的交易就会失败。</p>
-<p>即使没有故意的攻击，这也会造成问题。但是，如果攻击者可以操纵所需的燃料值，就会特别糟糕。在之前的例子中，攻击者可以添加大量地址，每一个都需要获得极销量的退款。攻击者的每一个地址退款操作的燃气消耗最终可能超过燃料限制，从而阻止退款交易的发生。</p>
-<p>这是另一个 <a href="https://consensys.github.io/smart-contract-best-practices/recommendations#favor-pull-over-push-for-external-calls" target="_blank" rel="noopener">赞成推拉支付</a> 的原因。</p>
-<p>如果你必须完全遍历一个你不知道大小的数组，那么你应该计划它可能需要多个区块，因而需要多个交易。你会需要对你当前的进度保持跟踪，并且能够从那个点恢复，就像下面这个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">struct Payee &#123;</span><br><span class="line">	address addr;</span><br><span class="line">	uint256 value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Payee[] payees;</span><br><span class="line">uint256 nextPayeeIndex;</span><br><span class="line"></span><br><span class="line">function payOut() &#123;</span><br><span class="line">	uint256 i = nextPayeeIndex;</span><br><span class="line">	while (i &lt; payees.length &amp;&amp; msg.gas &gt; 200000) &#123;</span><br><span class="line">		payees[i].addr.send(payees[i].value);</span><br><span class="line">		i++;</span><br><span class="line">	&#125;</span><br><span class="line">	nextPayeeIndex = i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>你会需要确认在等待 <code>payOut()</code> 函数的下一个遍历的时候，如果其他交易被处理，不会有不好的事情发生。所以只在完全必要的时候使用这个模式。</p>
-<h3 id="强制将-ETH-发送到合约"><a href="#强制将-ETH-发送到合约" class="headerlink" title="强制将 ETH 发送到合约"></a>强制将 ETH 发送到合约</h3><p>可以不通过触发合约的 fallback 函数来强行将 ETH 发送到合约。当 fallback 函数内有重要的逻辑或者进行了基于合约余额的计算时，这是一个很重要的考虑。见下面的例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">contract Vulnerable &#123;</span><br><span class="line">	function () payable &#123;</span><br><span class="line">		revert();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function somethingBad() &#123;</span><br><span class="line">		require(this.balance &gt; 0);</span><br><span class="line">		// do something bad</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>合约逻辑看起来并不允许合约被支付，因此也不允许 “一些坏事” 发生。但是，存在一些强制发送 ETH 给合约的方法，因此它的余额大于 0。</p>
-<p>合约方法 <code>selfdestruct</code> 允许用户指定一个受益人发送多余的 ETH。<code>selfdestruct</code> <a href="https://solidity.readthedocs.io/en/develop/security-considerations.html#sending-and-receiving-ether" target="_blank" rel="noopener">不会触发合约的 fallback 函数</a>。</p>
-<p>也可以<a href="https://github.com/Arachnid/uscc/tree/master/submissions-2017/ricmoo" target="_blank" rel="noopener">预先计算</a>合约的地址，然后在合约部署之前给那个地址发送 ETH。</p>
-<p>合约开发者应该注意 ETH 可以被强制发送给合约并且应该设计相应的合约逻辑。通常来说，假设不可能限制你的合约的资金来源。</p>
-<h3 id="废弃的-历史的攻击"><a href="#废弃的-历史的攻击" class="headerlink" title="废弃的 / 历史的攻击"></a>废弃的 / 历史的攻击</h3><p>这些攻击由于协议的改变或固体的改进而不再可能发生。</p>
-<h4 id="调用深度攻击（废弃）"><a href="#调用深度攻击（废弃）" class="headerlink" title="调用深度攻击（废弃）"></a>调用深度攻击（废弃）</h4><p>在 EIP 150 的硬分叉中，调用深度攻击不再相关*（在达到 1024 调用深度限制之前，所有气体都将消耗得很好）。</p>
-
-          
+          <h2 id="已知攻击"><a href="#已知攻击" class="headerlink" title="已知攻击"></a>已知攻击</h2><p>以下列出了你应该知道的已知攻击，并且在编写智能合约的时候进行防御。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/09/智能合约最佳实践翻译三-已知攻击/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -659,7 +610,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/09/智能合约最佳实践翻译一-常规理念/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/09/智能合约最佳实践翻译二-安全推荐/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -678,7 +629,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/03/09/智能合约最佳实践翻译一-常规理念/" itemprop="url">智能合约最佳实践翻译一 - 常规理念</a></h1>
+                <a class="post-title-link" href="/2018/03/09/智能合约最佳实践翻译二-安全推荐/" itemprop="url">智能合约最佳实践翻译二 - 安全推荐</a></h1>
         
 
         <div class="post-meta">
@@ -690,7 +641,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-09T11:07:21+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-09T10:04:07+08:00">
                 2018-03-09
               </time>
             
@@ -729,53 +680,16 @@
 
       
         
-          
-            <p><a href="https://consensys.github.io/smart-contract-best-practices/general_philosophy/" target="_blank" rel="noopener">原文链接</a></p>
-<h2 id="常规理念"><a href="#常规理念" class="headerlink" title="常规理念"></a>常规理念</h2><p>以太坊和复杂的区块链编程是崭新的和高度实验性的。 因此，随着新 bug 和安全风险的发现，您应该预期到安全形势会不断发生变化，并制定新的最佳实践。 因此，遵循本文档中的安全措施只是作为智能合约开发人员需要做的安全工作的开始。</p>
-<p>智能合约编程需要一个与您过往习惯不同的工程思维。失败的代价可能很高，并且更改可能很困难，使得它在某些方面更像硬件编程或金融服务编程，而不是 Web 或移动开发。因此，防御已知的漏洞是不够的。相反，你需要学习一种新的开发理念：</p>
-<h3 id="做好失败的准备"><a href="#做好失败的准备" class="headerlink" title="做好失败的准备"></a>做好失败的准备</h3><p>任何不平凡的（non-trivial）合约中都有错误。因此你的代码必须能够优雅地反馈 Bug 和漏洞。</p>
-<ul>
-<li>当出现错误时暂停该合约（“电路中断者”） </li>
-<li>管理风险金额（限制比例，设置最大使用量）</li>
-<li>为错误修正和改进提供有效的升级途径</li>
-</ul>
-<h3 id="小心地推出"><a href="#小心地推出" class="headerlink" title="小心地推出"></a>小心地推出</h3><p>在完整的产品发布前捕获错误总是更好。彻底地测试合约，并在每次发现新的攻击媒介时添加新的测试 - 从 alpha 测试网络起就提供 Bug 悬赏 - 随着每个阶段的使用和测试推出。</p>
-<h3 id="保持合约简单"><a href="#保持合约简单" class="headerlink" title="保持合约简单"></a>保持合约简单</h3><p>复杂性增加错误的可能性。</p>
-<ul>
-<li>确定合约的逻辑简单</li>
-<li>通过模块化使得合约和函数小巧</li>
-<li>在可以使用的地方使用已经存在的工具或者代码（比如，不要使用你自己写的随机数生成器）</li>
-<li>只要有可能，请尽量保持清晰</li>
-<li>只对你的系统中需要去中心化的部分使用区块链</li>
-</ul>
-<h3 id="保持更新"><a href="#保持更新" class="headerlink" title="保持更新"></a>保持更新</h3><p>使用下一节中列出的资源跟踪新的安全开发。</p>
-<ul>
-<li>检测你的合同是否有任何新发现的 bug</li>
-<li>尽可能快的将工具或者类库更新到最新的版本</li>
-<li>接受新的使用的安全技术</li>
-</ul>
-<h3 id="注意区块链的属性"><a href="#注意区块链的属性" class="headerlink" title="注意区块链的属性"></a>注意区块链的属性</h3><p>虽然你的编程经验大部分将与以太坊编程相关，但有一些陷阱需要注意。</p>
-<ul>
-<li>要非常小心外部合约的调用，这可能会执行恶意代码并更改控制流。</li>
-<li>了解你的公共函数是公开的，可能会被恶意地调用。任何人都可以查看您的私人数据。</li>
-<li>记住燃料的消耗和区块燃料的限制。</li>
-</ul>
-<h3 id="基本权衡：简单与复杂的实例"><a href="#基本权衡：简单与复杂的实例" class="headerlink" title="基本权衡：简单与复杂的实例"></a>基本权衡：简单与复杂的实例</h3><p>在评估智能合约系统的结构和安全性时，需要考虑多个基本的权衡。任何智能合约系统的常规建议是在这些基本的权衡之间找到合适的平衡点。</p>
-<p>从软件工程来说，理想的智能合约系统是模块化的，复用代码而不是复制代码，并且支持组建可升级。从安全架构来看，一个理想的智能合约要分享它的观念模式，特别是复杂的智能合约系统。</p>
-<p>但是，也存在着软件工程和安全不能保持一致的重要的例外。在这些情况下，通过顺着合约系统的维度的最佳组合获得合适的平衡点，比如：</p>
-<ul>
-<li>静态 与 可升级</li>
-<li>整体 与 模块化</li>
-<li>重复 与 复用</li>
-</ul>
-<h3 id="静态和可升级"><a href="#静态和可升级" class="headerlink" title="静态和可升级"></a>静态和可升级</h3><p>尽管包括这个在内的多种资源强调拓展特性，例如可删除，可升级或者可修改的模式，但在可塑性和安全性之间还是需要一个基本的平衡。</p>
-<p>根据定义，可塑性模式增加了复杂性和潜在的被攻击可能性。在智能合约系统在预定义的有限时间段内执行非常有限的一组功能的情况下，简单性比复杂性更有效率，例如，无管理的有限时间帧令牌销售合约系统。</p>
-<h3 id="单一整体和模块化"><a href="#单一整体和模块化" class="headerlink" title="单一整体和模块化"></a>单一整体和模块化</h3><p>一个单一的只有自身的合约保证了所有的内容都可以在自身被识别与读取。尽管几乎很少有被高度重视的智能合约系统作为一个庞然大物单独存在，但是也有一个理由极端地要求数据和流程在本地 - 例如，优化代码审查效率的情况下。</p>
-<p>与在此考虑的其他平衡一样，安全最佳实践趋向于在简单短期合约中的使用软件工程最佳实践，以及在更复杂更长久的合约系统中趋向于软件工程最佳实践。</p>
-<h3 id="复制与复用"><a href="#复制与复用" class="headerlink" title="复制与复用"></a>复制与复用</h3><p>从软件工程的角度看，智能合约系统希望在合理的情况下最大限度地提高重用率。在 Solidity 中有很多方法可以重用合约代码。使用自己拥有的经过验证的已经被部署了的合约通常是实现代码复用的最安全方式。</p>
-<p>在自己之前已经部署的合约不可用的情况下，通常就会依赖复制。Live Libs 和 Zeppelin Solidity 等努力试图提供一些模式，一遍复用安全代码而不是复制。任何合约安全分析必须包含之前没有建立与目标智能合约系统中的资金风险相当的信任等级的任何复用的代码。</p>
-
-          
+          <p><a href="https://consensys.github.io/smart-contract-best-practices/recommendations/" target="_blank" rel="noopener">原文链接</a></p>
+<h2 id="对-Solidity-中的智能合约的安全推荐-Recommendations-for-Smart-Contract-Security-in-Solidity"><a href="#对-Solidity-中的智能合约的安全推荐-Recommendations-for-Smart-Contract-Security-in-Solidity" class="headerlink" title="对 Solidity 中的智能合约的安全推荐 Recommendations for Smart Contract Security in Solidity"></a>对 Solidity 中的智能合约的安全推荐 Recommendations for Smart Contract Security in Solidity</h2><p>本页面展示了编写智能合约时应遵循的一些 solidity 模式。</p>
+<h3 id="协议具体建议"><a href="#协议具体建议" class="headerlink" title="协议具体建议"></a>协议具体建议</h3><p>以下建议适用于以太坊中所有的智能合约的开发。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/09/智能合约最佳实践翻译二-安全推荐/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -822,7 +736,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/05/智能合约最佳实践翻译二-安全推荐/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/05/智能合约最佳实践翻译一-常规理念/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -841,7 +755,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/03/05/智能合约最佳实践翻译二-安全推荐/" itemprop="url">智能合约最佳实践翻译二 - 安全推荐</a></h1>
+                <a class="post-title-link" href="/2018/03/05/智能合约最佳实践翻译一-常规理念/" itemprop="url">智能合约最佳实践翻译一 - 常规理念</a></h1>
         
 
         <div class="post-meta">
@@ -853,7 +767,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-05T10:04:07+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-05T11:07:21+08:00">
                 2018-03-05
               </time>
             
@@ -892,90 +806,16 @@
 
       
         
-          
-            <p><a href="https://consensys.github.io/smart-contract-best-practices/recommendations/" target="_blank" rel="noopener">原文链接</a></p>
-<h2 id="对-Solidity-中的智能合约的安全推荐-Recommendations-for-Smart-Contract-Security-in-Solidity"><a href="#对-Solidity-中的智能合约的安全推荐-Recommendations-for-Smart-Contract-Security-in-Solidity" class="headerlink" title="对 Solidity 中的智能合约的安全推荐 Recommendations for Smart Contract Security in Solidity"></a>对 Solidity 中的智能合约的安全推荐 Recommendations for Smart Contract Security in Solidity</h2><p>本页面展示了编写智能合约时应遵循的一些 solidity 模式。</p>
-<h3 id="协议具体建议"><a href="#协议具体建议" class="headerlink" title="协议具体建议"></a>协议具体建议</h3><p>以下建议适用于以太坊中所有的智能合约的开发。</p>
-<h3 id="外部调用"><a href="#外部调用" class="headerlink" title="外部调用"></a>外部调用</h3><h4 id="小心使用外部调用"><a href="#小心使用外部调用" class="headerlink" title="小心使用外部调用"></a>小心使用外部调用</h4><p>调用不受信任的合约会引入一些预期外的风险或错误。外部调用可能会在该合约或其依赖的任何其他合约中执行恶意代码。所以每个外部调用都要被当做潜在的安全风险来对待。如果不可能或不希望删除外部调用，请使用本节其余部分的建议来减少危险</p>
-<h4 id="标记不受信任的合约"><a href="#标记不受信任的合约" class="headerlink" title="标记不受信任的合约"></a>标记不受信任的合约</h4><p>当与外部合约交互的时候，通过某种形式命名你的变量，方法和合约接口来清楚地表达其所交互的对象是具有潜在性的安全问题的。这适用于你的调用外部合约的函数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// bad</span><br><span class="line">Bank.withdraw(100); // Unclear whether trusted or untrusted</span><br><span class="line"></span><br><span class="line">// Isn&apos;t clear that this function is potentially unsafe</span><br><span class="line">function makeWithdrawal(uint amount)  &#123;</span><br><span class="line">	Bank.withdraw(amount);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// good</span><br><span class="line">UntrustedBank.withdraw(100);</span><br><span class="line">TrustedBank.withdraw(100);</span><br><span class="line"></span><br><span class="line">function makeUntrustedWithdrawal(uint amount) &#123;</span><br><span class="line">	UntrustedBank.withdraw(amount);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="避免在外部调用之后改变状态"><a href="#避免在外部调用之后改变状态" class="headerlink" title="避免在外部调用之后改变状态"></a>避免在外部调用之后改变状态</h4><p>不论是否使用 <code>raw calls</code>（<code>someAddress,call()</code> 的格式） 或者 <code>contract calls</code>（<code>ExternalContract.someMethod()</code> 的格式），都假定会执行恶意代码。即使 <code>ExternalContract</code> 不是恶意的，但它调用的任何合约也可能会执行恶意代码。</p>
-<p>一个特殊的危险是，恶意代码可能对控制流进行了 <code>hijack</code> 攻击，导致条件竞争。（见 <a href="https://consensys.github.io/smart-contract-best-practices/known_attacks/#race-conditions" target="_blank" rel="noopener">Race Conditions</a> 了解更多关于这个问题的讨论）。</p>
-<p>如果你调用了一个不受信任的外部合约，<em>避免在调用之后改变状态</em>。这个模式也常常作为 <a href="https://solidity.readthedocs.io/en/develop/security-considerations.html?highlight=check%20effects#use-the-checks-effects-interactions-pattern" target="_blank" rel="noopener">check-effects-interactions 模式</a> 为人们所知。</p>
-<h4 id="注意-send-transfer-call-value-之间的平衡"><a href="#注意-send-transfer-call-value-之间的平衡" class="headerlink" title="注意 send() / transfer() / call.value() 之间的平衡"></a>注意 <code>send() / transfer() / call.value()</code> 之间的平衡</h4><p>在发送 ether 时注意 <code>someAddress.send() / someAddress.transfer() / someAddress.call.value()()</code> 之间的使用的关系的平衡。</p>
-<ul>
-<li><code>someAddress.send()</code> 和 <code>someAddress.transfer()</code> 被认为对于<a href="https://consensys.github.io/smart-contract-best-practices/recommendations/#reentrancy" target="_blank" rel="noopener">重入</a>是安全的。尽管这些方法仍然会触发代码的执行，但是被调用的合约只会被提供 2300 单位的燃料，目前来说，这么多的燃料足够用来记录事件了。</li>
-<li><code>x.transfer(y)</code> 和 <code>require(x.send(y));</code> 的等同的，如果发送失败，它会自动回退。</li>
-<li><code>someAddress.call.value(y)()</code> 会发送提供的以太币，然后触发代码的执行。为执行的代码提供所有可用来执行的燃料使得这种转账方式对于重入来说很不安全。</li>
-</ul>
-<p>使用 <code>send()</code> 和 <code>transfer()</code> 可以防止重入，但是这样的做法会使得与那些 fallback 函数的消耗超过 2300 单位燃料的合约不兼容。也可以使用 <code>someAddress.vall.value(ethAmount).gas(gasAmount)()</code> 来转发指定的燃料数量。</p>
-<p>一个试图平衡这个问题的解决办法是实现 <em><a href="https://consensys.github.io/smart-contract-best-practices/recommendations/#favor-pull-over-push-payments" target="_blank" rel="noopener">退和拉</a></em> 的机制模式， <em>推送</em> 部分使用 <code>send()</code> 或者 <code>transfer()</code> ，<em>拉</em> 部分使用 <code>call.value()</code> 。</p>
-<p>值得指出的是，对于价值转移而言，专用 <code>send()</code> 或者 <code>transfer()</code> 并不能使得合约避免重入的安全问题，但是能够使得一些特定的转账避免重入的安全问题。</p>
-<h4 id="解决外部调用的错误"><a href="#解决外部调用的错误" class="headerlink" title="解决外部调用的错误"></a>解决外部调用的错误</h4><p>Solidity 提供了处理原生地址的底层调用方法：<code>address.call()</code>，<code>address.callcode()</code>，<code>address,delegatecall()</code>，和 <code>address.send()</code>。当调用遇到一个异常的时候，这些底层方法不会抛出一个异常，而是返回一个 <code>false</code>。从另一方面来说，<em>合约调用</em>（如 <code>ExternalContract.doSomething()</code>）会自动传播一个异常（比如，如果 <code>doSomething()</code> 抛出异常，<code>ExternalContract.doSomething()</code> 也会 <code>throw</code>）。</p>
-<p>如果你选择使用底层调用方法，要确定你通过检查返回值，处理了可能存在的调用失败的情况。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// bad</span><br><span class="line">someAddress.send(55);</span><br><span class="line">someAddress.call.value(55)(); // this is doubly dangerous, as it will forward all remaining gas and doesn&apos;t check for result</span><br><span class="line">someAddress.call.value(100)(bytes4(sha3(&quot;deposit()&quot;))); // if deposit throws an exception, the raw call() will only return false and transaction will NOT be reverted</span><br><span class="line"></span><br><span class="line">// good</span><br><span class="line">if (!someAddress.send(55)) &#123;</span><br><span class="line">	// some failure code</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ExternalContract(someAddress).deposit.value(100);</span><br></pre></td></tr></table></figure>
-<h4 id="对外部调用来说，拉比推更好"><a href="#对外部调用来说，拉比推更好" class="headerlink" title="对外部调用来说，拉比推更好"></a>对外部调用来说，拉比推更好</h4><p>外部调用可能有意无意而失败。为了最小化这样失败带来的破坏，通常最好将每个外部调用隔离到可以由调用接收方发起的自己的交易中。这与支付特别相关，与将资金自动推给用户比起来，更好的是让用户提取资金。（这也减少了<a href="https://consensys.github.io/smart-contract-best-practices/known_attacks/#dos-with-block-gas-limit" target="_blank" rel="noopener">燃料限制问题</a>。）避免在单个交易中组合多个 <code>send()</code> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">// bad</span><br><span class="line">contract auction &#123;</span><br><span class="line">	address highestBidder;</span><br><span class="line">	uint highestBid;</span><br><span class="line"></span><br><span class="line">	function bid() payable &#123;</span><br><span class="line">		require(msg.value &gt;= highestBid);</span><br><span class="line"></span><br><span class="line">		if (highestBidder != 0) &#123;</span><br><span class="line">			highestBidder.transfer(highestBid); // if this call consistently fails, no one else can bid </span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		highestBidder = msg.sender;</span><br><span class="line">		highestBid = msg.value;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// good</span><br><span class="line">contract auction &#123;</span><br><span class="line">	address highestBidder;</span><br><span class="line">	uint highestBid;</span><br><span class="line">	mapping(address =&gt; uint) refunds;</span><br><span class="line"></span><br><span class="line">	function bid() payable external &#123;</span><br><span class="line">		require(msg.value &gt;= highestBid);</span><br><span class="line"></span><br><span class="line">		if (highestBidder != 0) &#123;</span><br><span class="line">			refunds[highestBidder] += highestBid; // record the refund that this user can claim</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		highestBidder = msg.sender;</span><br><span class="line">		highestBid = msg.value;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function withdrawRefund() external &#123;</span><br><span class="line">		uint refund = refunds[msg.sender];</span><br><span class="line">		refunds[msg.sender] = 0;</span><br><span class="line">		msg.sender.transfer(refund);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="不要假设合约创建时是-0-资产"><a href="#不要假设合约创建时是-0-资产" class="headerlink" title="不要假设合约创建时是 0 资产"></a>不要假设合约创建时是 0 资产</h4><p>一个攻击者可以在合约创建之前发送 wei 到合约的地址。合约不应该假设初始状态包含 0 资产。见 <a href="https://github.com/ConsenSys/smart-contract-best-practices/issues/61" target="_blank" rel="noopener">问题 61</a> 查看更多细节。</p>
-<h4 id="记住链上的数据是公开的"><a href="#记住链上的数据是公开的" class="headerlink" title="记住链上的数据是公开的"></a>记住链上的数据是公开的</h4><p>许多应用程序要求提交数据以便在某个时间点可以供其工作。游戏（如链上的石头剪子布）和拍卖机制（如 盲派的第二次出价）是两种主要类别的例子。如果你正在构建一个涉及到隐私的应用，注意不免要求用户过早发布信息。</p>
-<p>示例：</p>
-<ul>
-<li>在石头剪子布中，首先要求两个玩家同时提交他们的出手意图的哈希值，然后再要求提交他们的实际出手，如果匹配不上之前的哈希值，则抛出。</li>
-<li>在一个拍卖中，要求玩家在初始阶段提交他们的出价金额的哈希值（保证金高于他们的竞价），然后在第二阶段提交他们的实际竞价。</li>
-<li>当开发一个依赖于随机数生成器的应用时，顺序应该总是（1）提交行动，（2）生成随机数，（3）玩家付出。随机数生成方法本来就是一个活跃的研究领域；目前同类最佳的解决方案包括比特币区块头（通过 <a href="http://btcrelay.org" target="_blank" rel="noopener">http://btcrelay.org</a> 来验证），散列提交揭示方案（即一方产生一个数字，将其散列值发布为”提交“的值，然后揭示这个数）和 <a href="https://github.com/randao/randao" target="_blank" rel="noopener">RANDAO</a></li>
-<li>如果你正在实现一个频繁的批量拍卖，哈希提交方案也很合适。</li>
-</ul>
-<h3 id="注意在双方或者多方合约中，一些成员可能”掉线“，没有返回"><a href="#注意在双方或者多方合约中，一些成员可能”掉线“，没有返回" class="headerlink" title="注意在双方或者多方合约中，一些成员可能”掉线“，没有返回"></a>注意在双方或者多方合约中，一些成员可能”掉线“，没有返回</h3><p>不要只依赖于特定方执行特定行动的退款或者索赔流程，而没有其他获得资金的方式。比如，在剪刀石头布游戏中，一个常见的错误是在两位玩家提交它们的行动之前，没有进行支付；然而，一个恶意的玩家可以简单地通过不提交他的动作来使得另一位玩家陷入困境 - 实际上，如果一个玩家看到了其他玩家暴露的行为，并且确定他们输了，他们就没有任何理由去提交他们自己的行为。这个问题也可能出现在状态渠道的解决中。当这样的场景变成一个问题，（1）提供一种规避未参与的参与者的方式，可能是通过限制时间，（2）考虑增加额外的经济激励，让参与者在需要提交信息的场景中提交所有该场景需要的信息。</p>
-<h3 id="Solidity-详细建议"><a href="#Solidity-详细建议" class="headerlink" title="Solidity 详细建议"></a>Solidity 详细建议</h3><p>下面的建议对于 Solidity 来说十分详细，不过对于使用其他语言来开发智能合约来说，应该也是有所帮助的。</p>
-<h3 id="强制对不变值使用-assert"><a href="#强制对不变值使用-assert" class="headerlink" title="强制对不变值使用 assert()"></a>强制对不变值使用 <code>assert()</code></h3><p>当一个断言失败的时候，它的保护机制就会被触发 - 比如当一个不变的属性改变的时候。比如，在一个代币发行合约中，代币与以太币的汇率可能是固定的。然后你可以通过 <code>assert()</code> 来验证所有的这种情况。断言保护机制应该经常与其他技术结合，如暂停合约和允许升级。（否则，你可能会陷入停滞，而一个断言总是在失败。）</p>
-<p>例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">contract Token &#123;</span><br><span class="line">	mapping (address =&gt; uint) public balanceOf;</span><br><span class="line">	uint public totalSupply;</span><br><span class="line"></span><br><span class="line">	function deposit() public payable &#123;</span><br><span class="line">		balanceOf[msg.sender] += msg.value;</span><br><span class="line">		totalSupply += msg.value;</span><br><span class="line">		assert(this.balance &gt;= totalSupply);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>注意断言并非对资产严格相等，因为合约可以不通过 <code>deposit</code> 函数强制<a href="https://consensys.github.io/smart-contract-best-practices/recommendations/#ether-forcibly-sent" target="_blank" rel="noopener">发送以太币</a></p>
-<h3 id="正确地使用-assert-和-require"><a href="#正确地使用-assert-和-require" class="headerlink" title="正确地使用 assert() 和 require()"></a>正确地使用 <code>assert()</code> 和 <code>require()</code></h3><p>在 Solidity 0.4.10 中，引入了 <code>assert()</code> 和 <code>require()</code>。<code>require(condition)</code> 被用来对用户的任何输入进行验证，如果条件不成立则回滚。<code>assert(condition)</code> 在条件不成立时也会回滚，但是只用在不变值上：内部错误或者检查你的合约是否是非法的状态。遵循这种范式将允许形式分析工具来进行验证工作，而非法的操作码永远不会到达：这意味着代码中的任何不变值都不会被违反，并且代码正确地验证。</p>
-<h3 id="小心整数除法"><a href="#小心整数除法" class="headerlink" title="小心整数除法"></a>小心整数除法</h3><p>所有整数除法都被向下取整。如果你需要更高的精度，考虑使用乘数，或者存储分子和分母。</p>
-<p>（在未来，Solidity 会有定点类型，这会使得整数除法更容易。）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// bad</span><br><span class="line">uint x = 5 / 2; // Result is 2, all integer divison rounds DOWN to the nearest integer</span><br></pre></td></tr></table></figure>
-<p>使用乘数来防止向下取整，当使用 x 的时候要考虑到这个乘数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// good</span><br><span class="line">uint multiplier = 10;</span><br><span class="line">uint x = (5 * multipler) / 2;</span><br></pre></td></tr></table></figure>
-<p>存储分子和分母意味着你可以离链计算分子除以分母的结果。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// good</span><br><span class="line">uint numerator = 5;</span><br><span class="line">uint denominator = 2;</span><br></pre></td></tr></table></figure>
-<h3 id="记住以太币可以被强制发送到一个账户"><a href="#记住以太币可以被强制发送到一个账户" class="headerlink" title="记住以太币可以被强制发送到一个账户"></a>记住以太币可以被强制发送到一个账户</h3><p>注意对严格检查了的合约的余额进行编码。</p>
-<p>一个攻击者可以强制对任何账户发送 wei，而且这不能被阻止（即使是使用了 <code>revert()</code> 的 fallback 函数也不可以）</p>
-<p>攻击者通过创余额为 1 wei 的合约，然后通过 <code>selfdestruct(victimAddress)</code> 的方式达到目的。<code>victimAddress</code> 中没有代码被激活，所以这不能被阻止。</p>
-<h3 id="注意抽象合约和接口的平衡"><a href="#注意抽象合约和接口的平衡" class="headerlink" title="注意抽象合约和接口的平衡"></a>注意抽象合约和接口的平衡</h3><p>接口和抽象合约都为智能合约提供了一种定制的，可复用的方式。接口，在 Solidity 0.4.11 中被引入，与抽象合约十分相似，但是接口不能有已经实现的方法。接口同样也有限制，它不能访问存储，不能继承其他接口，而这通常使得抽象合约更加实用。虽然，接口实际上对设计合约的实现上十分有用。另外，十分重要的是如果一个合约继承了一个抽象合约，那它必须通过重写来实现所有抽象合约中未实现的函数，否则它依旧是一个抽象合约。</p>
-<h3 id="保持-fallback-函数简单"><a href="#保持-fallback-函数简单" class="headerlink" title="保持 fallback 函数简单"></a>保持 fallback 函数简单</h3><p>当一个合约发送了没有参数（或者当没有函数匹配上的时候）的消息时，<a href="https://solidity.readthedocs.io/en/latest/contracts.html#fallback-function" target="_blank" rel="noopener">Fallback 函数</a> 会被调用，而且如果通过 <code>.send()</code> 或者 <code>.transfer()</code> 调用的话只需要 2300 单位的燃料。如果你希望能够从 <code>.send()</code> 或者 <code>.transfer()</code> 接受以太币，你能做的就是在 fallback 函数中记录一个日志。如果需要计算，或者更多的燃料，就使用一个真正的函数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// bad</span><br><span class="line">funciton() payable &#123; balances[msg.sender] += msg.value; &#125;</span><br><span class="line"></span><br><span class="line">// good</span><br><span class="line">function deposit() payable external &#123; balances[msg.sender] += msg.value; &#125;</span><br><span class="line"></span><br><span class="line">function() payable &#123; LogDepositReceived(msg.sender); &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="为函数和状态变量显式标记可见性"><a href="#为函数和状态变量显式标记可见性" class="headerlink" title="为函数和状态变量显式标记可见性"></a>为函数和状态变量显式标记可见性</h3><p>显式标记函数和状态变量的可见性。函数可以被指定为 <code>external / public / internal / private</code>。请理解它们之间的区别，比如，比起 <code>public</code>，<code>external</code> 可能已经足够使用了。对于状态变量来说，<code>external</code> 是不可能的。显式标记可见性将更容易捕捉有关谁可以调用函数或访问变量的错误假设。 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// bad</span><br><span class="line">uint x; // the default is internal for state variables, but it should be made explicit</span><br><span class="line">function buy() &#123; // the default is public </span><br><span class="line">	// public code</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// good</span><br><span class="line">uint private y;</span><br><span class="line">function buy() external &#123;</span><br><span class="line">	// only callable external</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function utility() public &#123;</span><br><span class="line">	// callable externally, as well as internally: changing this code requires thinking about both cases</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function internalAction() internal &#123;</span><br><span class="line">	// internal code</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="锁定指定编译器版本的编译指示"><a href="#锁定指定编译器版本的编译指示" class="headerlink" title="锁定指定编译器版本的编译指示"></a>锁定指定编译器版本的编译指示</h3><p>应该使用相同的编译器版本部署合同，并标记它们已经经过了足够的测试。锁定编译指示可以帮助确保合约不会意外部署，比如，最新的编译器对未知错误有更高的风险。合约也可能由其他人部署，通过编译指示就知道原作者打算使用的编译器版本。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// bad </span><br><span class="line">pragma solidity ^0.4.4;</span><br><span class="line"></span><br><span class="line">// good</span><br><span class="line">pragma solidity 0.4.0;</span><br></pre></td></tr></table></figure>
-<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>当合约打算供其他开发人员使用时，可以允许 <code>pragma</code> 语句浮动，例如类库或者 EthPM 包。否则，开发人员为了在本地编译就需要手动更新编译指示。</p>
-<h3 id="函数和事件的区别"><a href="#函数和事件的区别" class="headerlink" title="函数和事件的区别"></a>函数和事件的区别</h3><p>对事件名首字母大写,以及添加作用前缀，来防止对函数和事件产生困惑。对于方法来说，总是以小写字母开头，除了构造函数之外。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// bad </span><br><span class="line">event Transfer() &#123;&#125;</span><br><span class="line">function transfer() &#123;&#125;</span><br><span class="line"></span><br><span class="line">// good</span><br><span class="line">event LogTransfer() &#123;&#125;</span><br><span class="line">function transfer() external &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="推荐使用更新的-Solidity-结构"><a href="#推荐使用更新的-Solidity-结构" class="headerlink" title="推荐使用更新的 Solidity 结构"></a>推荐使用更新的 Solidity 结构</h3><p>使用构造/别名如 <code>selfdestruct</code> （而不是 <code>suicide</code>），和 <code>keccak256</code> （而不是 <code>sha3</code>）。<code>require(msg.sender.send(1 ether))</code> 也可以使用 <code>transfer()</code> 简单地实现： <code>msg.sender.transfer(1 ether)</code>。</p>
-<h3 id="注意内置函数可以被覆盖"><a href="#注意内置函数可以被覆盖" class="headerlink" title="注意内置函数可以被覆盖"></a>注意内置函数可以被覆盖</h3><p>目前可以在 Solidity 覆盖（<a href="https://en.wikipedia.org/wiki/Variable_shadowing" target="_blank" rel="noopener">shadow</a>）内置的全局变量。它允许合约重写覆盖内置的方法，如 <code>msg</code> 和 <code>revert()</code>。尽管这是<a href="https://github.com/ethereum/solidity/issues/1249" target="_blank" rel="noopener">故意</a>的，但是它可能会在关于合约的真实行为上误导合约的用户。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">contract PretendingToRevert &#123;</span><br><span class="line">	function revert() internal constant &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract ExampleContract is PretendingToRevert &#123;</span><br><span class="line">	function somethingBad() public &#123;</span><br><span class="line">		revert();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>合约用户（和审计人员）应该注意他们想要使用的应用的所有合约源代码。</p>
-<h3 id="避免使用-tx-origin"><a href="#避免使用-tx-origin" class="headerlink" title="避免使用 tx.origin"></a>避免使用 <code>tx.origin</code></h3><p>永远不要使用 <code>tx.origin</code> 进行授权，另一个合约可以有一种方法来调用你的合约（比如用户有一些资金），而因为你的地址在 <code>tx.origin</code> 里面，你的合约就会授权该交易。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.18;</span><br><span class="line"></span><br><span class="line">contract MyContract &#123;</span><br><span class="line">	address owner;</span><br><span class="line"></span><br><span class="line">	function MyContract() public &#123;</span><br><span class="line">		owner = msg.sender;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function sendTo(address receiver, uint amount) public &#123;</span><br><span class="line">		require(tx.origin == owner);</span><br><span class="line">		receiver.transfer(amount);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract AttackingContract &#123;</span><br><span class="line">	MyContract myContract;</span><br><span class="line">	address attacker;</span><br><span class="line"></span><br><span class="line">	function AttackingContract(address myContractAddress) public &#123;</span><br><span class="line">		myContract = MyContract(myContractAddress);</span><br><span class="line">		attacker = msg.sender;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	function() public &#123;</span><br><span class="line">		myContract.sendTo(attacker, msg.sender.balance);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>你应该使用 <code>msg.sender</code> 来授权（如果有另一个合约调用了你的合约，<code>msg.sender</code> 会成为合约的地址，而且不是调用合约的人的地址）。</p>
-<p>更多可见 <a href="https://solidity.readthedocs.io/en/develop/security-considerations.html#tx-origin" target="_blank" rel="noopener">Solidity 文档</a></p>
-<p>除了授权的这个问题，<code>tx.origin</code> 可能在将来从以太坊协议中移除，所以使用了 <code>tx.origin</code> 的代码在将来不会再被兼容 <a href="https://ethereum.stackexchange.com/questions/196/how-do-i-make-my-dapp-serenity-proof/200#200" target="_blank" rel="noopener">Vitalik: ‘Do NOT assume that tx.origin will continue to be usable or meaningful.’</a></p>
-<p>另外值得一提的是，通过使用 <code>tx.origin</code>，你会限制合同之间的互操作性，因为使用 <code>tx.origin</code> 的合同不能被另一个合同使用，因为合同不能是 <code>tx.origin</code>。</p>
-<h3 id="时间戳依赖"><a href="#时间戳依赖" class="headerlink" title="时间戳依赖"></a>时间戳依赖</h3><p>在合同中使用时间戳执行关键功能时有三个主要考虑因素，特别是当涉及到资金转移时。</p>
-<h4 id="Gameability"><a href="#Gameability" class="headerlink" title="Gameability"></a>Gameability</h4><p>注意区块的时间戳是可用被矿工操作的。考虑这个<a href="https://etherscan.io/address/0xcac337492149bdb66b088bf5914bedfbf78ccc18#code" target="_blank" rel="noopener">合约</a>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">uint256 constant private salt = block.timestamp;</span><br><span class="line"></span><br><span class="line">function random(uint Max) constant private returns (uint256 result) &#123;</span><br><span class="line">	//get the best seed for randomness</span><br><span class="line">	uint256 x = salt * 100/Max;</span><br><span class="line">	uint256 y = salt * block.number/(salt % 5);</span><br><span class="line">	uint256 seed = block.number/3 + (salt % 300) + Last_Payout + y;</span><br><span class="line">	uint256 h = uint256(block.blockhash(seed));</span><br><span class="line"></span><br><span class="line">	return uint256((h / x)) % Max + 1; // random number between 1 and Max</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当合约使用时间戳来产生随机数时，矿工实际上可以在被验证块的 30 秒内发布时间戳，从而有效地允许矿工预先计算一个更有利于他们抽奖机会的选项。 时间戳不是随机的，不应该在这种情况下使用。</p>
-<h4 id="30-秒规则"><a href="#30-秒规则" class="headerlink" title="30 秒规则"></a>30 秒规则</h4><p>评估时间戳使用的一般经验法则是：</p>
-<p><strong>如果合约功能可以容忍30秒的时间漂移，则可以安全使用 <code>block.timestamp</code></strong></p>
-<p>如果您的时间相关事件的比例可以变化 30 秒并保持完整性，则使用时间戳是安全的。 这包括拍卖结束，注册期限等事情。</p>
-<h4 id="将-block-number-作为时间戳使用时要当心"><a href="#将-block-number-作为时间戳使用时要当心" class="headerlink" title="将 block.number 作为时间戳使用时要当心"></a>将 <code>block.number</code> 作为时间戳使用时要当心</h4><p>当合约创建一个 <code>auction_complete</code> 修饰器来表示代币销售的结束，像<a href="https://consensys.github.io/smart-contract-best-practices/(https://github.com/SpankChain/old-sc_auction/blob/master/contracts/Auction.sol" target="_blank" rel="noopener">这样</a>)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">modifier auction_complete &#123;</span><br><span class="line">	require(auctionEndBlock &lt;= block.number ||</span><br><span class="line">		currentAuctionState == AuctionState.success ||</span><br><span class="line">		currentAuctionState == AuctionState.cancel)</span><br><span class="line">		_;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>block.number</code> 和 <a href="https://etherscan.io/chart/blocktime" target="_blank" rel="noopener">平均出块时间</a> 也可以用来估算时间，但是这不是未来的证明，因为区块时间可以修改（例如 <a href="https://blog.ethereum.org/2015/08/08/chain-reorganisation-depth-expectations/" target="_blank" rel="noopener">分叉重组</a> 和 <a href="https://github.com/ethereum/EIPs/issues/649" target="_blank" rel="noopener">难度炸弹</a>）。在一天的销售中，12分钟规则允许人们构建更可靠的时间估计。</p>
-<h3 id="弃用-历史-建议"><a href="#弃用-历史-建议" class="headerlink" title="弃用/历史 建议"></a>弃用/历史 建议</h3><p>由于协议的修改或者 solidity 的提升，这些建议不再相关。They are recorded here for posterity and awareness.</p>
-<h4 id="注意被-0-除-（Solidity-lt-0-4）"><a href="#注意被-0-除-（Solidity-lt-0-4）" class="headerlink" title="注意被 0 除 （Solidity &lt; 0.4）"></a>注意被 0 除 （Solidity &lt; 0.4）</h4><p>在版本 0.4 之前，当一个数字除以 0 时，Solidity 会返回零，并且不会引发异常。 确保你至少运行 0.4 版本。</p>
-
-          
+          <p><a href="https://consensys.github.io/smart-contract-best-practices/general_philosophy/" target="_blank" rel="noopener">原文链接</a></p>
+<h2 id="常规理念"><a href="#常规理念" class="headerlink" title="常规理念"></a>常规理念</h2><p>以太坊和复杂的区块链编程是崭新的和高度实验性的。 因此，随着新 bug 和安全风险的发现，您应该预期到安全形势会不断发生变化，并制定新的最佳实践。 因此，遵循本文档中的安全措施只是作为智能合约开发人员需要做的安全工作的开始。</p>
+<p>智能合约编程需要一个与您过往习惯不同的工程思维。失败的代价可能很高，并且更改可能很困难，使得它在某些方面更像硬件编程或金融服务编程，而不是 Web 或移动开发。因此，防御已知的漏洞是不够的。相反，你需要学习一种新的开发理念：</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/05/智能合约最佳实践翻译一-常规理念/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1092,202 +932,19 @@
 
       
         
-          
-            <p><a href="https://media.consensys.net/ethereum-gas-fuel-and-fees-3333e17fe1dc" target="_blank" rel="noopener">来自 BTC Relay 的首席开发人员 Joseph Chow ：Ethereum,Gas,Fuel &amp; Fees</a></p>
+          <p><a href="https://media.consensys.net/ethereum-gas-fuel-and-fees-3333e17fe1dc" target="_blank" rel="noopener">来自 BTC Relay 的首席开发人员 Joseph Chow ：Ethereum,Gas,Fuel &amp; Fees</a></p>
 <p>以太坊是分布式和诚实的应用程序的平台，可在没有任何管理员或单点故障的全球点对点网络上运行。这些应用程序没有停机时间，任何人都可以创建它们：这是无许可的创新。这些应用是诚实的，不可改变的，并且在编码时总是互操作。从这个角度来说，智能合约的术语是合理的，因为它们是始终遵循其创建时所设定的条款的最终合约。</p>
-<p>使这成为可能的核心实际上是 Ethereum。在技术上称为以太坊虚拟机（EVM），它包括用于计算和数据存储的操作。交易代表 Ethereum 内的单个会话。它是交互的单位，类似于句子如何作为语法意义的单位，尽管单个句子可以包含很多单词。</p>
-<h2 id="燃气（gas）是什么？"><a href="#燃气（gas）是什么？" class="headerlink" title="燃气（gas）是什么？"></a>燃气（gas）是什么？</h2><p>燃气是 Ethereum 使用的计量单位。做一个类比，电量按千瓦小时计量。在以太坊中使用更多的算力和存储代表着会使用更多的燃气。计量的一个基本原因是它可以激励人们（矿工）操作 Ethereum。这些矿工为处理交易收取费用，费用则取决于计量方案：燃气。</p>
-<p>EVM 中的每个操作都会消耗燃气。例如，一个乘法（<code>MUL</code>）消耗 5 燃气而一个加法（<code>ADD</code>）消耗 3 燃气。<a href="https://docs.google.com/spreadsheets/d/1m89CVujrQe5LAFJ8-YAUCcNK950dUzMQPMJBxRtGCqs/edit" target="_blank" rel="noopener">以太坊操作的燃气消耗表格</a></p>
-<p><strong>将燃气看做是燃料的代名词</strong></p>
-<p>计量与费用不同，而燃气和以太币也不同。为了帮助说清楚这个，将燃气看做是燃料的代名词。一笔交易必须提供足够的燃料，或者 <code>startGas</code>，来支持 EVM 的计算和存储的使用。所有的剩余燃气会回退给交易的发起人：初始化该笔交易的用户。一笔燃料耗尽的交易会回滚，但是依旧包含在区块中，并且相关的费用已经支付给了矿工。</p>
-<p>了解了燃料角度的概述，让我们来看看费用相关的概述。在 EVM 中，每个操作都会消耗已经预定义数量的燃气（比如，一个乘法操作总是消耗 5 燃气），用户在每笔交易中都可以指定燃气价格。当前的燃气价格是 0.02μ 以太币，或者 0.00000002 ETH。交易发起人支付给矿工的费用是交易的 <code>(开始燃气 - 剩余燃气) * 燃气价格</code>。</p>
-<p>这里是一个关于交易燃料和交易费用的影响的总结：</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>燃料</th>
-<th>费用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>通常</td>
-<td>EVM 中的每个操作都会消耗一定数量预先已经设定好的燃料；用户不能更改它。每笔交易都有一个用户指定的初始燃气。</td>
-<td>每笔交易都有用户指定的燃料价格（当前默认为每单位燃气 0.02μ ETH）</td>
-</tr>
-<tr>
-<td>交易开始时</td>
-<td>交易发起人应该提供足够的燃料：初始燃气。剩余燃气 = 初始燃气。</td>
-<td>交易发起人必须支付所有燃料。放置 <code>初始燃气 * 燃气价格 = 以太币</code> 在托管中。</td>
-</tr>
-<tr>
-<td>每个操作</td>
-<td>剩余燃气会由于操作消耗而减少</td>
-<td>直到交易完结，不论成功不成功。</td>
-</tr>
-<tr>
-<td>不成功的交易</td>
-<td>剩余燃气为零，还有未完成的操作。这导致一个燃气耗尽的异常，而所有的操作都会被撤销</td>
-<td>所有托管的费用都会被支付给矿工</td>
-</tr>
-<tr>
-<td>成功的交易</td>
-<td>所有剩余的燃气会回退给交易发起人</td>
-<td>（初始燃气 - 剩余燃气） <em> 燃气价格 = 费用 支付给矿工；剩余燃气 </em> 燃气价格 = 回退给交易发起人的费用。</td>
-</tr>
-</tbody>
-</table>
-<p>在交易开始时，被要求用来作为初始燃气的以太币会被搁置，然后剩余燃气会被设置为初始燃气。随着交易中的每个操作，燃气会被消耗，剩余燃气逐渐变少。如果发生燃气耗尽的异常，所有的操作都会回滚，而之前搁置的所有的以太币都会被支付给矿工。如果交易成功执行完毕，所有的剩余部分的燃气会回退给交易发起人，而其他燃气则支付给矿工。</p>
-<h2 id="简单的例子"><a href="#简单的例子" class="headerlink" title="简单的例子"></a>简单的例子</h2><p>在下面的情景模拟中，假设存储消耗 45 燃气，一个加法操作消耗 10 燃气。这个场景涉及到在 EVM 中存储数字 31，将两个数相加，然后存储它们的和。让我们假设交易发起人指定了 150 的初始燃气，和 0.02μ 以太币的燃气价格。下面是 EVM 处理该笔交易的描述：</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>操作消耗的燃气</th>
-<th>剩余燃气</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>交易开始</td>
-<td></td>
-<td>150</td>
-</tr>
-<tr>
-<td>存储 31</td>
-<td>45</td>
-<td>105</td>
-</tr>
-<tr>
-<td>两个数相加</td>
-<td>10</td>
-<td>95</td>
-</tr>
-<tr>
-<td>存储和</td>
-<td>45</td>
-<td>50</td>
-</tr>
-<tr>
-<td>交易结束</td>
-<td>数字 31 和 加法的和 已经被存储写入区块链</td>
-</tr>
-</tbody>
-</table>
-<p>交易发起人支付给矿工的费用是：</p>
-<p><strong>（150–50) × 0.02µETH = 2µETH = 0.000002 ETH</strong></p>
-<h2 id="燃料与费用"><a href="#燃料与费用" class="headerlink" title="燃料与费用"></a>燃料与费用</h2><p>交易发起人提供足够的燃料与提供足够的费用是有区别的。以下是对交易的可能影响：</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>燃料</th>
-<th>费用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>太低</td>
-<td>不会广播给矿工（错误：<code>intrinsic gas too low</code>）</td>
-<td>矿工不会执行计算</td>
-</tr>
-<tr>
-<td>低</td>
-<td>少量计算或者燃料耗尽</td>
-<td>之后会打包进区块</td>
-</tr>
-<tr>
-<td>中等</td>
-<td>通常是理想的</td>
-<td>通常是理想的</td>
-</tr>
-<tr>
-<td>高</td>
-<td>可能导致打包被延迟</td>
-<td>尽快被打包入区块</td>
-</tr>
-<tr>
-<td>太高</td>
-<td>不会广播给矿工（错误：<code>exceeds block gas limit</code>）</td>
-<td>如果交易发起人没有足够的以太币，则不会广播给矿工</td>
-</tr>
-</tbody>
-</table>
-<p>尽管提供了费用，但是一笔燃料很低的交易甚至可能不会到达矿工处。如果一笔交易提供了足够的燃料，但是费用很低，即使该交易到达矿工处，一旦矿工看到这个费用就不会对其进行计算处理。费用决定了交易将被打包进入区块的顺序。而提供高燃料会导致交易打包时间更长的原因在本文中 <em>高初始燃气可能会导致延迟</em> 部分。</p>
-<h2 id="初始燃气"><a href="#初始燃气" class="headerlink" title="初始燃气"></a>初始燃气</h2><p>让我们讨论一下交易开始时的燃料需求。抽象地说，在被允许使用 Ethereum 的计算和存储之前，Ethereum 需要知道交易发起人是否有能力支付费用。具体地说，在处理交易之前，矿工需要知道自己是否可以获得报酬。一笔交易需要指定它愿意花费的最大燃料值。对于本文的目的来说，这个需求被称作初始燃气。初始燃气是交易的重要部分。不幸的是，不同的文档使用了不同的词来描述这个关键部分：</p>
-<ul>
-<li><a href="https://github.com/ethereum/wiki/wiki/White-Paper" target="_blank" rel="noopener">以太坊白皮书</a>中使用了 初始燃气</li>
-<li><a href="https://github.com/ethereum/yellowpaper" target="_blank" rel="noopener">以太坊黄皮书</a>中使用了燃料限制</li>
-<li><a href="https://github.com/ethereum/go-ethereum/releases" target="_blank" rel="noopener">Geth</a> 和 <a href="https://github.com/ethereum/web3.js/releases" target="_blank" rel="noopener">web3.js</a> 等软件中，简单地使用了 ”燃气“。</li>
-</ul>
-<p>因为在通常情况下，不真正运行计算（关联 <a href="https://en.wikipedia.org/wiki/Halting_problem" target="_blank" rel="noopener">停机问题</a>），矿工是不知道到底需要多少计算量的，所以初始燃气使事情变得更加简单（而不用 ”燃气作为支付的消耗方式“ 这种说法）。作为一个以太坊应用的用户，必须提供初始燃气似乎很复杂，但开发人员可以使用一些工具来估计初始燃气并隐藏用户的详细信息。</p>
-<h2 id="燃料耗尽异常"><a href="#燃料耗尽异常" class="headerlink" title="燃料耗尽异常"></a>燃料耗尽异常</h2><p>一笔交易提供了它愿意消耗的最大燃料值。该燃气会被 EVM 中的每个操作消耗。如果燃料消耗完毕，而交易还未完成，那么一个燃料耗尽的异常就会发生。交易发起人为已经执行的操作支付，而交易也被打包进区块，但是所有的状态改变（比如合约的创建，值的存储，和<a href="https://media.consensys.net/technical-introduction-to-events-and-logs-in-ethereum-a074d65dd61e" target="_blank" rel="noopener">日志</a>的写入）都会回滚。</p>
-<p>让我们还是使用第一个例子作为场景，但是这次交易发起人指定初始燃气为 90（而不是 150）。这里是执行的示意图：</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>操作的燃料消耗</th>
-<th>剩余燃料</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>交易开始</td>
-<td></td>
-<td>90</td>
-</tr>
-<tr>
-<td>存储 31</td>
-<td>45</td>
-<td>45</td>
-</tr>
-<tr>
-<td>求和</td>
-<td>10</td>
-<td>35</td>
-</tr>
-<tr>
-<td>保存和</td>
-<td>45</td>
-<td>燃料耗尽</td>
-</tr>
-<tr>
-<td>交易结束</td>
-<td>因为燃料耗尽，存储的 31 会回滚</td>
-</tr>
-</tbody>
-</table>
-<p>在交易开始时，交易发起人需要拿出所有燃料的资金： 初始燃气 * 燃气价格 = 存放在柜台的以太币。柜台中的以太币数量为：</p>
-<p><strong>90 × 0.02µETH = 1.8µETH</strong></p>
-<p>当每个操作执行时，燃气会消耗，而在存储和时产生了燃料耗尽异常。这会导致所有的操作撤销，代表数字 31 会被回滚到它之前存储的值，但是交易依旧被打包进入区块链，而且矿工获得所有的酬金：1.8μ ETH。</p>
-<h2 id="燃气回退"><a href="#燃气回退" class="headerlink" title="燃气回退"></a>燃气回退</h2><p>EVM 中有两个负值燃气的操作：</p>
-<ul>
-<li>清空合约是 -24000</li>
-<li>清空存储是 -15000</li>
-</ul>
-<p>当 EVM 执行了这样的一个操作，它将被记录在单独的退款计数器中。燃气退款仅在交易结束时提供。 此外，返还的最高值为一半已经消耗的燃气。</p>
-<p>一个关键点在于，一笔交易的燃料永远不会增加。当 EVM 执行操作时，燃料总是减少（当一些合约或者存储被清空，退款计数器会增加）。如果燃料到零或者负数，那么立马会产生一个燃料耗尽异常：退款计数器中有多少燃气并不重要。一笔交易为了能够使用燃气退款，它必须避免燃料耗尽异常。假设一笔交易有足够的燃气，然后它就能使用退款计数器中的燃气。</p>
-<p>退款的燃气值最多为消耗的燃气值的一半。例如，如果一笔交易使用了 60000 燃气，然后清空了 2 个合约而获得 48000 的一笔退款（每笔 24000），交易发起人还是需要支付给矿工 30000 燃气。这激励了矿工使用负值燃气操作处理交易，因为这给了他们收入，并确保了矿工不可能为他人的计算付款。</p>
-<h2 id="区块燃气限制（Block-gas-limit-BGL）"><a href="#区块燃气限制（Block-gas-limit-BGL）" class="headerlink" title="区块燃气限制（Block gas limit:BGL）"></a>区块燃气限制（Block gas limit:BGL）</h2><p>回顾一下，初始燃气由用户指定，是一笔交易将要消耗的燃料最大值。那么一个区块中能够容纳多少交易呢？答案是直到所有交易的初始燃气总和达到区块燃气限制（BGL）位置。当前(2016.6.23)的 BGL 是 4,712,388 （1.5π 的数字形式），表示能够在一个区块（平均出块时间 15 秒）中容纳 224 笔初始燃气为 21000 的交易。为了防止像比特币一样对区块是否变大产生分歧，以太坊协议允许矿工对自己的区块往任意方向进行 1/1024(0.0976%) 幅度的 BGL 调整。与协议不同的是默认的采矿策略，其最小 BGL 为 4,712,388。</p>
-<h2 id="高初始燃气可能存在的延迟"><a href="#高初始燃气可能存在的延迟" class="headerlink" title="高初始燃气可能存在的延迟"></a>高初始燃气可能存在的延迟</h2><p>既然燃料耗尽异常对交易发起人来说几乎是在浪费金钱，那么将初始燃气设置得更高更低总是更好的。所以，交易发起人不总是将初始燃气指定为 4,000,000 呢？</p>
-<p>答案在于交易的初始燃气和它实际消耗的燃气之间的差异。矿工只会获得一笔交易实际消耗的燃气；所有未使用的燃气会被回退给交易发起人。</p>
-<p>如果同时存在一笔初始燃气为 4M 的交易和 100 笔初始燃气为 40,000 的交易，矿工可能会选择后者，因为这 100 笔交易的收入有更高的预测性。如果一笔初始燃气为 4M 的交易实际只消耗了 1M 燃气，那么矿工将损失 3M 的潜在燃气收入。所以，矿工更愿意优先考虑一些”小“交易，而不是拥有高初始燃气（除非<a href="https://github.com/ethereum/pyethereum/blob/3841e9a406f4ca9452afa45035fb07b5ce6314d9/ethereum/transactions.py#L177" target="_blank" rel="noopener">潜在的实际消耗燃气</a>也十分高）的一笔交易。这会导致高初始燃气的交易在被打包之前存在延迟，并且解释了过高的初始燃气会是有害的。</p>
-<h2 id="绕过交易所"><a href="#绕过交易所" class="headerlink" title="绕过交易所"></a>绕过交易所</h2><p>以太坊有两种类型的账户：</p>
-<ul>
-<li>用户账户（由私钥控制）</li>
-<li>合约（由代码控制）</li>
-</ul>
-<p>发送以太币到一个用户账户需要 21000 的燃气费用，而发送以太币到合约则需要更高的费用，这个费用取决于合约代码和交易中发送的数据。一些交易所会对他们所有的交易都只提供 21000 燃气，这会表示在用户想要从交易所发送以太币到他们 Mist（以太坊钱包） 中的合约钱包时，交易会耗尽燃料，以太币永远也不会发送到用户的合约钱包。</p>
-<h2 id="计量和费用"><a href="#计量和费用" class="headerlink" title="计量和费用"></a>计量和费用</h2><p>关于计量和费用之间的区别还有一点需要注意。在比特币中，计量是根据交易中字节数来的。在以太坊中，计算也需要计量，因为少量的代码也可能被编码成永远执行。计量计算量也是使用燃气的一个原因。但是拥有燃气不代表需要费用。</p>
-<p>比如，在一个私链上，每个账户每天可以拥有 X 燃气，或者是每笔交易 Y 燃气，或者其他方案。另一方面，有费用不代表需要燃气：费用可以基于不同的计量，如字节。对于公有链上的安全性来说，燃气和费用两者都需要，而替代方案可能更适合私有链（比如，对于任何人都可以创建账户的公有链来说，每个账户每天有 X 燃气，可以被”女巫攻击“（Sybil-attacked））。</p>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>燃气是使用 Ethereum 的计量方式和燃料，与使用 Ethereum 所支付的以太币费用是不同的。提供足够的燃料和足够的费用，两者直接是有区别的。运行时燃料耗尽会花费钱，而提供更多的燃气会使得更加安全，反正所有的未使用的燃气都会被回退。燃气是以太坊的核心部分，它的大多数话题已经被讨论过。这里有更多关于它的信息，包括<a href="https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethestimategas" target="_blank" rel="noopener">估计燃气</a>，内在燃气（intrinsic gas），<a href="https://github.com/ethereum/go-ethereum/wiki/Gas-Price-Oracle" target="_blank" rel="noopener">燃气价格预告（gas price oracle）</a>，<a href="https://ethereum.stackexchange.com/questions/1106/is-there-a-limit-for-transaction-size" target="_blank" rel="noopener">交易大小的影响</a>，可以在本文的基础上进一步地探索和理解。</p>
-
-          
+<p>使这成为可能的核心实际上是 Ethereum。在技术上称为以太坊虚拟机（EVM），它包括用于计算和数据存储的操作。交易代表 Ethereum 内的单个会话。它是交互的单位，类似于句子如何作为语法意义的单位，尽管单个句子可以包含很多单词。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/01/以太坊-燃气-燃料和费用/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
-    </div>
+    </p></div>
     
     
     
@@ -1401,169 +1058,17 @@
 
       
         
-          
-            <p>尽管以太坊借鉴了许多已经在比特币这样的老式加密货币中经过了5年的尝试和测试的想法，但是以太坊在处理某些协议特征方面与常见方式有很多不同之处，因为目前现存的系统中没有以太坊需要的功能，所以以太坊另外开发了全新的功能。本文档的目的是详细说明在制定以太坊协议过程中所做出的所有可能不明显的或有些有争议的决定，以及显示我们的方法和可能的替代方案所涉及的风险。</p>
-<h2 id="原则"><a href="#原则" class="headerlink" title="原则"></a>原则</h2><p>以太坊协议的设计过程遵循了下列原则：</p>
-<ol>
-<li><strong>三明治复杂模型</strong>：我们相信以太坊结构的底层应该尽可能的简单，并且与以太坊的交互接口（包括开发者使用的高级编程语言以及用户的使用界面）应该尽可能的易懂。在复杂性不可避免的情况下，它应该被推入协议的“中间层”，它们不是核心共识的一部分，但也不被终端用户看到，如高级语言编译器，参数序列化和反序列化脚本，存储 数据结构模型，<code>leveldb</code>存储接口和有线协议等。但是，这种偏好并不是绝对的。</li>
-<li><strong>自由</strong>：用户在使用以太坊协议的时候不应该被限制，我们也不应该试图去表示喜欢或者不喜欢他们基于某种目的而使用的以太坊合约或者交易。这类似于和“网络中立”背后的指导原则。一个没有遵循此原则的例子是比特币交易协议中的情况，它不鼓励使用区块链来做“非标签”（如数据存储，元协议）目的的行为，并且在某些情况下明确了对准协议的改变（如 <code>OP_RETURN</code> 限制为 40 字节），试图以“未授权”方式使用区块链来攻击应用。在 <code>Ethereum</code> 中，我们强烈支持设置交易费用，这样大致上就会具有激励作用，这样，使用区块链的用户会以膨胀（<code>bloat-producing</code>）的方式内部化其活动成本（即 <code>Pigovian</code> 税）。</li>
-<li><strong>概念</strong>：以太坊中的协议特征和操作码应该体现最低级别的概念，以便可以以任意的方式进行组合，包括今天可能看起来不太有用但以后可能会变得有用的方法，然后当这些概念对于使用了这些概念的功能来说不再必要的时候，就可以通过剥离它们来提升效率。遵循这个原则的一个例子是我们选择 <code>LOG</code> 操作码作为向（特别是轻客户端）<code>dapps</code> 提供信息的一种方式，而不是像之前建议的那样在内部简单地记录所有事务和消息 - “消息”的概念是包括“方法调用”和“外部观察者感兴趣的事件”在内的多个概念的聚集，理应分离这两个概念。</li>
-<li><strong>我们没有特征</strong>：作为泛化的必然结果，我们常常拒绝将十分常见的高级使用示例作为协议的一部分，我们认为如果人们真的需要做一件事情，那么他可以在一个合约内部创建一个子协议。一个例子是以太坊中缺少与比特币中一样“锁定时间”的功能，因为这样的功能可以通过用户发送“签名数据包”协议来模拟，然后这些数据包可以被输入到专门的合同中处理，并且如果数据包符合合同的一些条件，就会触发相应的功能。</li>
-<li><strong>非风险规避</strong>：如果风险增加的变化提供了非常可观的收益（例如，广义的状态转换，50倍的更快的阻塞时间，共识效率等），那么我们可以承受更高的风险程度。</li>
-</ol>
-<p>这些原则在规定以太坊开发中都涉及到，但它们并不是绝对的，在某些情况下，减少开发时间的愿望或者不要立即尝试太多激进的东西，导致我们推迟某些明显有利的变革，以便将来发行（如以太坊1.1）。</p>
-<h2 id="区块链层次的协议"><a href="#区块链层次的协议" class="headerlink" title="区块链层次的协议"></a>区块链层次的协议</h2><p>这部分描述了以太坊中对区块链层次协议所做的一些改变，包括了区块和交易是如何工作的，数据是如何序列化和存储的，以及账户背后的机制。</p>
-<h3 id="账户和非-UTXOs"><a href="#账户和非-UTXOs" class="headerlink" title="账户和非 UTXOs"></a>账户和非 <code>UTXOs</code></h3><p>比特币，以及许多由它衍生而来的系统，将用户的资产数据存储在一个基于 <code>unspent transaction outputs(UTXOs)</code> 的结构中：整个系统的状态由一系列未花费输出（联想成“币”）组成，所以每个币都有一个主人和面值，而一笔交易可以花费一个或更多的币并且创建一个或更多的币，有效性的约束有：</p>
-<ol>
-<li>每一个被引用的输入必须是合法的并且没有被花费过</li>
-<li>交易中的每一个输入都必须有一个符合该输入的主人的签名</li>
-<li>所有的输入必须大于等于所有的输出</li>
-</ol>
-<p>因此，系统中用户的“余额”是用户具有能够产生有效签名的私钥的一组硬币的总值。</p>
-<p><img src="https://bitcoin.org/img/dev/en-transaction-propagation.svg" alt></p>
-<p>(图片来自 <code>https://bitcoin.org/en/developer-guide</code>)</p>
-<p>以太坊抛弃这个方案，转而采用更简单的方法：状态存储了一个账户列表，而每个账户都有一个余额，以及以太坊特定的数据（代码和内部存储），而在发送账户有足够的余额支付的情况下，交易将是有效的，在这种情况下，发送账户减少余额，收款账户增加余额。如果接收账户有代码，代码会运行，而内部存储也可能被更改，或者代码甚至可能会创建额外的消息给其他账户，从而导致进一步的余额变更。</p>
-<p><code>UTXOs</code> 的好处：</p>
-<ol>
-<li><strong>高度的隐私性</strong>：如果用户接受每笔交易的时候都使用一个新地址，那么就很难将账户连接起来。这对货币有很大的影响，但是对任意 <code>dapps</code> 就没有那么大了，因为 <code>dapps</code> 常常需要对用户的一系列复杂的状态保持跟踪，并且可能不存在像货币那样简单的用户状态分区方案。</li>
-<li><strong>潜在的可扩展性范例</strong>：<code>UTXO</code> 在理论上更与某些可扩展性模式相兼容，因为我们只能依靠一些拥有 <code>Merkle</code> 所有权证明的币的所有者，即使包括所有者在内的每个人都决定忘记这些数据，只有所有者受到损害( and even if everyone including the owner decides to forget that data then only the owner is harmed)。 在一个账户范例中，每个人失去一个账户对应的 <code>Merkle</code> 树的部分将使得不可能以任何方式处理影响该账户的消息，包括发送给它。 但是，非UTXO依赖的可伸缩性范例确实存在。</li>
-</ol>
-<p>账户的好处：</p>
-<ol>
-<li><strong>节省了大量空间</strong>：例如，如果一个账户有 5 个 <code>UTXO</code>，然后将一个 <code>UTXO</code> 模型转换成账户模型，它的空间要求就会从 （20+32+8）*5=300bytes(20 是地址，32 是 txid，8 是值)减少到 20+8+2=30bytes(20 是地址，8 是值，2 是nonce)。实际上，储蓄几乎没有这么大，因为账户需要存储在Patricia树中（见下文），但是它们仍然很大。（In reality savings are not nearly this massive because accounts need to be stored in a Patricia tree (see below) but they are nevertheless large. ）另外，交易会更小（如以太坊中需要 100 bytes 而比特币中需要 200-250bytes），因为每笔交易只需要使用一个引用，一个签名以及一个输出。</li>
-<li><strong>更好的可替代性</strong>：因为没有区块链层次的特定币来源的概念，所以从技术上和法律上来说，建立一个红名单/黑名单方案并根据它们的来源来区分币就很不现实。</li>
-<li><strong>简单</strong>：编码简单易懂，特别是涉及到复杂脚本的时候。虽然也可以强制使用 <code>UTXO</code> 模型来实现 <code>dapp</code>，但本质上是通过赋予脚本限制给定的UTXO可用于的UTXO类型的能力（ssentially by giving scripts the ability to restrict what kinds of UTXO a given UTXO can be spent to），并且需要花费包括根据脚本评估的 <code>Merkle</code> 树中的应用程序状态改变的证明的 <code>Merkle</code> 树的根（and requiring spends to include Merkle tree proofs of change-of-application-state-root that scripts evaluate），这样的范例比使用帐户更加复杂和难看。</li>
-<li><strong>持久的轻客户端参考</strong>：轻客户端可以在任何时候通过定向扫描一棵状态树来访问一个账户相关的所有数据。在 <code>UTXO</code> 模型中，每笔交易都会改变引用，对于长时间运行的 <code>dapps</code> 来说，试图使用上面提到的 <code>UTXO</code> 状态传播机制，将是一个特别繁琐的问题。</li>
-</ol>
-<p>我们已经做好了决定，特别是因为我们正在处理包含任意状态和代码的 <code>dapps</code>，帐户的好处大大超过了其他选择。 此外，本着“我们没有特征”原则的精神，我们认为，如果人们确实关心隐私，那么可以通过合同内的签名数据包协议来建立混淆器（mixer）和组合币（coinjoin）。</p>
-<p>账户模型的一个缺点是，为了防止重放攻击，每笔交易都必须有一个 <code>nonce</code> 值，这样账户就可以对使用的 <code>nonce</code> 进行跟踪，并且只接受当前 <code>nonce</code> 值比之前的 <code>nonce</code> 值多 1 的交易。这意味着即使是废弃的账号也不会删除账号状态。解决这个问题的一个简单方法是要求每笔交易都包含一个区块号，使得它们在一段时期之后就不能够被重放，并且在每个时期都重置一次 <code>nonce</code>。矿工或者其他用户会对账户进行 <code>ping</code> 操作，然后删除状态中的未使用账户，因为作为区块链协议的一部分，进行全部扫描的代价太高了。我们没有用这个机制只是为了加快 <code>1.0</code> 的发展; <code>1.1</code> 及以后可能会使用这样一个系统。</p>
-<h2 id="默克尔帕夏里克树"><a href="#默克尔帕夏里克树" class="headerlink" title="默克尔帕夏里克树"></a>默克尔帕夏里克树</h2><p>默克尔帕夏里克树（<code>Merkle Patricia tree/trie</code>），以前由 Alan Reiner 设想并在 Ripple 协议中实现，是以太坊中的基本数据结构，被用来存储所有的账户状态，以及区块中的交易和收据。<code>MPT</code> 是 <code>Merkle tree</code> 和 <code>Patricia tree</code> 的结合，以两者的元素来创建具有以下两个属性的结构：</p>
-<ol>
-<li>每一组唯一的键/值对唯一地映射到一个根散列，并且不可能欺骗一个 <code>trie</code> 中的键/值对的成员（除非攻击者具有〜2 ^ 128 的计算能力）</li>
-<li>在对数时间对进行修改，添加和删除键值对。</li>
-</ol>
-<p>这为我们提供了一种方法，可以高效的，更新容易的，对我们整个状态树进行“指纹”操作。以太坊 <code>MPT</code> 是正式描述如下：<a href="https://github.com/ethereum/wiki/wiki/Patricia-Tree" target="_blank" rel="noopener">https://github.com/ethereum/wiki/wiki/Patricia-Tree</a></p>
-<p><code>MPT</code> 中详细的设计决定包括：</p>
-<ol>
-<li><strong>拥有两种节点类别</strong>：<code>kv</code> 节点和分叉节点（从 <code>MPT</code> 详解中获得更多信息）。<code>kv</code> 节点的存在提高了效率，因为如果一棵树在特定区域稀疏，<code>kv</code> 节点就可以作为“快捷方式”，从而不需要深度为 64 的树。</li>
-<li><strong>使分叉节点为 6 而不是 2</strong>：这是为了提升查找效率。我们现在认识到这个选择并不理想，因为可以通过存储批量节点，以二进制模式模拟六叉树的查找效率。然而，由于 <code>trie</code> 结构在实现中很容易出现错误，最终导致根本不匹配，所以我们决定把它推迟到 <code>1.1</code>。</li>
-<li><strong>空值和没有成员之间没有区别</strong>：这是为了简单起见，并且因为以太坊的默认值通常意味着零（如 余额（balance）），而且空字符串被用来表示零，所以实际运行起来也没有任何问题。</li>
-<li><strong>终止和非终止节点之间的区别</strong>：从技术上讲，“这个节点终止”标志是不必要的，因为以太坊中的所有 <code>trie</code> 都用来存储静态键长度，但是为了增加通用性，我们添加了它，希望其他加密协议也能够使用以太坊中 <code>MPT</code> 的实现方式。</li>
-<li><strong>使用 <code>sha3(k)</code> 作为 ”安全树（secure tree）” 中的键（在状态和账户存储中使用）</strong>：这会使得「通过设置一个分叉了 64 层级深的节点的最大不利链，然后在这上面不断调用 <code>SLOAD</code> 和 <code>SSTORE</code>」这样的方式，对 <code>trie</code> 进行 <code>DoS</code> 攻击会十分困难。请注意，这使枚举树更加困难。 如果你想在你的客户端拥有枚举功能，最简单的方法是维护一个数据库映射 <code>sha3（k） - &gt; k</code>。</li>
-</ol>
-<h2 id="RLP"><a href="#RLP" class="headerlink" title="RLP"></a>RLP</h2><p><code>RLP</code>（递归场地前缀）编码是以太坊中主要使用的序列化格式，并且被使用于任何地方 - 区块，交易，账户状态和信息传递协议。<code>RLP</code> 的正式描述如下：<a href="https://github.com/ethereum/wiki/wiki/RLP" target="_blank" rel="noopener">https://github.com/ethereum/wiki/wiki/RLP</a></p>
-<p><code>RLP</code> 旨在成为高度简约的序列化格式，它唯一的目的是存储嵌套的字节数组。不像 <code>[protobuf](https://developers.google.com/protocol-buffers/docs/pythontutorial)</code>，<code>[BSON](http://bsonspec.org/)</code> 和其他解决方式，<code>RLP</code> 并不想定义任何具体的数据类型，如 <code>booleans, floats, doubles</code> 或者 <code>integers</code>，相反，它只是以嵌套数组的形式存储结构，并将其留给协议来确定数组的含义。键/值映射也不被明确支持; 支持键/值映射的半官方建议是将这些映射表示为<code>[[k1，v1]，[k2，v2]，...]</code>，其中 <code>k1，k2 ...</code> 使用字符串的标准排序来排序。</p>
-<p><code>RLP</code> 的替选方案可以使用已经存在的算法如 <code>protobuf</code> 或者 <code>BSON</code>，但我们更青睐 <code>RLP</code> 的原因是：(1) 实现方式简单。（2）保证绝对的字节完美一致性。许多语言中的键/值映射没有明确的顺序，浮点格式有许多特殊情况，这可能导致相同的数据使用不同的编码，因此产生不同的哈希。我们可以内部开发一个协议来确定解决这些问题（这是一个普遍的原则，也适用于代码的其他部分，例如 <code>VM</code>）。注意 <code>BitTorrent</code> 使用的 <code>bencode</code>，可能为 <code>RLP</code> 提供了一个可行的替代方案，尽管其使用十进制编码的长度使得它与二进制 <code>RLP</code> 相比稍微不太理想。</p>
-<h2 id="压缩算法"><a href="#压缩算法" class="headerlink" title="压缩算法"></a>压缩算法</h2><p>有线协议和数据库都使用了定制的压缩算法来存储数据。该算法可以被最好地描述为运行长度编码零（<code>run-length-encoding zeroes</code>），并保留其他值，除了像 <code>sha3（&#39;&#39;）</code> 这样的常见值的一些特殊情况例外。例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; compress(&apos;horse&apos;)</span><br><span class="line">&apos;horse&apos;</span><br><span class="line">&gt;&gt;&gt; compress(&apos;donkey dragon 1231231243&apos;)</span><br><span class="line">&apos;donkey dragon 1231231243&apos;</span><br><span class="line">&gt;&gt;&gt; compress(&apos;\xf8\xaf\xf8\xab\xa0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xbe&#123;b\xd5\xcd\x8d\x87\x97&apos;)</span><br><span class="line">&apos;\xf8\xaf\xf8\xab\xa0\xfe\x9e\xbe&#123;b\xd5\xcd\x8d\x87\x97&apos;</span><br><span class="line">&gt;&gt;&gt; compress(&quot;\xc5\xd2F\x01\x86\xf7#&lt;\x92~&#125;\xb2\xdc\xc7\x03\xc0\xe5\x00\xb6S\xca\x82&apos;;&#123;\xfa\xd8\x04]\x85\xa4p&quot;)</span><br><span class="line">&apos;\xfe\x01&apos;</span><br></pre></td></tr></table></figure>
-<p>在压缩算法出现之前，以太坊协议中的很多部分都有大量的特殊情况。比如，<code>sha3</code> 常常被覆盖，以至于 <code>sha3(&#39;&#39;)=&#39;&#39;</code>，这样就不需要存储代码或者在账户中存储，所以会节省 64 个字节。但是，最近发生的变化是，所有的这些特殊情况都被移除 - 这使得以太坊数据结构在默认情况下变得非常庞大，取而代之的是将数据保存功能添加到区块链协议层之外的层级，添加方式是将其利用有线协议无缝插入用户的数据库实现。 这增加了模块性，简化了共识层，并且还允许相对容易地部署压缩算法的升级（例如，通过网络协议版本）。</p>
-<h2 id="树的使用方式"><a href="#树的使用方式" class="headerlink" title="树的使用方式"></a>树的使用方式</h2><p>警告：本节内容假设你已经了解了布隆过滤器是如何工作的。详情可见<a href="http://en.wikipedia.org/wiki/Bloom_filter" target="_blank" rel="noopener">http://en.wikipedia.org/wiki/Bloom_filter</a></p>
-<p>以太坊区块链中的每个区块都包含了 3 个指针指向 3 个 树：状态树（the state trie），代表连接区块之后的全部状态，交易树，代表区块中索引关联的所有交易（即 <code>key 0</code>:第一笔要执行的交易，<code>key 1</code>:第二笔要执行的交易，等等），以及收据树，代表了符合每笔交易的收据（receipts）。对应于一笔交易的收据是一个经过 <code>RLP</code> 编码的数据结构：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ medstate, gas_used, logbloom, logs ]</span><br></pre></td></tr></table></figure>
-<p>对应的：</p>
-<ul>
-<li><code>medstate</code> 是处理交易之后的状态树的根。</li>
-<li><code>gas_used</code> 是处理该笔交易之后消耗的燃料数量。</li>
-<li><code>logs</code> 是交易执行过程中由 <code>LOG0 ... LOG4</code> 操作码生成的 <code>[address, [topic1, topic2...], data]</code>形式的项目列表（包括主调用和次调用）。<code>address</code> 是产生日志的合约的地址，<code>topics</code> 最多为 4 个 32 字节值，<code>data</code> 是任意大小的字节数组。</li>
-<li><code>logbloom</code> 是交易中所有的日志的 <code>topics</code> 和地址组成的布隆过滤器。</li>
-</ul>
-<p>区块头中也有一个布隆（bloom），它是区块中所有交易的布隆的“或”结果。这个结构的目的是使以太坊的轻客户端尽可能的友好。更多以太坊轻客户端和它们的使用实例，见<a href="https://github.com/ethereum/wiki/wiki/Light-client-protocol#principles" target="_blank" rel="noopener">light client page (principles section)</a>。</p>
-<h2 id="叔块激励"><a href="#叔块激励" class="headerlink" title="叔块激励"></a>叔块激励</h2><p>“贪婪的最重观察子树（Greedy Heaviest Observed Subtree）”（GHOST）协议是 Yonatan Sompolinsky 和 Aviv Zohar 于 2013 年 12 月<a href="http://eprint.iacr.org/2013/881.pdf" target="_blank" rel="noopener">首次</a>推出的一项创新，也是第一次有人认真尝试解决“阻塞越来越快”的问题。<code>GHOST</code> 背后的动机是，目前区块链通过最快确认次数来确认区块的方案，由于过高的陈旧率而降低了安全性 - 因为区块在网络中传播需要一定的时间，如果矿工 A 挖出一个块，然后在矿工 A 的块传播到 B 之前矿工 B 恰巧挖出另一个块 ，矿工 B 的块将会浪费掉（“陈旧”），并且对于网络安全没有任何帮助。此外，还有一个集中化问题：如果矿工 A 是一个拥有3 0％ 算力的矿池，而 B 拥有 10％ 的算力，那么 A 将有 70％ 的时间产生陈旧块的风险（因为另外 30％ 的时间 A 产生了最后一个块，因此将立即获取挖掘数据），而 B 将有 90％ 的时间产生陈旧块的风险。因此，如果区块间隔足够短而导致陈旧率较高，那么凭借其算力，明显地，A 将更高效。将这两种效应结合起来，快速生成区块的区块链很可能导致一个具有足够算力的矿池对挖矿产生垄断。</p>
-<p>正如 Sompolinsky 和 Zohar 所描述的那样，<code>GHOST</code> 通过在计算哪个链是“最长”时包含陈旧块来解决网络安全损失的第一个问题; 也就是说，在计算最长链的工作量证明中，除了该区块的直系祖先区块，还包含了该区块之前被废弃的叔块。</p>
-<p>为了解决可能的中心化问题，我们采用了一个不同的策略：我们对叔块进行奖励：一个叔块会获得它的基本奖励的 7/8(87.5%)，而该叔块的下一个区块会获得基本奖励的 1/32(3.125%)。当然交易费不会作为奖励。</p>
-<p>在以太坊中，一个陈旧的块只能被当做一个叔块，然后从它的兄弟区块往下最多被直系区块包含 7 代，除此之外叔块和其他任何区块都没有关系。这么做的原因如下：首先，不受限制的 <code>GHOST</code> 会在计算哪个叔块对于当前的区块是合法的时候产生大量的困难。其次，在以太坊中使用无限制的叔块激励，会导致矿工对于是否在主链挖矿不再关心，而这可能导致主链被公共攻击。最后，计算表明，限制到七个级别时利大于弊。</p>
-<ul>
-<li>这里有一个可用的衡量集中化风险的仿真器<a href="https://github.com/ethereum/economic-modeling/blob/master/ghost.py" target="_blank" rel="noopener">https://github.com/ethereum/economic-modeling/blob/master/ghost.py</a></li>
-<li>一个更高级的讨论<a href="https://blog.ethereum.org/2014/07/11/toward-a-12-second-block-time/" target="_blank" rel="noopener">https://blog.ethereum.org/2014/07/11/toward-a-12-second-block-time/</a></li>
-</ul>
-<p>我们的区块时间算法中的设计决定包含：</p>
-<ul>
-<li><strong>12 秒出块时间</strong>：选择 12 秒作为尽可能快的时间，但同时比网络等待时间长得多。2013年，Decker和Wattenhofer在苏黎世的<a href="http://www.tik.ee.ethz.ch/file/49318d3f56c1d525aabf7fda78b23fc0/P2P2013_041.pdf" target="_blank" rel="noopener">一篇文章</a>测量了比特币的网络延迟，并确定了 12.6 秒是一个新块传播到95％的节点所花费的时间。然而，论文还指出，大部分传的播时间与块的大小成正比，因此越快的货币传播时间越少（in a faster currency we can expect the propagation time to be drastically reduced）。传播间隔的恒定部分约为 2 秒，但是，为了安全起见，我们假设块在我们的分析中需要 12 秒才能传播。</li>
-<li><strong>7 个区块祖先限制</strong>：这是一个设计目标的一部分，希望在块数很少的情况下很快就可以使块的历史被“遗忘”，并且已经证明 7 块已经提供了大部分预期的效果。</li>
-<li><strong>一个区块后代限制</strong>（如，<code>c(c(p(p(p(head)))))</code>，其中 c = child，p = parent，是不合法的）：这是简洁的设计目标的一部分，上面的模拟器显示它不会带来很大的集中化风险。</li>
-<li><strong>叔块验证要求</strong>：叔块必须包含一个有效的头部，而不是块。这是为了简单起见，并将区块链模型保持为线性数据结构（而不是 Sompolinsky 和 Zohar 的新模型中的块 <code>DAG</code>）。 要求叔块的块合法也是一个有效的方法。</li>
-</ul>
-<h2 id="难度调整算法"><a href="#难度调整算法" class="headerlink" title="难度调整算法"></a>难度调整算法</h2><p>以太坊目前的难度调整规则如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">diff(genesis) = 2^32</span><br><span class="line"></span><br><span class="line">diff(block) = diff.block.parent + floor(diff.block.parent / 1024) *</span><br><span class="line">    1 if block.timestamp - block.parent.timestamp &lt; 9 else</span><br><span class="line">    -1 if block.timestamp - block.parent.timestamp &gt;= 9</span><br></pre></td></tr></table></figure>
-<p>难度调整规则的设计目标是：</p>
-<ul>
-<li><strong>快速更新</strong>：区块之间的时间的调整要快。</li>
-<li><strong>稳定</strong>：如果算力不变，难度不应该过大。</li>
-<li><strong>简单</strong>：算法实现要简单。</li>
-<li><strong>占用内存低</strong>：算法不应依赖太多历史区块，并尽可能少地使用内存。假设最后十个块，加上最后十个块的块头中的所有内存变量，这就足够算法运行了。</li>
-<li><strong>非开发性</strong>：该算法不应该过度鼓励矿工修改时间戳，或者矿池频繁地增加和移除算力，以试图最大化他们的收入。</li>
-</ul>
-<p>我们已经确定，我们目前的算法在稳定性和不可利用性方面非常不理想，然后我们打算至少将时间戳相对于父母和祖父母进行切换，这样当矿工挖矿时，他们只会修改时间戳。另一个更强大的仿真器公式位于<a href="https://github.com/ethereum/economic-modeling/blob/master/diffadjust/blkdiff.py" target="_blank" rel="noopener"><code>https://github.com/ethereum/economic-modeling/blob/master/diffadjust/blkdiff.p</code></a>（仿真器使用比特币的挖矿能力，但只使用当天的均值;它在一天的时间内，在某个点模拟 95% 的崩溃）。</p>
-<h2 id="燃料和手续费"><a href="#燃料和手续费" class="headerlink" title="燃料和手续费"></a>燃料和手续费</h2><p>比特币中的交易大致相同，因此它们在网络上的成本可以抽象成一个模型，而以太坊中的交易则更复杂，交易费用系统需要考虑许多因素，包括带宽成本 ，存储成本和计算成本。特别重要的是，以太坊编程语言是图灵完备的，因此交易可以使用任意数量的带宽，存储和计算，并且因为不能提前可靠地预估暂停的问题，算力可能被大量使用。所以防止通过无限循环进行的拒绝服务攻击是一个关键目标。</p>
-<p>交易手续费的基本机制如下：</p>
-<ul>
-<li>每笔交易都需要指定一定愿意被花费的燃料数量（被称作 <code>startgas</code>），以及愿意为每单位燃料支付的价格（<code>gasprice</code>）。在执行之初，<code>startgas * gasprice</code> 这么多的 <code>ether</code> 会从交易发送者的账户中被移除。</li>
-<li>交易执行期间的所有操作，包括数据库的读写，消息，和虚拟机中的每个计算步骤，都会消耗一定数量的燃料。</li>
-<li>如果一笔交易执行被完整地处理，消耗的燃料比它限定的燃料少，那么该剩余的燃料被称作 <code>gas_rem</code>。一笔交易首先会正常执行，然后在交易执行的最后，交易发送者会收到一笔退款 <code>gas_rem * gasprice</code>，矿工会收到一笔 <code>(startgas - gas_rem) * gasprice</code> 的奖励。</li>
-<li>如果在交易执行过程中，燃料耗尽，那么所有的执行都会被回滚，而交易也依旧未被验证。该交易的唯一影响是 <code>startgas * gasprice</code> 会被转给矿工。</li>
-<li>当一个合约发送一个消息给另一个合约，它也可以设置一个燃料限定来指定由该消息引起的子执行操作。如果该执行耗尽燃料，那么一切回滚，而燃料也会被消耗。</li>
-</ul>
-<p>以上的每个部分都是必要的。例如：</p>
-<ul>
-<li>如果交易不需要指定燃料限制，那么恶意用户可以发送一笔进行数十亿循环的交易，因为处理这样的交易将花费比块间隔更长的时间，所以没有人能够处理它， 但矿工们无法预知该交易的存在，那么就会导致拒绝服务漏洞。</li>
-<li>将时间限制替代燃料限制，并不会起作用，因为这太主观了（有些机器比其他机器更快，甚至在相同的机器中也总是存在闭合调用）。</li>
-<li>整个值 <code>startgas * gasprice</code> 必须在开始时即作为存款取出，这样就不会出现账户在执行中“破产”并且无法支付燃料的情况。 请注意，余额检查是不够的，因为帐户可以在其他地方发送余额。</li>
-<li>如果在燃料不足的错误下，执行没有回滚，那么合约就需要采取强有力但是困难的安全措施，以防止自身被交易或消息利用而提供只能运行到一半的燃料，从而导致当前正在执行的合约发生一些变化。</li>
-<li>如果分限制不存在，那么敌对账户可以通过与其签订协议来制定对其他合同的拒绝服务攻击，然后在计算开始时插入无限循环，这样受害者合约中的任何企图补偿攻击合约（any attempts by the victim contract to compensate the attack contract）或向其发送消息的行为都会使整个交易执行陷于瘫痪。</li>
-<li>要求交易发送者支付燃料而不是合约，这大大提高了开发者的可用性。以太坊的早期版本有合约支付燃料，但是这导致了一个相当丑的问题，即每个合约都必须实施“守卫”代码，以确保每一个传入的信息都足以补偿合约以足以支付燃料的消耗。</li>
-</ul>
-<p>注意燃料消耗的特定的特性：</p>
-<ul>
-<li>21000 单位的燃料是一笔交易的基本手续费。这涵盖了从签名中恢复发件人地址以及存储交易的空间和带宽空间的椭圆曲线操作的成本。</li>
-<li>一笔交易可以包括无限的数据，虚拟机提供了操作码使得合约接受交易来访问数据。固定燃料手续费为，每个 0 字节 4 单位燃料，每个非 0 字节 68 单位燃料。这个公式是因为我们注意到用户写的合约中的大多数交易数据都被组织成一系列 32 字节的参数，其中大部分都有前导 0 字节，而且这样的构造看起来似乎没有效率，但是由于压缩算法，这样反而十分有效率，我们希望鼓励使用它们来代替更复杂的机制，以便根据预期的字节数来压缩参数，从而在编译器级别增加复杂性。这是三明治复杂性模型的一个例外，但是由于成本与收益的比例，这是合理的。</li>
-<li><code>SSTORE</code> 操作符会在账户的存储空间中设置变量，它的消耗如下：(i) 将一个为零的变量改为非零时，为 20000 单位的燃料，(ii) 将一个零变量改为零变量，将一个非零变量改为非零变量时，为 5000 单位燃料，(iii) 将非零变量改为零变量时，为 5000 单位燃料，加上在成功交易执行结束时提供的 20000 单位燃料退款。（plus a 20000 gas refund to be given at the end of successful transaction execution）（即不是执行导致的燃料耗尽异常）。退款最高为交易花费的全部燃料的一半。这提供了一个小小的激励来清空存储空间，因为我们注意到，没有这样的激励的话，很多合约都会留下一些未使用的存储空间，导致快速增加膨胀，为存储“收取租金”提供了很多好处，同时也没有风险，一个被放置好的合同将永远存在。延迟退款机制对于防止拒绝服务攻击是必要的，攻击者会发送具有少量燃料的交易，在一个运行很长时间的循环中频繁清空大量的存储空间，这样会很快耗尽燃料，也会消耗验证者大量的算力，但这个操作实际上却并没有清空存储空间或者花费大量的燃料。需要 50% 的上限，以确保一个矿工在给予其一定数量燃料的交易后仍然可以确定执行交易的计算时间的上限。</li>
-<li>合约提供的消息中的数据不会消耗燃料。这是因为在消息调用期间不需要真正“复制”任何数据，因为调用数据可以简单地看作是指向父合约的内存的指针，它在子进程执行期间不会改变。</li>
-<li>内存是一个无限可扩展的阵列。 但是，四舍五入之后，每 32 字节的内存扩展会消耗一个单位的燃料。</li>
-<li>一些计算时间高度依赖于参数的操作码，拥有不同的燃料消耗值。比如，指数的燃料消耗为 10 加上指数中的每字节的 10 单位（即 x^0 = 1 燃料，x^1…x^255 = 2 燃料，x^256…x^65535 = 3 燃料 等等），而复制操作码（<code>CALLDATACOPY, CODECOPY, EXTCODECOPY</code>）的燃料消耗为 1 加上每 32 字节的一单位燃料，这里四舍五入（<code>LOG</code> 拥有类似的规则）。内存膨胀的燃料成本不足以弥补这一缺陷，因为它打开了一次二次攻击（50000 轮的 50000 单位燃料的 <code>CALLDATACOPY</code> 约为 50000 ^ 2 的计算量，但在引入可变燃料成本之前只有约 50000 单位燃料）</li>
-<li>如果值非零，那么<code>CALL</code> 操作码（和对称的 <code>CALLCODE</code>）花费额外的 9000 单位燃料。这是因为任意值转移都会导致存档节点的历史存储空间严重膨胀。注意，实际的手续费为 6700；在这之上我们强制增加了一个最低为 2300 单位的燃料用来自动给收据。这是为了确保收到交易的钱包至少有足额的燃料来记录该交易。</li>
-</ul>
-<p>燃料机制的另一个重要的部分是燃料价格本身的经济性。比特币中使用的默认方法是完全自愿的手续费，依靠矿工设置动态的最低值来扮演一个守门人的角色；与之相对的，在以太坊中，允许交易发送者设置任意的燃料消耗。这种方式在比特币社区中十分受欢迎，因为它是基于市场的，允许矿工和交易发送者之间的供需关系决定价格。然而这里存在一个问题，交易处理并不是市场；尽管将交易处理作为矿工提供给发送方的服务具有直接的吸引力，但实际上，矿工打包的每笔交易都需要被网络上的每个节点处理，因此绝大多数交易处理成本由第三方承担，而不是决定是否打包该交易的矿工。因此，很可能会发生普遍灾难（tragedy-of-the-commons）的问题。</p>
-<p>目前，由于缺少关于矿工实际上是处理的详细信息，我们实施了一个相当简单的方法：一个投票系统。矿工拥有权力对当前的区块设置燃料限制，该限制与上一个区块的燃料限制可以有大约 0.0975%（1/1024）的浮动，因此产生的燃料限制应该为矿工偏好的中位数。我们希望将来能够将其分解为更精确的算法。</p>
-<h2 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h2><p>以太坊虚拟机是交易码执行的引擎，也是以太坊和其他系统不同的核心特性。注意，将 <em>虚拟机</em> 和 <em>合约</em> 与 <em>消息模型</em> 分别看待，比如， <code>SIGNEXTEND</code> 操作码是虚拟机的一个特性，而合约可以调用其他合约，指定子调用的燃料限制是合约和消息的一部分。以太坊虚拟机的设计目的包括：</p>
-<ul>
-<li><strong>简单</strong>：尽可能少的底层操作码，尽可能少的数据类型，以及尽可能少的虚拟机层次的结构。</li>
-<li><strong>完全明确</strong>：在虚拟机的说明中绝对不允许存在模棱两可的情况，并且结果必须是完全确定的。另外，应该有一个精确的计算步骤的概念，可以测量计算燃料的消耗。</li>
-<li><strong>节省空间</strong>：以太坊虚拟机组件应尽可能紧凑（例如，默认 C 程序的 4000 字节基本大小是不可接受的）。</li>
-<li><strong>期望的应用的专业能力（Specialization to expected applications）</strong>：有能力处理 20 字节地址 和自定义的32 字节变量的加密，自定义加密中 的模块化算法，读取区块和交易数据，与状态交互等等。</li>
-<li><strong>简单的安全</strong>：应该很容易就能够想出一个使得虚拟机不可利用的操作符的燃料消耗模型。</li>
-<li><strong>优化友好</strong>：应该很容易应用优化，以便可以构建 <code>JIT</code> 编译的和其他速度更快的 <code>VM</code> 版本。</li>
-</ul>
-<p>一些特殊的设计决定如下：</p>
-<ul>
-<li><strong>临时/永久存储的区别</strong> - 存在于虚拟机的每个实例内并在虚拟机执行完成时消失的临时存储与基于每个账户的存在于区块链状态级别上的永久存储之间存在区别。比如，假设执行下列执行树（使用 S 代表永久存储，M 代表临时存储）：（i） A 调用 B，（ii） B 设置 <code>B.S[0] = 5</code>，<code>B.M[0] = 9</code>，（iii） B 调用 C，（iv）C 调用 B。在此时，如果 B 树读取 <code>B.S[0]</code>，它会获取到之前存储在 B 中的值，但是 B 树读取 <code>B.M[0]</code>，它回返回 0，因为在虚拟机的临时存储中这个一个新的实例。如果 B 在这个内部调用中设置 <code>B.M[0] = 13</code> 和 <code>B.S[0] = 17</code>，然后这个内部调用和 C 的调用终止，使得执行回到 B 的外部调用，然后 B 读取 M，将会看到 <code>B.M[0] = 9</code>(自上次设置此值在同一个 VM 执行实例中) 和 <code>B.S[0] = 17</code>。如果 B 的外部调用终止，A 再次调用 B，然后 B 会看到 <code>B.M[0] = 0</code> 和 <code>B.S[0] = 17</code>。这种区别的目的是（1）为每个执行实例提供自己的内存，这些内存不会受到递归调用的破坏，使安全编程变得更加容易，并且（2）提供一种可以非常快地操作的内存形式， 因为需要修改树，所以存储更新的速度一定很慢。</li>
-<li><strong>栈/内存模型</strong> - 早期做出的决定有三种计算状态（除了指向下一条指令的程序计数器外）：栈（一种标准的先进后出的 32 字节变量栈），内存（一种无限可扩展的临时字节数组）和存储（永久存储）。在临时存储方面，堆栈和内存的替代方案是一个仅限内存的范例，或者是寄存器和内存的混合（不是很不相同，因为从根本上说寄存器也是一种内存）。在这个例子中，每个命令会有三个参数，如 <code>ADD R1 R2 R3:M[R1] = M[R2] + M[R3]</code>。选择堆栈范例的原因很明显，它使代码缩小了四倍。</li>
-<li><strong>32 字节字大小</strong> - 与其他大多数架构一样，替代方案是 4 或 8 个字节的字，或者像比特币一样是无限的字。4 字节或 8 字节字太严格，无法存储加密计算的地址和很大的值，而无限的值则很难根据其建立一个安全的燃料模型。32 字节是理想的，因为它足够大以存储许多加密实现中常见的 32 字节值，以及地址（并提供将地址和值打包到单个存储索引中的优化能力），但又不会太大以至于效率变得极低。</li>
-<li><strong>拥有我们自己的虚拟机</strong> - 替代方案是使用 <code>Java</code>，或者一些 <code>Lisp dialect</code>，或者 <code>Lua</code>。我们认为拥有一个专门的虚拟机是合适的，因为（i）我们的虚拟机规格比许多其他虚拟机简单得多，因为其他虚拟机必须为复杂性付出更低的成本，而在我们的情况下，每次增加复杂性都是朝着创建开发集中化和可能存在包括共识失败的安全漏洞这样的高门槛迈出的一步（whereas in our case every additional unit of complexity is a step toward high barriers of entry creating development centralization and potential for security flaws including consensus failures,），（ii）它使我们能够更专业化虚拟机，例如，通过具有 32 字节的字大小，（iii）它使我们不会有非常复杂的可能导致安装困难的外部依赖性，以及（iv）针对以太坊的特殊安全需求的安全审查，无论如何都需要对外部虚拟机进行安全审查，因此节省的工作量并不大。</li>
-<li><strong>使用可变的可扩展内存大小</strong> - 我们认为，如果规模很小，或者规模很大，都没有必要限定一个固定的内存大小，并且注意如果内存访问的语句在任何情况下都需要检查越界访问，那么固定大小就不会使执行效率更高。</li>
-<li><strong>不限制堆栈大小</strong> - 没有任何特别的理由; 请注意，在许多情况下，限制并非绝对必要，因为燃料消耗和区块级燃料限制的组合总是作为每种资源消耗的上限。</li>
-<li><strong>有一个 1024 层级深度的调用限制</strong> - 许多编程语言在很高的堆栈深度时会比在很高的内存使用率或计算负载时突然崩溃的速度快得多，因此区块燃料限制的隐含限制可能不足。</li>
-<li><strong>没有类型</strong> - 为了简单。相反，取而代之的是使用有符号或无符号的操作码如 <code>DIV, SDIV, MOD, SMOD</code>（事实证明，对于 <code>ADD</code> 和 <code>MUL</code>，有符号和无符号操作码的行为是等同的），以及定点数运算（高深度定点运算是 32 字节字的另一个好处）在任何情况下都很简单，如 32 位深度，<code>a * b -&gt; (a * b) / 2^32</code>，<code>a / b -&gt; a * 2^32 / b</code> 以及 +，- 和 * 在整数情况下保持不变。</li>
-</ul>
-<p>虚拟机中的一些方法和操作码的目的是显而易见的，但也不全是。一些特殊解释给出如下：</p>
-<ul>
-<li><strong><code>ADDMOD, MULMOD</code></strong>：在大多数情况下，<code>addmod(a, b, c) = a * b % c</code>。然而，在许多类椭圆曲线密码学的特定情况下，使用 32 字节模块化算术，因此直接做 <code>a * b % c</code> 实际上是 <code>((a * b) % 2 ^ 256) % c</code>，这就是一个完全不同的结果。在 32 字节的空间中使用 32 字节的值计算 <code>a * b % c</code> 的公式是十分普通和臃肿的。</li>
-<li><strong>SIGNEXTEND</strong>：SIGNEXTEND 的目的是促进从更大的有符号整数到更小的有符号整数的类型转换。 小的带符号整数很有用，因为 JIT 编译的虚拟机将来可以检测长时间运行的代码块，这些代码块主要处理 32 字节整数，并大大加快速度。</li>
-<li><strong>SHA3</strong>： SHA3 在以太坊代码中十分使用，因为使用存储的安全无限大小散列映射可能需要使用安全散列函数，以防止恶意冲突，以及验证默克尔树，甚至是验证类以太坊的数据结构。一个关键点是它的朋友 SHA256，ECRECOVER 和 RIPEMD160不是作为操作码而是伪协议被包含其中。这样做的目的是将它们放入一个单独的类别中，以便在之后我们提出适当的“本机扩展”系统时，可以添加更多此类合约而不是填充操作码的空间。</li>
-<li><strong>ORIGIN</strong>：提供交易发送人的 <code>ORIGIN</code> 操作码的主要用途是允许合约对燃料进行退款支付。</li>
-<li><strong>COINBASE</strong>：<code>COINBASE</code> 操作码的主要用途是（i）允许子货币选择为网络安全做出贡献;以及（ii）开放矿工的使用权，作为分布式经济集合，用于基于次级共识的应用程序，如 Schellingcoin。</li>
-<li><strong>PREVHASH</strong>：用作半安全随机源，并允许合约评估前一个区块中 Merkle 树状态的树状证明，而不需要高度复杂的递归“以太坊中的以太坊轻客户端”构造。</li>
-<li><strong>EXTCODESIZE, EXTCODECOPY</strong>：这里的主要用途是允许合约在与其他合约进行交互之前，根据模板检查其他合约的代码，甚至模拟它们。见应用的<a href="http://lesswrong.com/lw/aq9/decision_theories_a_less_wrong_primer/" target="_blank" rel="noopener">http://lesswrong.com/lw/aq9/decision_theories_a_less_wrong_primer/</a></li>
-<li><strong>JUMPDEST</strong>：JIT 编译的虚拟机在跳转目标受限于几个索引时变得更容易实现（具体的说，可变目标跳转的计算复杂度大致为 O(log(有效跳转目标的数量))，尽管静态跳转总是常量时间）。因此，我们需要（i）对有效变量跳转目标的限制，（ii）激励使用静态跳转。为了达到这些目的，我们有以下规则（i）在被推送紧接着的跳转可以跳转到任意地方，但是不能跳转到另一个跳转，（ii）其他跳转尽能跳到 JUMPDEST。限制跳转到跳转是必要的，这样查看一个跳转是动态还是静态的可以很容易的根据代码中在它之前的操作判断。对静态跳转缺乏 JUMPDEST 操作的需求是使用它们的动机。禁止跳入推送数据也会加速 JIT VM 的编译和执行。</li>
-<li><strong>LOG</strong>：LOG 表示记录事件，可见上面树的使用部分。</li>
-<li><strong>CALLCODE</strong>：这个操作符的目的是允许合约以存储在其他合约中的代码的形式调用“函数”，这样具有单独的堆栈和内存，但是使用该合约自己的存储。这使得在区块链上可扩展地实现代码的“标准库”变得更加容易。</li>
-<li><strong>SELFDESTRUCT</strong>：如果不再需要一个合约可以通过此操作符来销毁该合约。SELFDESTRUCT 在交易执行结束时被处理，而不是立即处理，这是因为拥有回滚早已执行的 SELFDESTRUCT 的能力会大大增加一个高效的虚拟机实现中所需的高速缓存的复杂度。</li>
-<li><strong>PC</strong>：尽管在理论上不是必需的，因为 PC 操作码的所有实例都可以通过简单地将实际的程序计数器放在该索引处作为推动来替换，使用代码中的 PC 允许创建与位置无关的代码（即编译的可复制/粘贴到其他合同中的函数，并且如果它们以不同的索引结束就不会中断）。</li>
-</ul>
-
-          
+          <p>尽管以太坊借鉴了许多已经在比特币这样的老式加密货币中经过了5年的尝试和测试的想法，但是以太坊在处理某些协议特征方面与常见方式有很多不同之处，因为目前现存的系统中没有以太坊需要的功能，所以以太坊另外开发了全新的功能。本文档的目的是详细说明在制定以太坊协议过程中所做出的所有可能不明显的或有些有争议的决定，以及显示我们的方法和可能的替代方案所涉及的风险。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/02/24/ethereum-设计原理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
-    </div>
+    </p></div>
     
     
     
@@ -1677,89 +1182,14 @@
 
       
         
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">EIP: 20</span><br><span class="line">Title: ERC-20 Token Standard</span><br><span class="line">Author: Fabian Vogelsteller &lt;fabian@ethereum.org&gt;, Vitalik Buterin &lt;vitalik.buterin@ethereum.org&gt;</span><br><span class="line">Type: Standard</span><br><span class="line">Category: ERC</span><br><span class="line">Status: Accepted</span><br><span class="line">Created: 2015-11-19</span><br></pre></td></tr></table></figure>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>token 接口标准。</p>
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>下面描述了在智能合约中对代币实现的 API 标准。这个标准提供了转移，接受代币的基本方法，所以代币可以在链上被转给第三方。</p>
-<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>一种使得在 Ethereum 上的代币可以被其他应用复用的标准接口：从钱包到去中心化的交易所。</p>
-<h2 id="详情"><a href="#详情" class="headerlink" title="详情"></a>详情</h2><h3 id="代币"><a href="#代币" class="headerlink" title="代币"></a>代币</h3><h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ul>
-<li>注意：调用者必须处理 <code>returns (bool success)</code> 返回的 <code>false</code> 情况。不能假设永远不会返回 <code>false</code>。</li>
-</ul>
-<h4 id="name"><a href="#name" class="headerlink" title="name"></a>name</h4><p>返回代币名称。如 MyToken。</p>
-<p>可选的 - 该方法可以被提高可用性，不过接口和其他合约不能认为其是一定存在的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function name() constant returns (string name)</span><br></pre></td></tr></table></figure>
-<h4 id="symbol"><a href="#symbol" class="headerlink" title="symbol"></a>symbol</h4><p>返回代币符号。如 HIX。</p>
-<p>可选的 - 该方法可以被提高可用性，不过接口和其他合约不能认为其是一定存在的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function symbol() constant returns (string symbol)</span><br></pre></td></tr></table></figure>
-<h4 id="decimals"><a href="#decimals" class="headerlink" title="decimals"></a>decimals</h4><p>返回十进制的代币使用数量。如 8，代表用户能看到 100000000 分之一的代币。</p>
-<p>可选的 - 该方法可以被提高可用性，不过接口和其他合约不能认为其是一定存在的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function decimals() constant returns (uint8 decimals)</span><br></pre></td></tr></table></figure>
-<h4 id="totalSupply"><a href="#totalSupply" class="headerlink" title="totalSupply"></a>totalSupply</h4><p>返回代币发行的总数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function totalSupply() constant returns (uint256 totalSupply)</span><br></pre></td></tr></table></figure>
-<h4 id="balanceOf"><a href="#balanceOf" class="headerlink" title="balanceOf"></a>balanceOf</h4><p>返回指定地址的剩余账户资产</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function balanceOf(address _owner) constant returns (uint256 balance)</span><br></pre></td></tr></table></figure>
-<h4 id="transfer"><a href="#transfer" class="headerlink" title="transfer"></a>transfer</h4><p>将指定数量的代币转移到指定地址，并且必须触发 <code>Transfer</code> 事件。当发币账户没有足够的资产，应该 throw。</p>
-<ul>
-<li><p>注意：转账额为 0，也必须按照常规转账执行，并且触发 Transfer 事件。</p>
-<p><code>function transfer(address _to, uint256 _value) returns (bool success)</code></p>
-</li>
-</ul>
-<h4 id="transferFrom"><a href="#transferFrom" class="headerlink" title="transferFrom"></a>transferFrom</h4><p>将一定数量资产从 <code>_from</code> 转账到 <code>_to</code>，并且必须触发 <code>Transfer</code> 事件。</p>
-<p>本方法用于提币，允许合约从你的账户转移代币。举例来说，合约可以从你的账户中扣除一定资产作为手续费。除非经过 <code>_from</code> 通过某些机制认证了信息的发送者。</p>
-<ul>
-<li><p>注意：转账额为 0，也必须按照常规转账执行，并且触发 Transfer 事件。</p>
-<p><code>function transferFrom(address _from, address _to, uint256 _value) returns (bool success)</code></p>
-</li>
-</ul>
-<h4 id="approve"><a href="#approve" class="headerlink" title="approve"></a>approve</h4><p>设置提币额度。允许 <code>_spender</code> 从你的账户中多次提币，直到上限 <code>_value</code>。如果这个方法被再次调用，它会使用 <code>_value</code> 覆盖当前的额度。</p>
-<ul>
-<li><p>注意：为了防御如<a href="https://docs.google.com/document/d/1YLPtQxZu1UAvO9cZ1O2RPXBbT0mooh4DYKjA_jp-RLM/edit#heading=h.m9fhqynw2xvt" target="_blank" rel="noopener">这里描述的</a>和<a href="https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729" target="_blank" rel="noopener">这里讨论的</a>，客户端在设置一个用户可以从一个账户提出一定资产之前，需要先将提币额度设置成 0。尽管合约本身不强制要求完成此要求。</p>
-<p><code>function approve(address _spender, uint256 _value) returns (bool success)</code></p>
-</li>
-</ul>
-<h4 id="allowance"><a href="#allowance" class="headerlink" title="allowance"></a>allowance</h4><p>返回消费者 <code>_spender</code> 从 <code>_owner</code> 账户中的剩余提币额度。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function allowance(address _owner, address _spender) constant returns (uint256 remaining)</span><br></pre></td></tr></table></figure>
-<h3 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h3><h4 id="Transfer"><a href="#Transfer" class="headerlink" title="Transfer"></a>Transfer</h4><p>当发生资产转移的时候，必须触发此事件，即使资产转移数为 0。</p>
-<p>当一个创建代币的合约创建新代币时，应该触发 Transfer 事件，并且将 <code>_from</code> 地址设为 <code>0x0</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event Transfer(address indexed _from, address indexed _to, uint256 _value)</span><br></pre></td></tr></table></figure>
-<h4 id="Approval"><a href="#Approval" class="headerlink" title="Approval"></a>Approval</h4><p>成功调用 <code>approve(address _spender, uint256 _value)</code> 时，必须触发。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event Approval(address indexed _owner, address indexed _spender, uint256 _value)</span><br></pre></td></tr></table></figure>
-<h2 id="个人总结"><a href="#个人总结" class="headerlink" title="个人总结"></a>个人总结</h2><p>该接口是对于代币的一个约定，尽量统一不同代币的相关方法，以方便代币的使用。</p>
-<p>对于代币主要有两部分，即查看资产，和转账功能。能查看的资产有代币总数，和用户个人账户中的代币数量。资产转账功能中又分为主动转与第三方转。所以该约定主要针对的就是这些基本功能。</p>
-<p>资产部分：</p>
-<ol>
-<li><p>查看代币总量，<code>totalSupply</code>： </p>
-<p><code>function totalSupply() constant returns (uint256 totalSupply)</code></p>
-</li>
-<li><p>查看个人账户代币数量，<code>balanceOf</code>：</p>
-<p><code>function balanceOf(address _owner) constant returns (uint256 balance)</code></p>
-</li>
-</ol>
-<p>转账部分：</p>
-<ol>
-<li><p>个人主动转账，<code>transfer</code>：</p>
-<p><code>function transfer(address _to, uint256 _value) returns (bool success)</code></p>
-</li>
-<li><p>第三方转账，<code>transferFrom</code>：</p>
-<p><code>function transferFrom(address _from, address _to, uint256 _value) returns (bool success)</code></p>
-</li>
-</ol>
-<p>2.1 设置第三方能够从自己账户提币的额度，<code>approve</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function approve(address _spender, uint256 _value) returns (bool success)</span><br></pre></td></tr></table></figure>
-<p>2.2 查看第三方当前还能够从指定账户提币的额度，allowance：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function allowance(address _owner, address _spender) constant returns (uint256 remaining)</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>除了以上，还有两个是用户需要用到的，即什么时候发生了资产的变更，和什么时候发生了提币额度的变更</li>
-</ol>
-<p>3.1 资产转移必须触发的事件，<code>Transfer</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event Transfer(address indexed _from, address indexed _to, uint256 _value)。</span><br></pre></td></tr></table></figure>
-<p>3.2 提币额度修改必须触发的事件，<code>Approval</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event Approval(address indexed _owner, address indexed _spender, uint256 _value)</span><br></pre></td></tr></table></figure>
-<p>所以代币必须的有以上 6 个函数，2 个事件。而 6 个函数中，因为 <code>totalSupply()</code> 函数是一个针对代币合约中公开状态的读取，而对于合约中的公开状态，合约会自动生成一个针对该状态的公开函数，用来访问获取该状态的值，所以 <code>totalSupply()</code> 函数可以由在合约中创建一个 <code>totalSupply</code> 状态变量替代。</p>
-<p>除此之外，对于转账的函数，与现实生活中一样，需要对转账金额和账户金额进行比较，不可能存在转账金额比账户金额还要多的情况。所以当金额不足时，需要抛出异常。这样一切就会回滚，不会出现错误。这里要注意，不能直接 +/-，因为存在情况被构造数据，在增加或者减少之后溢出产生的数据在比较中通过的情况，所以要利用开源的公用数学类库，它已经封装好了相关的方法。</p>
-<p>对于转账来说，自然是有出的账户地址，也有入的账户地址，创建新代币的合约也是一个转账操作，就是将指定的币量转到一个指定的外部账户，但是来源呢，这里就有一个约定，来源地址为 ‘0x0’。所以当转账的来源地址为这个值的时候，说明这实际上是创建了一个新代币。</p>
-
-          
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">EIP: 20</span><br><span class="line">Title: ERC-20 Token Standard</span><br><span class="line">Author: Fabian Vogelsteller &lt;fabian@ethereum.org&gt;, Vitalik Buterin &lt;vitalik.buterin@ethereum.org&gt;</span><br><span class="line">Type: Standard</span><br><span class="line">Category: ERC</span><br><span class="line">Status: Accepted</span><br><span class="line">Created: 2015-11-19</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/02/23/Ethereum-EIP-20/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

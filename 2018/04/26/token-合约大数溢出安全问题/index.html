@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。 BEC12345678910111213function batchTransfer(address[] _receivers, uint256 _value) public whenNotPaused returns (bool) &amp;#123;  uint cnt =">
+<meta name="description" content="上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。">
 <meta name="keywords" content="blockchain ethereum erc20">
 <meta property="og:type" content="article">
 <meta property="og:title" content="token 合约大数溢出安全问题">
 <meta property="og:url" content="http://yoursite.com/2018/04/26/token-合约大数溢出安全问题/index.html">
 <meta property="og:site_name" content="Fuyk&#39;s blog">
-<meta property="og:description" content="上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。 BEC12345678910111213function batchTransfer(address[] _receivers, uint256 _value) public whenNotPaused returns (bool) &amp;#123;  uint cnt =">
+<meta property="og:description" content="上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-27T16:03:03.926Z">
+<meta property="og:updated_time" content="2019-02-27T17:00:41.585Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="token 合约大数溢出安全问题">
-<meta name="twitter:description" content="上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。 BEC12345678910111213function batchTransfer(address[] _receivers, uint256 _value) public whenNotPaused returns (bool) &amp;#123;  uint cnt =">
+<meta name="twitter:description" content="上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。">
 
 
 
@@ -300,7 +300,7 @@
       
 
       
-        <p>上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。</p>
+        <p>上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。<br><a id="more"></a></p>
 <h2 id="BEC"><a href="#BEC" class="headerlink" title="BEC"></a>BEC</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function batchTransfer(address[] _receivers, uint256 _value) public whenNotPaused returns (bool) &#123;</span><br><span class="line">  uint cnt = _receivers.length;</span><br><span class="line">  uint256 amount = uint256(cnt) * _value; // 大数溢出 amount 可能从 11111.....1111 体现成 1111 从而在发送者的余额范围内</span><br><span class="line">  require(cnt &gt; 0 &amp;&amp; cnt &lt;= 20);</span><br><span class="line">  require(_value &gt; 0 &amp;&amp; balances[msg.sender] &gt;= amount);</span><br><span class="line"></span><br><span class="line">  balances[msg.sender] = balances[msg.sender].sub(amount);</span><br><span class="line">  for (uint i = 0; i &lt; cnt; i++) &#123;</span><br><span class="line">      balances[_receivers[i]] = balances[_receivers[i]].add(_value); // 各个地址增加 _value 余额</span><br><span class="line">      Transfer(msg.sender, _receivers[i], _value);</span><br><span class="line">  &#125;</span><br><span class="line">  return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>BEC</code> 的问题出现在 <code>batchTransfer</code> 方法。如注释所述，当 <code>amount</code> 超过最大值，那么该值会被截取范围内的数字，当截取后的数字处在当前用户余额范围内，那么 <code>_value &gt; 0 &amp;&amp; balances[msg.sender] &gt;= amount</code> 成立。后面的代码就可以正常执行，余额减去实际的 <code>amount</code> 截取后的较小数字，然后可以给地址列表内的地址增加 <code>_value</code> 余额。</p>
 <h2 id="SMT"><a href="#SMT" class="headerlink" title="SMT"></a>SMT</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">function transferProxy(address _from, address _to, uint256 _value, uint256 _feeSmt,</span><br><span class="line">    uint8 _v,bytes32 _r, bytes32 _s) public transferAllowed(_from) returns (bool)&#123;</span><br><span class="line"></span><br><span class="line">    // 将 _feeSmt + _value 的和截取后溢出值小于发起者余额 绕过检测</span><br><span class="line">    // _value = 8fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</span><br><span class="line">    // _feeSmt = 7000000000000000000000000000000000000000000000000000000000000001</span><br><span class="line">    if(balances[_from] &lt; _feeSmt + _value) revert();</span><br><span class="line"></span><br><span class="line">    uint256 nonce = nonces[_from]; // 获得发起人 nonce </span><br><span class="line">    bytes32 h = keccak256(_from,_to,_value,_feeSmt,nonce);</span><br><span class="line">    if(_from != ecrecover(h,_v,_r,_s)) revert();</span><br><span class="line"></span><br><span class="line">    // _value &gt; 0 , _feeSmt &gt; 0</span><br><span class="line">    if(balances[_to] + _value &lt; balances[_to]</span><br><span class="line">        || balances[msg.sender] + _feeSmt &lt; balances[msg.sender]) revert();</span><br><span class="line">    balances[_to] += _value;</span><br><span class="line">    Transfer(_from, _to, _value);</span><br><span class="line"></span><br><span class="line">    balances[msg.sender] += _feeSmt;</span><br><span class="line">    Transfer(_from, msg.sender, _feeSmt);</span><br><span class="line"></span><br><span class="line">    balances[_from] -= _value + _feeSmt; // 发起人扣币为溢出之后截取的值</span><br><span class="line">    nonces[_from] = nonce + 1; </span><br><span class="line">    return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -336,8 +336,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/01/智能合约最佳实践翻译六-文档和程序/" rel="next" title="智能合约最佳实践翻译六 - 文档和程序">
-                <i class="fa fa-chevron-left"></i> 智能合约最佳实践翻译六 - 文档和程序
+              <a href="/2018/04/01/智能合约最佳实践翻译八-安全通知/" rel="next" title="智能合约最佳实践翻译八 - 安全通知">
+                <i class="fa fa-chevron-left"></i> 智能合约最佳实践翻译八 - 安全通知
               </a>
             
           </div>

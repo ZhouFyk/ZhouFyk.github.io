@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Token 实现最佳实践实现 Token 应该符合其他的最佳实践，但是它有一些独特的考虑。 遵守最新的标准通常来说，token 的智能合约应该遵循公认的稳定标准。 当前公认的标准有：  EIP20 EIP721（不可替代的 token）  注意 EIP-20 的前期攻击EIP-20 的 token 的 approve() 函数可能会让第三方提币量超过设置的预定数量。一个 前期攻击 可以使得一个经过">
+<meta name="description" content="Token 实现最佳实践实现 Token 应该符合其他的最佳实践，但是它有一些独特的考虑。 遵守最新的标准通常来说，token 的智能合约应该遵循公认的稳定标准。 当前公认的标准有：  EIP20 EIP721（不可替代的 token）">
 <meta name="keywords" content="blockchain ethereum solidity">
 <meta property="og:type" content="article">
 <meta property="og:title" content="智能合约最佳实践翻译五 - Token 实现最佳实践">
 <meta property="og:url" content="http://yoursite.com/2018/03/26/智能合约最佳实践翻译五-Token-实现最佳实践/index.html">
 <meta property="og:site_name" content="Fuyk&#39;s blog">
-<meta property="og:description" content="Token 实现最佳实践实现 Token 应该符合其他的最佳实践，但是它有一些独特的考虑。 遵守最新的标准通常来说，token 的智能合约应该遵循公认的稳定标准。 当前公认的标准有：  EIP20 EIP721（不可替代的 token）  注意 EIP-20 的前期攻击EIP-20 的 token 的 approve() 函数可能会让第三方提币量超过设置的预定数量。一个 前期攻击 可以使得一个经过">
+<meta property="og:description" content="Token 实现最佳实践实现 Token 应该符合其他的最佳实践，但是它有一些独特的考虑。 遵守最新的标准通常来说，token 的智能合约应该遵循公认的稳定标准。 当前公认的标准有：  EIP20 EIP721（不可替代的 token）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-27T16:29:33.751Z">
+<meta property="og:updated_time" content="2019-02-27T16:55:38.895Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="智能合约最佳实践翻译五 - Token 实现最佳实践">
-<meta name="twitter:description" content="Token 实现最佳实践实现 Token 应该符合其他的最佳实践，但是它有一些独特的考虑。 遵守最新的标准通常来说，token 的智能合约应该遵循公认的稳定标准。 当前公认的标准有：  EIP20 EIP721（不可替代的 token）  注意 EIP-20 的前期攻击EIP-20 的 token 的 approve() 函数可能会让第三方提币量超过设置的预定数量。一个 前期攻击 可以使得一个经过">
+<meta name="twitter:description" content="Token 实现最佳实践实现 Token 应该符合其他的最佳实践，但是它有一些独特的考虑。 遵守最新的标准通常来说，token 的智能合约应该遵循公认的稳定标准。 当前公认的标准有：  EIP20 EIP721（不可替代的 token）">
 
 
 
@@ -307,6 +307,7 @@
 <li><a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md" target="_blank" rel="noopener">EIP20</a></li>
 <li><a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md" target="_blank" rel="noopener">EIP721</a>（不可替代的 token）</li>
 </ul>
+<a id="more"></a>
 <h3 id="注意-EIP-20-的前期攻击"><a href="#注意-EIP-20-的前期攻击" class="headerlink" title="注意 EIP-20 的前期攻击"></a>注意 EIP-20 的前期攻击</h3><p>EIP-20 的 token 的 <code>approve()</code> 函数可能会让第三方提币量超过设置的预定数量。一个 <a href="https://consensys.github.io/smart-contract-best-practices/known_attacks/#transaction-ordering-dependence-tod-front-running" target="_blank" rel="noopener">前期攻击</a> 可以使得一个经过授权的用户不论是在调用方法 <code>approve()</code> 之前还是之后都可以调用 <code>transferFrom()</code> 函数。更多细节可见 <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md#approve" target="_blank" rel="noopener">EIP</a> 和 <a href="https://docs.google.com/document/d/1YLPtQxZu1UAvO9cZ1O2RPXBbT0mooh4DYKjA_jp-RLM/edit" target="_blank" rel="noopener">此文档</a>。</p>
 <h3 id="防止将-token-转到地址-0x0"><a href="#防止将-token-转到地址-0x0" class="headerlink" title="防止将 token 转到地址 0x0"></a>防止将 token 转到地址 0x0</h3><p>在写本文的此刻，“零”地址（<a href="https://etherscan.io/address/0x0000000000000000000000000000000000000000" target="_blank" rel="noopener">0x0000000000000000000000000000000000000000</a>）所拥有的 token 的价值超过了 8000,000 美元。</p>
 <h3 id="防止将-token-转到合约地址"><a href="#防止将-token-转到合约地址" class="headerlink" title="防止将 token 转到合约地址"></a>防止将 token 转到合约地址</h3><p>注意不要将 token 转到和智能合约地址相同的地址。</p>
@@ -356,8 +357,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/04/01/智能合约最佳实践翻译七-安全工具/" rel="prev" title="智能合约最佳实践翻译七 - 安全工具">
-                智能合约最佳实践翻译七 - 安全工具 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/04/01/智能合约最佳实践翻译六-文档和程序/" rel="prev" title="智能合约最佳实践翻译六 - 文档和程序">
+                智能合约最佳实践翻译六 - 文档和程序 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

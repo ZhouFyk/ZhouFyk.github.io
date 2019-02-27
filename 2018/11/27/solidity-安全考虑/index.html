@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Security Considerations 陷阱Private Information and Randomness - 私密信息和随机性即使本地变量是和状态变量被标记为 private，你在合约中的任何数据都是公开可见的。 如果你不想要矿工有能力作弊，在智能合约中使用随机数是很困难的。 Re-Entrancy - 重入任何合约 A 与合约 B 的交互以及任何转移以太币的操作都将控制权交给了合">
+<meta name="description" content="Security Considerations 陷阱Private Information and Randomness - 私密信息和随机性即使本地变量是和状态变量被标记为 private，你在合约中的任何数据都是公开可见的。 如果你不想要矿工有能力作弊，在智能合约中使用随机数是很困难的。">
 <meta name="keywords" content="blockchain ethereum solidity security">
 <meta property="og:type" content="article">
 <meta property="og:title" content="solidity 安全考虑">
 <meta property="og:url" content="http://yoursite.com/2018/11/27/solidity-安全考虑/index.html">
 <meta property="og:site_name" content="Fuyk&#39;s blog">
-<meta property="og:description" content="Security Considerations 陷阱Private Information and Randomness - 私密信息和随机性即使本地变量是和状态变量被标记为 private，你在合约中的任何数据都是公开可见的。 如果你不想要矿工有能力作弊，在智能合约中使用随机数是很困难的。 Re-Entrancy - 重入任何合约 A 与合约 B 的交互以及任何转移以太币的操作都将控制权交给了合">
+<meta property="og:description" content="Security Considerations 陷阱Private Information and Randomness - 私密信息和随机性即使本地变量是和状态变量被标记为 private，你在合约中的任何数据都是公开可见的。 如果你不想要矿工有能力作弊，在智能合约中使用随机数是很困难的。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-27T16:16:41.120Z">
+<meta property="og:updated_time" content="2019-02-27T16:59:19.376Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="solidity 安全考虑">
-<meta name="twitter:description" content="Security Considerations 陷阱Private Information and Randomness - 私密信息和随机性即使本地变量是和状态变量被标记为 private，你在合约中的任何数据都是公开可见的。 如果你不想要矿工有能力作弊，在智能合约中使用随机数是很困难的。 Re-Entrancy - 重入任何合约 A 与合约 B 的交互以及任何转移以太币的操作都将控制权交给了合">
+<meta name="twitter:description" content="Security Considerations 陷阱Private Information and Randomness - 私密信息和随机性即使本地变量是和状态变量被标记为 private，你在合约中的任何数据都是公开可见的。 如果你不想要矿工有能力作弊，在智能合约中使用随机数是很困难的。">
 
 
 
@@ -303,6 +303,7 @@
         <p><a href="https://solidity.readthedocs.io/en/latest/security-considerations.html" target="_blank" rel="noopener">Security Considerations</a></p>
 <h2 id="陷阱"><a href="#陷阱" class="headerlink" title="陷阱"></a>陷阱</h2><h3 id="Private-Information-and-Randomness-私密信息和随机性"><a href="#Private-Information-and-Randomness-私密信息和随机性" class="headerlink" title="Private Information and Randomness - 私密信息和随机性"></a>Private Information and Randomness - 私密信息和随机性</h3><p>即使本地变量是和状态变量被标记为 <code>private</code>，你在合约中的任何数据都是公开可见的。</p>
 <p>如果你不想要矿工有能力作弊，在智能合约中使用随机数是很困难的。</p>
+<a id="more"></a>
 <h3 id="Re-Entrancy-重入"><a href="#Re-Entrancy-重入" class="headerlink" title="Re-Entrancy - 重入"></a>Re-Entrancy - 重入</h3><p>任何合约 A 与合约 B 的交互以及任何转移以太币的操作都将控制权交给了合约 B。那么合约 B 就能在交互完成之前再次调用 A。举例来说，下面的代码包含一个 bug （只是个代码片段，不是完整的合约）：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity &gt;=0.4.0 &lt;0.6.0</span><br><span class="line">contract Fund&#123;</span><br><span class="line">    mapping(address=&gt;uint) shares;</span><br><span class="line">    function withdraw() public &#123;</span><br><span class="line">        if (msg.sender.send(shares[msg.sender]))</span><br><span class="line">        	shares[msg.sender] = 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里的问题并不是很严重，因为 <code>send</code> 的 gas 消耗是被限制了的，但是还是存在一个缺陷：以太币的转移是允许代码执行的，所以接收方可以是一个合约，而该合约可以再次调用 <code>withdraw</code>。这可以让合约 B 接收多次转账，基本上能够获得合约 A 中所有的以太币。特别的，下面这个合约使用了 <code>call</code> ，这允许攻击者可以多次退款，因为 <code>call</code> 默认转移剩余所有的 gas：</p>

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php framework ci,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1. 入口文件 index.php123456789101112131415161718192021222324&amp;lt;?php//强制 php 7.1 以上$minPHPVersion = &amp;apos;7.1&amp;apos;;if (phpversion() &amp;lt; $minPHPVersion)&amp;#123;	die(&amp;quot;Your PHP version must be &amp;#123;$mi">
+<meta name="keywords" content="php framework ci">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ci 4 启动过程">
+<meta property="og:url" content="http://yoursite.com/2018/12/19/ci-4-启动过程/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="1. 入口文件 index.php123456789101112131415161718192021222324&amp;lt;?php//强制 php 7.1 以上$minPHPVersion = &amp;apos;7.1&amp;apos;;if (phpversion() &amp;lt; $minPHPVersion)&amp;#123;	die(&amp;quot;Your PHP version must be &amp;#123;$mi">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-28T02:43:42.176Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ci 4 启动过程">
+<meta name="twitter:description" content="1. 入口文件 index.php123456789101112131415161718192021222324&amp;lt;?php//强制 php 7.1 以上$minPHPVersion = &amp;apos;7.1&amp;apos;;if (phpversion() &amp;lt; $minPHPVersion)&amp;#123;	die(&amp;quot;Your PHP version must be &amp;#123;$mi">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/19/ci-4-启动过程/">
+
+
+
+
+
+  <title>ci 4 启动过程 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/19/ci-4-启动过程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ci 4 启动过程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-19T18:10:29+08:00">
+                2018-12-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-入口文件-index-php"><a href="#1-入口文件-index-php" class="headerlink" title="1. 入口文件 index.php"></a>1. 入口文件 <code>index.php</code></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">//强制 php 7.1 以上</span><br><span class="line">$minPHPVersion = &apos;7.1&apos;;</span><br><span class="line">if (phpversion() &lt; $minPHPVersion)</span><br><span class="line">&#123;</span><br><span class="line">	die(&quot;Your PHP version must be &#123;$minPHPVersion&#125; or higher to run CodeIgniter. Current version: &quot; . phpversion());</span><br><span class="line">&#125;</span><br><span class="line">unset($minPHPVersion);</span><br><span class="line"></span><br><span class="line">//定义前端控制器路径常量</span><br><span class="line">define(&apos;FCPATH&apos;, __DIR__ . DIRECTORY_SEPARATOR);</span><br><span class="line">// 包含配置文件 - 路径文件</span><br><span class="line">$pathsPath = FCPATH . &apos;../app/Config/Paths.php&apos;;</span><br><span class="line">// 确保路径正确</span><br><span class="line">chdir(__DIR__);</span><br><span class="line"></span><br><span class="line">// 加载 app </span><br><span class="line">require $pathsPath;</span><br><span class="line">$paths = new Config\Paths();</span><br><span class="line"></span><br><span class="line">$app = require rtrim($paths-&gt;systemDirectory, &apos;/ &apos;) . &apos;/bootstrap.php&apos;;</span><br><span class="line"></span><br><span class="line">// 运行 app</span><br><span class="line">$app-&gt;run();</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h4 id="1-1-配置文件"><a href="#1-1-配置文件" class="headerlink" title="1.1 配置文件"></a>1.1 配置文件</h4><p>包含路径配置文件，实例化路径配置类。这里只为了获取一个 <code>systemDirectory</code> 配置。</p>
+<h4 id="1-2-加载初始化文件"><a href="#1-2-加载初始化文件" class="headerlink" title="1.2 加载初始化文件"></a>1.2 加载初始化文件</h4><p><code>/system/bootstrap.php</code> 文件内容，类似旧版本的 <code>index.php</code>（旧版本的 <code>CodeIgniter.php</code> 现在封装成了类）。</p>
+<h4 id="1-3-运行"><a href="#1-3-运行" class="headerlink" title="1.3 运行"></a>1.3 运行</h4><p>调用 <code>run</code> 方法。</p>
+<h3 id="2-配置文件"><a href="#2-配置文件" class="headerlink" title="2 配置文件"></a>2 配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$pathsPath = FCPATH . &apos;../app/Config/Paths.php&apos;;</span><br><span class="line">require $pathsPath;</span><br><span class="line">$paths = new Config\Paths();</span><br></pre></td></tr></table></figure>
+<h3 id="3-初始化文件"><a href="#3-初始化文件" class="headerlink" title="3 初始化文件"></a>3 初始化文件</h3><ol>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$app = require rtrim($paths-&gt;systemDirectory, &apos;/ &apos;) . &apos;/bootstrap.php&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>bootstrap.php</code> 定义了路径常量</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">if (! defined(&apos;APPPATH&apos;))</span><br><span class="line">&#123;</span><br><span class="line">	define(&apos;APPPATH&apos;, realpath($paths-&gt;appDirectory) . DIRECTORY_SEPARATOR);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (! defined(&apos;ROOTPATH&apos;))</span><br><span class="line">&#123;</span><br><span class="line">	define(&apos;ROOTPATH&apos;, realpath(APPPATH . &apos;../&apos;) . DIRECTORY_SEPARATOR);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (! defined(&apos;SYSTEMPATH&apos;))</span><br><span class="line">&#123;</span><br><span class="line">	define(&apos;SYSTEMPATH&apos;, realpath($paths-&gt;systemDirectory) . DIRECTORY_SEPARATOR);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (! defined(&apos;WRITEPATH&apos;))</span><br><span class="line">&#123;</span><br><span class="line">	define(&apos;WRITEPATH&apos;, realpath($paths-&gt;writableDirectory) . DIRECTORY_SEPARATOR);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (! defined(&apos;TESTPATH&apos;))</span><br><span class="line">&#123;</span><br><span class="line">	define(&apos;TESTPATH&apos;, realpath($paths-&gt;testsDirectory) . DIRECTORY_SEPARATOR);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>引入一些必要的文件:</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">require_once APPPATH . &apos;Config/Constants.php&apos;; // 加载全局常量</span><br><span class="line">require_once SYSTEMPATH . &apos;Common.php&apos;; // 加载全局函数</span><br><span class="line">require_once SYSTEMPATH . &apos;Autoloader/Autoloader.php&apos;; // 加载自动加载类</span><br><span class="line">require_once APPPATH . &apos;Config/Autoload.php&apos;; // 加载自动加载配置</span><br><span class="line">require_once SYSTEMPATH . &apos;Config/BaseService.php&apos;; // 加载基础服务配置类</span><br><span class="line">require_once APPPATH . &apos;Config/Services.php&apos;; // 加载服务配置</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>注册自动加载器：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">if (! class_exists(&apos;CodeIgniter\Services&apos;, false))</span><br><span class="line">&#123;</span><br><span class="line">	class_alias(&apos;Config\Services&apos;, &apos;CodeIgniter\Services&apos;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$loader = CodeIgniter\Services::autoloader();</span><br><span class="line">$loader-&gt;initialize(new Config\Autoload());</span><br><span class="line">$loader-&gt;register();</span><br></pre></td></tr></table></figure>
+<p>设置类别名。注册自动加载。自动加载是 <code>CodeIgniter\Services</code> 类（其实是 <code>Config\Services</code> 类），位于 <code>/system/Config/Services.php</code>，<code>autoloader()</code> 方法实际调用的其实是这个类的父类 <code>CodeIgniter\Config\BaseService</code> 类，都在一个目录下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public static function autoloader(bool $getShared = true)</span><br><span class="line">&#123;</span><br><span class="line">	if ($getShared) // 是否单例</span><br><span class="line">	&#123;</span><br><span class="line">		if (empty(static::$instances[&apos;autoloader&apos;]))</span><br><span class="line">		&#123;</span><br><span class="line">			static::$instances[&apos;autoloader&apos;] = new \CodeIgniter\Autoloader\Autoloader();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		return static::$instances[&apos;autoloader&apos;];</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return new \CodeIgniter\Autoloader\Autoloader();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以调用的其实是 <code>\CodeIgniter\Autoloader\Autoloader()</code>，位于 <code>/system/Autoloader/Autoloader.php</code>。<code>initialize()</code> 方法为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public function initialize(\Config\Autoload $config)</span><br><span class="line">&#123;</span><br><span class="line">	if (empty($config-&gt;psr4) &amp;&amp; empty($config-&gt;classmap))</span><br><span class="line">	&#123;</span><br><span class="line">		throw new \InvalidArgumentException(&apos;Config array must contain either the \&apos;psr4\&apos; key or the \&apos;classmap\&apos; key.&apos;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if (isset($config-&gt;psr4))</span><br><span class="line">	&#123;</span><br><span class="line">		$this-&gt;addNamespace($config-&gt;psr4);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if (isset($config-&gt;classmap))</span><br><span class="line">	&#123;</span><br><span class="line">		$this-&gt;classmap = $config-&gt;classmap;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	unset($config);</span><br><span class="line"></span><br><span class="line">	return $this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法的参数是自动加载的相关配置，从代码可以看出是「命名空间配置」和「类与路径的映射关系」。这个配置参数强制限定为 <code>Config\Autoload</code>，位于 <code>/app/Config/Autoload.php</code> 文件，这个配置文件就是定义「命名空间」和「类与路径的映射关系」的。初始化参数设置完成之后，调用了 <code>register()</code> 方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public function register()</span><br><span class="line">&#123;</span><br><span class="line">	spl_autoload_extensions(&apos;.php,.inc&apos;);</span><br><span class="line">	spl_autoload_register([$this, &apos;loadClass&apos;], true, true); // **1</span><br><span class="line">	$config = is_array($this-&gt;classmap) ? $this-&gt;classmap : [];</span><br><span class="line"></span><br><span class="line">	spl_autoload_register(function ($class) use ($config) &#123; // **2</span><br><span class="line">		if (empty($config[$class]))</span><br><span class="line">		&#123;</span><br><span class="line">			return false;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		include_once $config[$class];</span><br><span class="line">	&#125;, true, </span><br><span class="line">		true</span><br><span class="line">	);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法注册自动加载函数。里面 1/2 两处的函数实现原理都是之前 <code>__autoload()</code> 的实现方式。自动加载函数的实现原理见 P.S.</p>
+<blockquote>
+<p>P.S: 命名空间与自动加载器</p>
+<p>我原来还奇怪没有映射类文件存在路径，使用命名空间之后是怎么找到类文件的，其实是我概念总是搞混了。</p>
+<p>关于命名空间和自动加载器的问题：最初，我们要使用一个类，肯定是需要能够找到这个类的定义，才能实例化它，所以它就应该在当前的代码中被找到，而类多了之后，不可能在一个文件内被全部定义，代码会十分长。所以会分文件来保存类，这样结构也会更清晰，然后使用 <code>require_once / include_once</code> 等方式引入文件，就可以使用类了。</p>
+<p>但是如果类文件过多，那么 <code>require_once</code> 也会很多，又会回到之前的情况，只不过之前的类定义都变成了一行行 <code>require_once</code> 代码。这种情况，使用 <code>__autoload()</code> 魔术方法可以使得代码更美观，这个魔术方法在使用未定义类的时候触发，它的功能就是尝试找到未定义的类，找到的话就引入该类文件。那么我们在这个方法内封装了之前的 <code>require_once</code> 相关代码，就可以在每次使用新类的时候触发它，然后引入该类，这样代码就不会报错类未定义了。</p>
+<p>但是 <code>__autoload()</code> 方法只能定义一次，如果加载第三方类库，那么该类库的自动加载和本地的自动加载就会冲突，优化方法是 <code>spl_autoload_register</code> 方法，这个方法的功能是注册一个自动加载方法，可以说是把多个 <code>__autoload()</code> 方法放到一个队列，实际使用上，从原来只调用一次 <code>__autoload()</code> 方法，变成了按顺序调用注册的自动加载方法。到此时代码的加载方式已经很优雅了。</p>
+<p>但是加载方式优雅，并不能解决加载内容冲突的问题。如果是自己开发还成，冲突了就改名字，但是也很累，而如果加载了第三方类库，那就没办法了。此时终于是命名空间上场了。比如原来村里只有一个人叫小明，那么如果我要到找个村找小明，就能很准确的找到小明，后来搬来新村民，也叫小明，这时候找小明，跟村民打听的时候问小明在哪里就不好使了，需要加上一些两个小明之间有明确区别的限定词才行，比如村东的小明，比如不是搬来的小明等。这样村民就能准确反馈信息，你也能顺利找到小明。命名空间就是这样的作用，区别了同名类文件。那我们在开发时，给定义的类增加命名空间以做区分，使用时使用命名空间指定要使用的类就可以了。</p>
+<p>接着出现的问题就是，我们写代码是会有规划的，比如这个目录是啥，那个目录是啥，是有目的性的。我们不可能对所有的目录进行加载，也应该针对类，有明确的指向性，对于使用的这个就到哪个目录去找，所以会对命名空间也进行相应的规划，比如控制器目录下的命名空间就写 <code>Controller</code>，而这个 <code>Controller</code> 之前可以加入模块名来区分不同模块的同名控制器。这样在实例化类的时候直接将类名 <code>Controller\Test</code> 中的 <code>\</code> 替换为 <code>/</code> 就是类文件的路径了。</p>
+<p>此时出现一个问题，就是引入文件肯定是需要绝对路径的，我们不可能在声明命名空间的时候把很长的一串绝对路径都写进去。框架实现这个的优化方式可能不都是一样的，举例 <code>phalcon</code> 框架，增加一个命名空间与实际基本目录路径的映射关系，比如要使用的代码都在 <code>A / B / C</code> 等目录下，那么将这几个目录建立根命名空间的映射 ，只要是这几个命名空间下的，就去对应的目录下找类文件。比如控制器在哪个文件，模型类在哪个文件，在加载的时候，类文件应该在哪个路径去找。但是在这几个目录下，就必须对每一条路径都加上命名空间。比如设定了基础命名空间 <code>A</code> 映射到 <code>A</code> 目录，那么 <code>A</code> 目录下新增目录 <code>a</code> 然后在这个目录下定义类文件 <code>test</code>，那么 <code>test</code> 类的命名空间就需要是 <code>A\a</code>，这样框架会自动转换，当然如果要能够直接使用的话，可以添加该子目录的命名空间映射关系。这是 <code>phalcon</code> 框架的设计，但是其他框架设计思路都差不多。</p>
+</blockquote>
+<ol start="5">
+<li><p>加载全局环境配置和 url 辅助函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">require_once SYSTEMPATH . &apos;Config/DotEnv.php&apos;;</span><br><span class="line"></span><br><span class="line">$env = new \CodeIgniter\Config\DotEnv(ROOTPATH);</span><br><span class="line">$env-&gt;load();</span><br><span class="line"></span><br><span class="line">helper(&apos;url&apos;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加载配置，实例化主程序类，初始化，返回至 <code>index.php</code>，运行 <code>app</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$appConfig = config(\Config\App::class);</span><br><span class="line">$app       = new \CodeIgniter\CodeIgniter($appConfig);</span><br><span class="line">$app-&gt;initialize();</span><br><span class="line"></span><br><span class="line">return $app;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="app-gt-run"><a href="#app-gt-run" class="headerlink" title="$app-&gt;run()"></a><code>$app-&gt;run()</code></h3><p>将之前的 <code>CodeIgniter.php</code> 文件内的过程式启动，封装成了方法，但是内容还是一样的，按顺序启动设置相关项，然后运行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">public function run(RouteCollectionInterface $routes = null, bool $returnResponse = false)</span><br><span class="line">&#123;</span><br><span class="line">	// ---------- 设置 start</span><br><span class="line">	$this-&gt;startBenchmark();</span><br><span class="line"></span><br><span class="line">	$this-&gt;getRequestObject();</span><br><span class="line">	$this-&gt;getResponseObject();</span><br><span class="line"></span><br><span class="line">	$this-&gt;forceSecureAccess();</span><br><span class="line"></span><br><span class="line">	$this-&gt;spoofRequestMethod();</span><br><span class="line"></span><br><span class="line">	Events::trigger(&apos;pre_system&apos;);</span><br><span class="line">	// ---------- 设置 end</span><br><span class="line"></span><br><span class="line">	// ---------- 缓存响应 start</span><br><span class="line">	$cacheConfig = new Cache();</span><br><span class="line">	$response    = $this-&gt;displayCache($cacheConfig);</span><br><span class="line">	if ($response instanceof ResponseInterface)</span><br><span class="line">	&#123;</span><br><span class="line">		if ($returnResponse)</span><br><span class="line">		&#123;</span><br><span class="line">			return $response;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		$this-&gt;response-&gt;pretend($this-&gt;useSafeOutput)-&gt;send();</span><br><span class="line">		$this-&gt;callExit(EXIT_SUCCESS);</span><br><span class="line">	&#125;</span><br><span class="line">	// ---------- 缓存响应 end</span><br><span class="line"></span><br><span class="line">	try</span><br><span class="line">	&#123;</span><br><span class="line">		// 业务逻辑执行 在这里处理请求相关的内容</span><br><span class="line">		return $this-&gt;handleRequest($routes, $cacheConfig, $returnResponse);</span><br><span class="line">	&#125;</span><br><span class="line">	catch (Router\RedirectException $e) // 处理异常</span><br><span class="line">	&#123;</span><br><span class="line">		$logger = Services::logger();</span><br><span class="line">		$logger-&gt;info(&apos;REDIRECTED ROUTE at &apos; . $e-&gt;getMessage());</span><br><span class="line"></span><br><span class="line">		$this-&gt;response-&gt;redirect($e-&gt;getMessage(), &apos;auto&apos;, $e-&gt;getCode());</span><br><span class="line">		$this-&gt;callExit(EXIT_SUCCESS);</span><br><span class="line">	&#125;</span><br><span class="line">	catch (PageNotFoundException $e)</span><br><span class="line">	&#123;</span><br><span class="line">		$this-&gt;display404errors($e);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-framework-ci/" rel="tag"># php framework ci</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/18/php-object-reference/" rel="next" title="php 对象赋值和引用的区别">
+                <i class="fa fa-chevron-left"></i> php 对象赋值和引用的区别
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/26/ci-4-加载配置文件/" rel="prev" title="ci 4 加载配置文件">
+                ci 4 加载配置文件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">74</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-入口文件-index-php"><span class="nav-number">1.</span> <span class="nav-text">1. 入口文件 index.php</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-配置文件"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-加载初始化文件"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 加载初始化文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-运行"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 运行</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-配置文件"><span class="nav-number">2.</span> <span class="nav-text">2 配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-初始化文件"><span class="nav-number">3.</span> <span class="nav-text">3 初始化文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#app-gt-run"><span class="nav-number">4.</span> <span class="nav-text">$app-&gt;run()</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

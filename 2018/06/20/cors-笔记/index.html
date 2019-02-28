@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="cors,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Mdn: http访问控制(cors) 跨域资源共享：cors (cross-origin resource sharing)  当一个资源从与该资源本身所在的服务器不同的域或端口请求一个资源时，资源会发起一个跨域 HTTP 请求。比如当前浏览的是 a 站点，但是请求的图片来自于 b 站点，那 a 站点就会发起一个跨域 http 请求。 CORS 需要客户端和服务器同时支持。 简单描述：使用 ht">
+<meta name="keywords" content="cors">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cors 笔记">
+<meta property="og:url" content="http://yoursite.com/2018/06/20/cors-笔记/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="Mdn: http访问控制(cors) 跨域资源共享：cors (cross-origin resource sharing)  当一个资源从与该资源本身所在的服务器不同的域或端口请求一个资源时，资源会发起一个跨域 HTTP 请求。比如当前浏览的是 a 站点，但是请求的图片来自于 b 站点，那 a 站点就会发起一个跨域 http 请求。 CORS 需要客户端和服务器同时支持。 简单描述：使用 ht">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-28T03:20:38.959Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cors 笔记">
+<meta name="twitter:description" content="Mdn: http访问控制(cors) 跨域资源共享：cors (cross-origin resource sharing)  当一个资源从与该资源本身所在的服务器不同的域或端口请求一个资源时，资源会发起一个跨域 HTTP 请求。比如当前浏览的是 a 站点，但是请求的图片来自于 b 站点，那 a 站点就会发起一个跨域 http 请求。 CORS 需要客户端和服务器同时支持。 简单描述：使用 ht">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/20/cors-笔记/">
+
+
+
+
+
+  <title>cors 笔记 | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/20/cors-笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cors 笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-20T22:13:20+08:00">
+                2018-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS" target="_blank" rel="noopener">Mdn: http访问控制(cors)</a></p>
+<p>跨域资源共享：cors (cross-origin resource sharing) </p>
+<p>当一个资源从与该资源本身所在的服务器不同的域或端口请求一个资源时，资源会发起一个<strong>跨域 HTTP 请求</strong>。比如当前浏览的是 a 站点，但是请求的图片来自于 b 站点，那 a 站点就会发起一个跨域 http 请求。</p>
+<p>CORS 需要客户端和服务器同时支持。</p>
+<p>简单描述：使用 http 首部字段来进行访问权限的控制。首先是对安全没有太大影响的会通过，比如单纯的 get 方式，把这种称为简单请求。而一些有风险存在的情况，则会对其进行权限控制，比如 put, delete 等等，这就需要一个预先检查，看服务器允许不允许该种情况的发生，把这种称为预检请求。服务器允许之后，在服务器允许的情况下也可以做一些其他操作，比如设置 cookies 等，得到服务器的正面响应，然后客户端再发起实际的请求。<br><a id="more"></a><br>简单请求：符合以下所有条件的即是 简单请求 </p>
+<ul>
+<li>请求方法为以下之一： </li>
+<li><ul>
+<li>GET </li>
+<li>HEAD </li>
+<li>POST </li>
+</ul>
+</li>
+<li>Fetch 规定的对 cors 安全的首部集合，这些集合之外的首部都是不被允许的： </li>
+<li><ul>
+<li>Accept </li>
+<li>Accept-Language </li>
+<li>Content-Language </li>
+<li>Content-Type </li>
+<li>DPR </li>
+<li>Downlink </li>
+<li>Save-Data </li>
+<li>Viewport-Width </li>
+<li>Width </li>
+</ul>
+</li>
+<li>Content-Type 为下列三值之一： </li>
+<li><ul>
+<li>text/plain </li>
+<li>Multipart/form-data </li>
+<li>Application/x-www-form-urlencoded </li>
+</ul>
+</li>
+<li>请求中的任意 XMLHttpRequestUpload 对象均没有注册任意事件监听器；XMLHttpRequestUpload 对象可以使用 XMLHttpRequest.upload 属性访问。 </li>
+<li>请求中没有使用 ReadableStream 对象 </li>
+</ul>
+<p>预检请求：预检请求可以避免跨域请求对服务器的用户数据产生未预期的影响。当满足以下任意条件时，应该发送预检请求： </p>
+<ul>
+<li>使用了以下任一 HTTP 方法： </li>
+<li><ul>
+<li>PUT </li>
+<li>DELETE </li>
+<li>CONNECT </li>
+<li>OPTIONS </li>
+<li>TRACE </li>
+<li>PATCH </li>
+</ul>
+</li>
+<li>人为设置了 对 cors 安全的首部字段集合 之外的其他首部字段。该集合为： </li>
+<li><ul>
+<li>Accept </li>
+<li>Accept-Language </li>
+<li>Content-Language </li>
+<li>Content-Type </li>
+<li>DPR </li>
+<li>Downlink </li>
+<li>Save-Data </li>
+<li>Viewport-Width </li>
+<li>Width </li>
+</ul>
+</li>
+<li>Content-Type 的值不属于下列之一： </li>
+<li><ul>
+<li>application/x-www-form-urlencoded </li>
+<li>multipart/form-data </li>
+<li>text/plain </li>
+</ul>
+</li>
+<li>请求中的任意 XMLHttpRequestUpload 对象注册了任意多个事件监听器； </li>
+<li>请求中使用了 ReadableStream 对象 </li>
+</ul>
+<hr>
+<p>服务器端处理 cors - php : </p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Server-Side_Access_Control" target="_blank" rel="noopener">Mdn:服务器端的访问控制 - PHP </a></p>
+<p>简单请求发起的情况： </p>
+<ul>
+<li>请求方式为 GET 或者 POST，如果是 POST，那么请求的 Content-Type 为以下之一：application/x-www-form-urlencoded, mumtipart/form-data, text/plain。 </li>
+<li>请求中无自定义的头部（如 X-Modified） </li>
+</ul>
+<p>以下情况，请求会返回相关响应信息</p>
+<ul>
+<li>如果资源是允许公开访问的(就像任何允许 GET 访问的 HTTP 资源),返回 <code>Access-Control-Allow-Origin:*</code> 头信息就足够了,除非是一些需要 Cookies 和 HTTP 身份验证信息的请求。</li>
+<li>如果资源访问被限制基于相同的域名,或者如果要访问的资源需要凭证(或设置凭证),那么就有必要对请求头信息中的 ORIGIN 进行过滤,或者至少响应请求的来源(例如 Access-Control-Allow-Origin:<a href="http://arunranga.com/" target="_blank" rel="noopener">http://arunranga.com</a>)。另外,将发送 <code>Access-Control-Allow-Credentials:TRUE</code> 头信息，这在后续部分将进行讨论。</li>
+</ul>
+<p>简单请求代码示例： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">    // 只允许 hello.com 的域，它可以通过 application/xml 方式来访问资源 </span><br><span class="line">    if($_SERVER[&apos;HTTP_ORIGIN&apos;] == &apos;http://hello.com&apos;) &#123; </span><br><span class="line">        header(&apos;Access-Control-Allow-Origin: http://hello.com&apos;); </span><br><span class="line">        header(&apos;Content-Type: application/xml&apos;); </span><br><span class="line">        readfile(&apos;resource.xml&apos;); </span><br><span class="line">    &#125; else &#123; </span><br><span class="line">        header(&apos;Content-Type: text/html&apos;); </span><br><span class="line">        // echo something</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>上面的示例单纯检测 origin 头，如果是允许的则返回正确的资源，否则输出其他。 </p>
+<p>预检请求发生情况： </p>
+<ul>
+<li>使用 GET 或 POST 以外的情况；使用 POST 发送 application/x-www-form-urlencoded, multipart/form-data, text/plain 之外的 Content-Type，如 application/xml </li>
+<li>发送自定义的头信息，如 x-pinghello </li>
+</ul>
+<p>响应 preflight requests 请求的服务器资源会有这些动作：</p>
+<ul>
+<li>基于 ORIGIN 进行过滤</li>
+<li>preflight请求的响应内容，包括必要的 Access-Control-Allow-Methods, Access-Control-Allow-Headers (保证系统正常运行)，如果需要凭据的话，也会包括 Access-Control-Allow-Credentials 头信息</li>
+<li>响应实际请求，包括处理 POST数据等。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line"></span><br><span class="line">if($_SERVER[&apos;REQUEST_METHOD&apos;] == &apos;GET’) &#123; </span><br><span class="line">    header(&apos;Content-Type: text/plain’); </span><br><span class="line">    // echo something </span><br><span class="line">&#125; elseif ($_SERVER[&apos;REQUEST_METHOD’] == &apos;OPTIONS’) &#123; </span><br><span class="line">    if($_SERVER[&apos;HTTP_ORIGIN&apos;] == &quot;http://hello.com”) &#123;      </span><br><span class="line">        header(&apos;Access-Control-Allow-Origin: http://hello.com&apos;); </span><br><span class="line">        header(&apos;Access-Control-Allow-Methods: POST, GET, OPTIONS&apos;);</span><br><span class="line">        header(&apos;Access-Control-Allow-Headers: X-PINGARUNER&apos;);</span><br><span class="line">        header(&apos;Access-Control-Max-Age: 1728000&apos;);</span><br><span class="line">        header(&quot;Content-Length: 0&quot;);</span><br><span class="line">        header(&quot;Content-Type: text/plain&quot;);</span><br><span class="line">    &#125; else &#123; </span><br><span class="line">        header(&quot;HTTP/1.1 403 Access Forbidden&quot;);</span><br><span class="line">        header(&quot;Content-Type: text/plain&quot;);</span><br><span class="line">        echo &quot;You cannot repeat this request&quot;;</span><br><span class="line">    &#125; </span><br><span class="line">&#125; elseif ($_SERVER[&apos;HTTP_METHOD’] == &quot;POST&quot;)&#123; </span><br><span class="line">    if($_SERVER[&apos;HTTP_ORIGIN’] == &apos;http://hello.com’) &#123; </span><br><span class="line">        $postData = file_get_contents(&apos;php://input’); </span><br><span class="line">        $document = simplexml_load_string($postData); </span><br><span class="line">        $ping = $_SERVER(&apos;HTTP_X_PING’); </span><br><span class="line">        header(&apos;Access-Control-Allow-Origin: http://hello.com&apos;); </span><br><span class="line">        header(&apos;Content-Type: text/plain’); </span><br><span class="line">        // echo something; </span><br><span class="line">    &#125; else &#123; </span><br><span class="line">        die(&apos;POSTing only allowed from hello.com&apos;); </span><br><span class="line">    &#125; </span><br><span class="line">&#125; else &#123; </span><br><span class="line">    die(&apos;No other methods allowed&apos;); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>凭证请求：带凭据的请求，将 Cookies 和 HTTP 认证信息一起发送出去的跨域请求，根据请求方式，可以是 简单请求 也可以是 预检请求。 </p>
+<p>发送 简单请求 时， Firefox 3.5 及以上会发送带 Cookies 信息的请求（如果 withCredentials 设为 true）。如果服务器响应客户端是可信任的，客户端接受并进行输出。在 预检请求 中，服务器可以针对 OPTIONS 请求，返回 <code>Access-Control-Allow-Credentials: true</code> 信息。 </p>
+<p>处理请求的 PHP 示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">if($_SERVER[&apos;REQUEST_METHOD&apos;] == &quot;GET”) &#123; </span><br><span class="line">    if(!isset($_COOKIE[&apos;pageAccess&apos;])) &#123; </span><br><span class="line">        setcookie(“pageAccess”,1,time()+2592000); </span><br><span class="line">        header(&apos;Access-Control-Allow-Origin: http://hello.com&apos;); </span><br><span class="line">        header(&apos;Cache-Control: no-cache’); </span><br><span class="line">        header(&apos;Pragma: no-cache’); </span><br><span class="line">        header(&apos;Access-Control-Allow-Credentials: true’); </span><br><span class="line">        header(&apos;Content-Type: text/plain’); </span><br><span class="line">        echo // something </span><br><span class="line">    &#125; else &#123; </span><br><span class="line">        $accesses = $_COOKIE[&apos;pageAccess&apos;]; </span><br><span class="line">        setcookie(&apos;pageAccess’, ++$accesses, time()+2592000); </span><br><span class="line">        header(&apos;Access-Control-Allow-Origin: http://hello.com&apos;); </span><br><span class="line">        header(&apos;Access-Control-Allow-Credentials: true’); </span><br><span class="line">        header(&apos;Cache-Control: no-cache’); </span><br><span class="line">        header(&apos;Pragma: no-cache’);</span><br><span class="line">        header(&apos;Content-Type: text/plain’);</span><br><span class="line">    &#125; </span><br><span class="line">&#125; elseif($_SERVER[&apos;REQUEST_METHOD’] == &apos;OPTIONS&apos;) &#123; </span><br><span class="line">    if($_SERVER[&apos;HTTP_ORIGIN’] == &quot;http://hello.com”) &#123; </span><br><span class="line">        header(&apos;Access-Control-Allow-Origin: http://hello.com&apos;); </span><br><span class="line">        header(&apos;Access-Control-Allow_Methods: GET, OPTIONS&apos;); </span><br><span class="line">        header(&apos;Access-Control-Allow-Credentials: true&apos;); </span><br><span class="line">        header(&apos;Access-Control-Max-Age: 1728000&apos;); </span><br><span class="line">        header(&apos;Content-Length: 0&apos;); </span><br><span class="line">        header(&apos;Content-Type: text/plain&apos;); </span><br><span class="line">    &#125; else &#123; </span><br><span class="line">        header(&apos;HTTP/1.1 403 Access Forbidden&apos;); </span><br><span class="line">        header(&apos;Content-Type: text/plain&apos;); </span><br><span class="line">        echo &apos;you cannot repeat this request&apos;; </span><br><span class="line">    &#125; </span><br><span class="line">&#125; else &#123; </span><br><span class="line">    die(&apos;this http Resource can only be accessed with get or options&apos;); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Note: 在带凭据请求中， Access-Control-Allow-Origin: 头不能是通配符 “*”，必须是一个有效的域名。 </p>
+<hr>
+<p>Nginx 配置方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$http_origin 为请求头中的 origin 字段数据，所以下面的设置会允许任意来源请求。可以加入判断条件，只允许指定的来源通过。这样可以做到允许多个来源请求。</span><br><span class="line"></span><br><span class="line">location / &#123;</span><br><span class="line">     add_header Access-Control-Allow-Origin $http_origin;</span><br><span class="line">    add_header Access-Control-Allow-Methods &apos;GET, POST, OPTIONS&apos;;</span><br><span class="line">    add_header Access-Control-Allow-Credentials true;</span><br><span class="line">    add_header Access-Control-Allow-Headers &apos;Origin, X-Requested-With,Content-Type, Accept, If-Modified-Since&apos;;</span><br><span class="line">    add_header P3P &quot;CP=\&quot;CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR\&quot;&quot;;</span><br><span class="line">    if ($request_method = &apos;OPTIONS&apos;) &#123;</span><br><span class="line">        return 204;</span><br><span class="line">    &#125;</span><br><span class="line">    // other config</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cors/" rel="tag"># cors</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/26/token-合约大数溢出安全问题/" rel="next" title="token 合约大数溢出安全问题">
+                <i class="fa fa-chevron-left"></i> token 合约大数溢出安全问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/20/php-fpm-监听方式笔记/" rel="prev" title="php-fpm 监听方式笔记">
+                php-fpm 监听方式笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">74</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

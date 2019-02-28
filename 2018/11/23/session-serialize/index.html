@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php session serialize,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="得到反馈，后台管理系统频繁登陆失效。在本地测试，无法复现。求助曾哥，最后的结果是说有历史遗留。但是不是那么说的通，但当时是成功的。就过了。后来反馈又复现。在彭飞的建议下，查看 session 文件。发现用户端和后台管理登陆对 session 文件操作有破坏性的操作。  捋了一下 session 相关的操作。目前是用户端和后台接口请求在一个域名下，所以如果用户登陆了前台，然后登陆后台，那么会操作同一">
+<meta name="keywords" content="php session serialize">
+<meta property="og:type" content="article">
+<meta property="og:title" content="session serialize">
+<meta property="og:url" content="http://yoursite.com/2018/11/23/session-serialize/index.html">
+<meta property="og:site_name" content="Fuyk&#39;s blog">
+<meta property="og:description" content="得到反馈，后台管理系统频繁登陆失效。在本地测试，无法复现。求助曾哥，最后的结果是说有历史遗留。但是不是那么说的通，但当时是成功的。就过了。后来反馈又复现。在彭飞的建议下，查看 session 文件。发现用户端和后台管理登陆对 session 文件操作有破坏性的操作。  捋了一下 session 相关的操作。目前是用户端和后台接口请求在一个域名下，所以如果用户登陆了前台，然后登陆后台，那么会操作同一">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-28T03:29:02.869Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="session serialize">
+<meta name="twitter:description" content="得到反馈，后台管理系统频繁登陆失效。在本地测试，无法复现。求助曾哥，最后的结果是说有历史遗留。但是不是那么说的通，但当时是成功的。就过了。后来反馈又复现。在彭飞的建议下，查看 session 文件。发现用户端和后台管理登陆对 session 文件操作有破坏性的操作。  捋了一下 session 相关的操作。目前是用户端和后台接口请求在一个域名下，所以如果用户登陆了前台，然后登陆后台，那么会操作同一">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/23/session-serialize/">
+
+
+
+
+
+  <title>session serialize | Fuyk's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fuyk's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/23/session-serialize/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">session serialize</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-23T14:41:32+08:00">
+                2018-11-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>得到反馈，后台管理系统频繁登陆失效。在本地测试，无法复现。求助曾哥，最后的结果是说有历史遗留。但是不是那么说的通，但当时是成功的。就过了。后来反馈又复现。在彭飞的建议下，查看 session 文件。发现用户端和后台管理登陆对 session 文件操作有破坏性的操作。 </p>
+<p>捋了一下 session 相关的操作。目前是用户端和后台接口请求在一个域名下，所以如果用户登陆了前台，然后登陆后台，那么会操作同一个 session 文件。前后台的 session 数据的区分用 键来表示。比如 AUTH 的值为前台的 session 数据。而 ADMIN_AUTH 的值是后台的 session 数据。查看代码，都是操作各自的键值，应当不会影响另一端的 session 数据。<br><a id="more"></a><br>session 的数据格式是这样的： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">value_name|value_type:value_length:value_value</span><br></pre></td></tr></table></figure>
+<p>而代码对用户 session 数据的存储不是存入指定的值，而是从数据库取出直接塞进去，而在 phalcon 框架下模型类查询的返回值是一个对象。 所以前后台的 session 都有一个对象。 </p>
+<p>而我最直观能看到的就是。前台登陆之后，session 文件存入了前台的用户 session 数据。然后登陆后台之后，session 文件内添加了后台的用户的 session 数据。到这里一切正常，然后在切换到前台去登陆，发现 session 文件内容变更，后台的已登陆用户的 session 数据内容为空了。上面提到目前的形式是存储一个对象。所以本来的数据是如： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ADMIN|C:33:&quot;Namespace\Modules\Admin\Models\Admin&quot;:380:&#123;对象数据&#125;</span><br></pre></td></tr></table></figure>
+<p>变成了： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ADMIN|O:33:&quot;Namespace\Modules\Admin\Models\Admin&quot;:0:&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>想不通。求助曾哥。曾哥直接给出了答案。这个和 php 的基础知识有关，涉及到 session 的存取，对象反序列化。 </p>
+<p>以上的错误流程如下： </p>
+<p>当第一次对 session 文件进行写入时，没有问题。这个时候写入了一个登陆用户的信息的对象。当第一次登陆是前台时，后台对其 session 数据无影响。而当 session 文件内存储了后台登陆用户的数据对象时，此时前台登陆，那么根据客户端传过来的 cookie 的 sid，从对应 sid 的 session 文件内取出数据，进行类似反序列化的操作。那么此时就需要对之前后台登陆时存入的用户数据对象反序列化，而对一个对象进行反序列化，必须知道该对象所属类的定义，而因为对模型类进行目录规划时，因为该类只会被后台使用到，所以位于后台模块目录内，前台访问不到该类定义。所以无从反序列化，所以解码失败，那么在更新 session 文件数据时，存入的该对象就变成了空。这时候在后台操作时，就会发现接口返回需要登陆的提示。 </p>
+<p>序列化： </p>
+<p>所有php里面的值都可以使用函数<a href="https://php.net/manual/zh/function.serialize.php" target="_blank" rel="noopener">serialize()</a>来返回一个包含字节流的字符串来表示。<a href="https://php.net/manual/zh/function.unserialize.php" target="_blank" rel="noopener">unserialize()</a>函数能够重新把字符串变回php原来的值。 序列化一个对象将会保存对象的所有变量，但是不会保存对象的方法，只会保存类的名字。</p>
+<p>为了能够<a href="https://php.net/manual/zh/function.unserialize.php" target="_blank" rel="noopener">unserialize()</a>一个对象，这个对象的类必须已经定义过。如果序列化类A的一个对象，将会返回一个跟类A相关，而且包含了对象所有变量值的字符串。 如果要想在另外一个文件中解序列化一个对象，这个对象的类必须在解序列化之前定义，可以通过包含一个定义该类的文件或使用函数<a href="https://php.net/manual/zh/function.spl-autoload-register.php" target="_blank" rel="noopener">spl_autoload_register()</a>来实现。</p>
+<p>解决方式： </p>
+<ol>
+<li>分域，后台单独一个域名，和前台分离 </li>
+<li>session 存储使用字符串，数组等方式，不要使用对象。 </li>
+</ol>
+<p>关于在 ubuntu 系统上的 session 回收。在 ubuntu 上 PHP 的 session 回收是由系统的一个 shell 脚本定时执行的，默认为半小时一次。所以如果设置了过期时间为半小时内，那么 session 的过期时间最长为半小时。 </p>
+<p>比如该脚本的默认执行时间为每小时的 9 分钟和 39 分钟。当 session 过期时间小于半小时，那么 session 的过期时间就是离这两个时刻较近的那个时刻之间的时间段。其实如果超过半小时，跨过了一个时刻，那么就会在下一个时刻才会被清理。大概就是说 session 的过期时间为前后误差半小时。 </p>
+<p>解决方式：使用其他方式，比如 redis。 </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php-session-serialize/" rel="tag"># php session serialize</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/20/php-fpm-监听方式笔记/" rel="next" title="php-fpm 监听方式笔记">
+                <i class="fa fa-chevron-left"></i> php-fpm 监听方式笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/26/小狗钱钱笔记/" rel="prev" title="小狗钱钱笔记">
+                小狗钱钱笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">74</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

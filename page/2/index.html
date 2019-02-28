@@ -229,7 +229,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/15/gas-价格预估/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/20/php-fpm-监听方式笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -248,7 +248,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/03/15/gas-价格预估/" itemprop="url">gas 价格预估</a></h1>
+                <a class="post-title-link" href="/2018/06/20/php-fpm-监听方式笔记/" itemprop="url">php-fpm 监听方式笔记</a></h1>
         
 
         <div class="post-meta">
@@ -260,8 +260,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-15T16:42:49+08:00">
-                2018-03-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-20T23:29:38+08:00">
+                2018-06-20
               </time>
             
 
@@ -299,21 +299,531 @@
 
       
         
+          <p>在 nginx 的配置中，会有如下配置： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastcgi_pass   unix:/run/php/php7.0-fpm.sock;</span><br></pre></td></tr></table></figure>
+<p>或者： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastcgi_pass   127.0.0.1:9000;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/20/php-fpm-监听方式笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/20/cors-笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/20/cors-笔记/" itemprop="url">cors 笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-20T22:13:20+08:00">
+                2018-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-            <p>燃气价格预估是 Geth 客户端的帮助函数，它在发送交易时试图找到合适的默认燃气价格。它可以使用以下命令行选项参数：</p>
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS" target="_blank" rel="noopener">Mdn: http访问控制(cors)</a></p>
+<p>跨域资源共享：cors (cross-origin resource sharing) </p>
+<p>当一个资源从与该资源本身所在的服务器不同的域或端口请求一个资源时，资源会发起一个<strong>跨域 HTTP 请求</strong>。比如当前浏览的是 a 站点，但是请求的图片来自于 b 站点，那 a 站点就会发起一个跨域 http 请求。</p>
+<p>CORS 需要客户端和服务器同时支持。</p>
+<p>简单描述：使用 http 首部字段来进行访问权限的控制。首先是对安全没有太大影响的会通过，比如单纯的 get 方式，把这种称为简单请求。而一些有风险存在的情况，则会对其进行权限控制，比如 put, delete 等等，这就需要一个预先检查，看服务器允许不允许该种情况的发生，把这种称为预检请求。服务器允许之后，在服务器允许的情况下也可以做一些其他操作，比如设置 cookies 等，得到服务器的正面响应，然后客户端再发起实际的请求。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/20/cors-笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </p></div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/26/token-合约大数溢出安全问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/26/token-合约大数溢出安全问题/" itemprop="url">token 合约大数溢出安全问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-26T15:21:03+08:00">
+                2018-04-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>上周连续爆出一些比较知名的 token 的安全问题，后续有消息称仍然存在同类问题的 token。简单描述一下该类问题的存在形式。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/26/token-合约大数溢出安全问题/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </p></div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/16/api-log-记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/16/api-log-记录/" itemprop="url">api log 记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-16T22:23:56+08:00">
+                2018-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>接口日志简单总结记录。</p>
+<p>使用框架 CI。</p>
+<h2 id="接口-URL-格式"><a href="#接口-URL-格式" class="headerlink" title="接口 URL 格式"></a>接口 URL 格式</h2><p>接口形式如下：</p>
+<p><code>project.com/api/api_name</code> - <code>项目基本域名/api/接口名</code>。在 <code>controller</code> 目录下增加 <code>api</code> 目录，单独存放对外部提供服务的类。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/16/api-log-记录/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/01/智能合约最佳实践翻译八-安全通知/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/01/智能合约最佳实践翻译八-安全通知/" itemprop="url">智能合约最佳实践翻译八 - 安全通知</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-01T18:30:16+08:00">
+                2018-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="安全通知"><a href="#安全通知" class="headerlink" title="安全通知"></a><a href="https://consensys.github.io/smart-contract-best-practices/security_notifications/" target="_blank" rel="noopener">安全通知</a></h2><p>这是一个资源清单，通常会强调在以太坊或 Solidity 中发现的漏洞。安全通知的官方来源是以太坊博客，但在很多情况下，漏洞会更早地在其他地方披露和讨论。</p>
 <ul>
-<li>gpomin：建议的燃气价格的下限。此值设定时至少要比矿工通常设置使用的燃气价格要高，否则你的交易将因为价格太低而被自动拒绝。</li>
-<li>gpomax：建议的燃气价格的上限。在下载高峰时，交易之间存在被打包进区块的竞争，此时需要设定价格上限，否则对价格的预估机制将会使你的价格高于其他所有人的价格，而不管其他人的价格是多高。</li>
-<li>gpofull：当交易的燃料数量达到了区块设定的燃料限制的一个确定的百分比时，该区块被视作“满”。如果一个区块还未“满”，那么即使是一笔提供了最小价格的交易也会被接受。</li>
-<li>gpobasedown：当最后一个区块的最低可接受价格低于最后基准价格时，基准价格下降的指数比率（指定为1/1000）。</li>
-<li>gpobaseup：当最后一个区块的最低可接受价格高于最后基准价格时基准价格上涨的指数比率（指定为1/1000）。</li>
-<li>gpobasecf：基准价格的修正因子（以百分比表示）。建议价格是修正后的基准价格，受 gpomin 和 gpomax 限制。</li>
+<li><a href="https://blog.ethereum.org/" target="_blank" rel="noopener">Ethereum Blog</a> : 以太坊官方博客</li>
+<li><a href="https://blog.ethereum.org/category/security/" target="_blank" rel="noopener">Ethereum Blog - Security only</a> : 安全类的博客文章</li>
+<li><a href="https://gitter.im/orgs/ethereum/rooms" target="_blank" rel="noopener">Ethereum Gitter</a> : 聊天室</li>
+<li><a href="https://gitter.im/ethereum/solidity" target="_blank" rel="noopener">Solidity</a></li>
+<li><a href="https://gitter.im/ethereum/go-ethereum" target="_blank" rel="noopener">Go-Ethereum</a></li>
+<li><a href="https://gitter.im/ethereum/cpp-ethereum" target="_blank" rel="noopener">CPP-Ethereum</a></li>
+<li><a href="https://gitter.im/ethereum/research" target="_blank" rel="noopener">Research</a></li>
+<li><a href="https://www.reddit.com/r/ethereum" target="_blank" rel="noopener">Reddit</a></li>
+<li><a href="https://ethstats.net/" target="_blank" rel="noopener">Network Stats</a></li>
 </ul>
-<p>最低可接受价格被定义为可以将交易插入到某个区块中的价格。虽然这个数值随着特定交易所使用的燃气而略有变化，但它的近似程度如下：如果该区块已满，则为该区块中发现的最低交易燃气价格。 如果该区块未满，则等于 gpomin。</p>
-<p>基准价格是一个区块间调整的动态值，如果价格低于最低可接受价格，则向上调整价格，否则下跌。 请注意，修正因素中添加了少量随机性，这样你的客户在市场上的行为就不能被完全预测。</p>
-<p>如果您想为默认燃气价格指定一个常数而不使用预估，请将 gpomin 和 gpomax 设置为相同的值。</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/01/智能合约最佳实践翻译八-安全通知/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -360,7 +870,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/12/solidity-contracts/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/01/智能合约最佳实践翻译七-安全工具/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -379,7 +889,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/03/12/solidity-contracts/" itemprop="url">solidity contracts</a></h1>
+                <a class="post-title-link" href="/2018/04/01/智能合约最佳实践翻译七-安全工具/" itemprop="url">智能合约最佳实践翻译七 - 安全工具</a></h1>
         
 
         <div class="post-meta">
@@ -391,8 +901,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-12T15:40:33+08:00">
-                2018-03-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-01T18:10:16+08:00">
+                2018-04-01
               </time>
             
 
@@ -430,10 +940,517 @@
 
       
         
-          <p>Solidity 中的合约与面向对象语言中的类相似。它们拥有持久化的状态变量，和可以修改这些变量的函数。在不同的合约（实例）上调用函数将执行 EVM 函数调用，从而切换上下文使得状态变量不可访问。<br>
+          <h2 id="安全工具"><a href="#安全工具" class="headerlink" title="安全工具"></a><a href="https://consensys.github.io/smart-contract-best-practices/security_tools/" target="_blank" rel="noopener">安全工具</a></h2>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/03/12/solidity-contracts/#more" rel="contents">
+            <a class="btn" href="/2018/04/01/智能合约最佳实践翻译七-安全工具/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/01/智能合约最佳实践翻译六-文档和程序/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/01/智能合约最佳实践翻译六-文档和程序/" itemprop="url">智能合约最佳实践翻译六 - 文档和程序</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-01T18:05:44+08:00">
+                2018-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="文档和程序"><a href="#文档和程序" class="headerlink" title="文档和程序"></a><a href="https://consensys.github.io/smart-contract-best-practices/documentation_procedures/" target="_blank" rel="noopener">文档和程序</a></h2><p>在启动一个将会拥有大量资金或者被要求作为关键任务的合约，拥有标准的文档是十分重要的。一些与安全相关的文档包括：</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/01/智能合约最佳实践翻译六-文档和程序/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/26/智能合约最佳实践翻译五-Token-实现最佳实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/26/智能合约最佳实践翻译五-Token-实现最佳实践/" itemprop="url">智能合约最佳实践翻译五 - Token 实现最佳实践</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-26T11:37:52+08:00">
+                2018-03-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Token-实现最佳实践"><a href="#Token-实现最佳实践" class="headerlink" title="Token 实现最佳实践"></a>Token 实现最佳实践</h2><p>实现 Token 应该符合其他的最佳实践，但是它有一些独特的考虑。</p>
+<h3 id="遵守最新的标准"><a href="#遵守最新的标准" class="headerlink" title="遵守最新的标准"></a>遵守最新的标准</h3><p>通常来说，token 的智能合约应该遵循公认的稳定标准。</p>
+<p>当前公认的标准有：</p>
+<ul>
+<li><a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md" target="_blank" rel="noopener">EIP20</a></li>
+<li><a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md" target="_blank" rel="noopener">EIP721</a>（不可替代的 token）</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/26/智能合约最佳实践翻译五-Token-实现最佳实践/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/26/智能合约最佳实践翻译四-软件工程技术/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/26/智能合约最佳实践翻译四-软件工程技术/" itemprop="url">智能合约最佳实践翻译四 - 软件工程技术</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-26T11:37:45+08:00">
+                2018-03-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="软件工程技术"><a href="#软件工程技术" class="headerlink" title="软件工程技术"></a>软件工程技术</h2><p>如我们在<a href="https://consensys.github.io/smart-contract-best-practices/software_engineering/#general-philosophy" target="_blank" rel="noopener">常规理念</a>中讨论的一样，其不足以保护你来抵御已知的攻击。由于区块链上的失败成本可能非常高，因此您还必须调整自己编写软件的方式，以解决该风险。</p>
+<p>我们主张的方式是 “做好失败的准备”。不可能提前知道你的代码是否安全。但是，你可以以使其能够优雅地失败并且损失最小的方式来构建你的合约。本部分提出了多种技术来帮助你为失败做好准备。</p>
+<p>注意：当你新增一个组件到你的系统中时，总是伴随着一定的风险。一个不好的防故障设计本身可能会成为一个漏洞 - 当它与大量优秀的防故障设计交互时。请仔细考虑你在合约中使用的每种技术，并仔细考虑它们是如何协同合作以创建一个健壮的系统。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/26/智能合约最佳实践翻译四-软件工程技术/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/17/本地运行-geth-记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fuyk's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/17/本地运行-geth-记录/" itemprop="url">本地运行 geth 记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-17T16:04:12+08:00">
+                2018-03-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>添加源，安装客户端：</p>
+<p><code>apt install software-properties-common</code></p>
+<p><code>add-apt-repository -y ppa:ethereum/ethereum</code></p>
+<p><code>apt install ethereum</code><br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/17/本地运行-geth-记录/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -441,1006 +1458,6 @@
         
       
     </p></div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/09/智能合约最佳实践翻译三-已知攻击/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/09/智能合约最佳实践翻译三-已知攻击/" itemprop="url">智能合约最佳实践翻译三 - 已知攻击</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-09T12:13:33+08:00">
-                2018-03-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="已知攻击"><a href="#已知攻击" class="headerlink" title="已知攻击"></a>已知攻击</h2><p>以下列出了你应该知道的已知攻击，并且在编写智能合约的时候进行防御。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/03/09/智能合约最佳实践翻译三-已知攻击/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/09/智能合约最佳实践翻译二-安全推荐/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/09/智能合约最佳实践翻译二-安全推荐/" itemprop="url">智能合约最佳实践翻译二 - 安全推荐</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-09T10:04:07+08:00">
-                2018-03-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><a href="https://consensys.github.io/smart-contract-best-practices/recommendations/" target="_blank" rel="noopener">原文链接</a></p>
-<h2 id="对-Solidity-中的智能合约的安全推荐-Recommendations-for-Smart-Contract-Security-in-Solidity"><a href="#对-Solidity-中的智能合约的安全推荐-Recommendations-for-Smart-Contract-Security-in-Solidity" class="headerlink" title="对 Solidity 中的智能合约的安全推荐 Recommendations for Smart Contract Security in Solidity"></a>对 Solidity 中的智能合约的安全推荐 Recommendations for Smart Contract Security in Solidity</h2><p>本页面展示了编写智能合约时应遵循的一些 solidity 模式。</p>
-<h3 id="协议具体建议"><a href="#协议具体建议" class="headerlink" title="协议具体建议"></a>协议具体建议</h3><p>以下建议适用于以太坊中所有的智能合约的开发。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/03/09/智能合约最佳实践翻译二-安全推荐/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/05/智能合约最佳实践翻译一-常规理念/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/05/智能合约最佳实践翻译一-常规理念/" itemprop="url">智能合约最佳实践翻译一 - 常规理念</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-05T11:07:21+08:00">
-                2018-03-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><a href="https://consensys.github.io/smart-contract-best-practices/general_philosophy/" target="_blank" rel="noopener">原文链接</a></p>
-<h2 id="常规理念"><a href="#常规理念" class="headerlink" title="常规理念"></a>常规理念</h2><p>以太坊和复杂的区块链编程是崭新的和高度实验性的。 因此，随着新 bug 和安全风险的发现，您应该预期到安全形势会不断发生变化，并制定新的最佳实践。 因此，遵循本文档中的安全措施只是作为智能合约开发人员需要做的安全工作的开始。</p>
-<p>智能合约编程需要一个与您过往习惯不同的工程思维。失败的代价可能很高，并且更改可能很困难，使得它在某些方面更像硬件编程或金融服务编程，而不是 Web 或移动开发。因此，防御已知的漏洞是不够的。相反，你需要学习一种新的开发理念：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/03/05/智能合约最佳实践翻译一-常规理念/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/01/以太坊-燃气-燃料和费用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/01/以太坊-燃气-燃料和费用/" itemprop="url">以太坊，燃气，燃料 和 费用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-01T16:11:53+08:00">
-                2018-03-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><a href="https://media.consensys.net/ethereum-gas-fuel-and-fees-3333e17fe1dc" target="_blank" rel="noopener">来自 BTC Relay 的首席开发人员 Joseph Chow ：Ethereum,Gas,Fuel &amp; Fees</a></p>
-<p>以太坊是分布式和诚实的应用程序的平台，可在没有任何管理员或单点故障的全球点对点网络上运行。这些应用程序没有停机时间，任何人都可以创建它们：这是无许可的创新。这些应用是诚实的，不可改变的，并且在编码时总是互操作。从这个角度来说，智能合约的术语是合理的，因为它们是始终遵循其创建时所设定的条款的最终合约。</p>
-<p>使这成为可能的核心实际上是 Ethereum。在技术上称为以太坊虚拟机（EVM），它包括用于计算和数据存储的操作。交易代表 Ethereum 内的单个会话。它是交互的单位，类似于句子如何作为语法意义的单位，尽管单个句子可以包含很多单词。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/03/01/以太坊-燃气-燃料和费用/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </p></div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/24/ethereum-设计原理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/24/ethereum-设计原理/" itemprop="url">ethereum 设计原理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-24T12:16:27+08:00">
-                2018-02-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>尽管以太坊借鉴了许多已经在比特币这样的老式加密货币中经过了5年的尝试和测试的想法，但是以太坊在处理某些协议特征方面与常见方式有很多不同之处，因为目前现存的系统中没有以太坊需要的功能，所以以太坊另外开发了全新的功能。本文档的目的是详细说明在制定以太坊协议过程中所做出的所有可能不明显的或有些有争议的决定，以及显示我们的方法和可能的替代方案所涉及的风险。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/02/24/ethereum-设计原理/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </p></div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/23/Ethereum-EIP-20/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/23/Ethereum-EIP-20/" itemprop="url">Ethereum EIP 20</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-23T10:22:41+08:00">
-                2018-02-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">EIP: 20</span><br><span class="line">Title: ERC-20 Token Standard</span><br><span class="line">Author: Fabian Vogelsteller &lt;fabian@ethereum.org&gt;, Vitalik Buterin &lt;vitalik.buterin@ethereum.org&gt;</span><br><span class="line">Type: Standard</span><br><span class="line">Category: ERC</span><br><span class="line">Status: Accepted</span><br><span class="line">Created: 2015-11-19</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/02/23/Ethereum-EIP-20/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/28/关于容器/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/28/关于容器/" itemprop="url">关于容器</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-28T16:03:28+08:00">
-                2017-09-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><code>phalcon</code> 框架 <code>3.2</code> 文档中有个 <a href="https://docs.phalconphp.com/zh/3.2/di" target="_blank" rel="noopener"><code>DI Container</code></a>。<code>laravel</code> 框架 <code>5.5</code> 文档中有个 <a href="https://laravel.com/docs/5.5/container" target="_blank" rel="noopener"><code>Service Container</code></a>。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/28/关于容器/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/08/Configuring-HTTPS-servers-翻译/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fuyk's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/08/Configuring-HTTPS-servers-翻译/" itemprop="url">Configuring HTTPS servers 翻译</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-08T18:28:35+08:00">
-                2017-08-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="配置-https-服务器"><a href="#配置-https-服务器" class="headerlink" title="配置 https 服务器"></a>配置 https 服务器</h1><p><a href="https://nginx.org/en/docs/http/configuring_https_servers.html" target="_blank" rel="noopener">Configuring HTTPS servers 原文链接</a></p>
-<p>配置 https 服务器时，需要在 <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#server" target="_blank" rel="noopener"><code>server</code></a> 中 <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#listen" target="_blank" rel="noopener"><code>listen</code></a> 的端口中使用 <code>ssl</code> 参数，并且需要指定 <a href="https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_certificate" target="_blank" rel="noopener"><code>server_certificate</code></a> 和 <a href="https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_certificate_key" target="_blank" rel="noopener"><code>private_key</code></a> 文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen              443 ssl;</span><br><span class="line">	server_name         www.example.com;</span><br><span class="line">	ssl_certificate     www.example.com.crt;</span><br><span class="line">	ssl_certificate_key www.example.com.key;</span><br><span class="line">	ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">	ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/08/Configuring-HTTPS-servers-翻译/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
     
     
     
@@ -1475,7 +1492,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1521,7 +1538,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">74</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1534,7 +1551,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
